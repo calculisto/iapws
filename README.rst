@@ -29,35 +29,35 @@ Flavors
 This library comes in two "flavors". The *constrained* flavor enforces physical
 dimension correctness, the *relaxed* flavor does not.
 
-If the header `isto/units/units.hpp` is found and the macro
-`ISTO_IAPWS_FORCE_RELAXED` is not defined when including any header of this
+If the header ``isto/units/units.hpp`` is found and the macro
+``ISTO_IAPWS_FORCE_RELAXED`` is not defined when including any header of this
 library, then the flavor is *constrained*.
 
 
-If the header `isto/units/units.hpp` is not found or the macro
-`ISTO_IAPWS_FORCE_RELAXED` is defined when including any header of this
+If the header ``isto/units/units.hpp`` is not found or the macro
+``ISTO_IAPWS_FORCE_RELAXED`` is defined when including any header of this
 library, then the flavor is *relaxed*.
 
 In the *constrained* flavor, the function templates arguments and return values 
-have a physical dimension, as provided by the `isto::units` library. A typical
+have a physical dimension, as provided by the ``isto::units`` library. A typical
 signature for a function template is
 
 .. code-block:: c++
-    template <class T> 
-    pressure_t
-pressure (density_t <T> const& density, temperature_t <T> const& temperature)
+        template <class T> 
+        pressure_t
+    pressure (density_t <T> const& density, temperature_t <T> const& temperature)
 
-where `pressure_t`, `density_t` and `temperature_t` exist in the namespace
-`isto::units` and wrap values with the given physical dimension.
+where ``pressure_t``, ``density_t`` and ``temperature_t`` exist in the namespace
+``isto::units`` and wrap values with the given physical dimension.
 
 In the *relaxed* flavor, the template functions arguments and return types can
 be anything for which the computation make sense (e.g. a `double`).
 A typical signature looks like
 
 .. code-block:: c++
-    template <class T> 
-    T
-pressure (T const& density, T const& temperature)
+        template <class T> 
+        T
+    pressure (T const& density, T const& temperature)
 
 
 Tests
