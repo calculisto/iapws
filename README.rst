@@ -40,24 +40,20 @@ library, then the flavor is *relaxed*.
 
 In the *constrained* flavor, the function templates arguments and return values 
 have a physical dimension, as provided by the ``isto::units`` library. A typical
-signature for a function template is
+signature for a function template is::
 
-.. code-block::
-    template <class T> 
-    pressure_t
-pressure (density_t <T> const& density, temperature_t <T> const& temperature)
+    template <class T> pressure_t
+    pressure (density_t <T> const& density, temperature_t <T> const& temperature)
 
 where ``pressure_t``, ``density_t`` and ``temperature_t`` exist in the namespace
 ``isto::units`` and wrap values with the given physical dimension.
 
 In the *relaxed* flavor, the template functions arguments and return types can
 be anything for which the computation make sense (e.g. a `double`).
-A typical signature looks like
+A typical signature looks like::
 
-.. code-block::
-    template <class T> 
-    T
-pressure (T const& density, T const& temperature)
+    template <class T> T
+    pressure (T const& density, T const& temperature)
 
 
 Tests
