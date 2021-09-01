@@ -1,6 +1,10 @@
 #pragma once
 #include "detail/common.hpp"
 
+// TODO template <class T, class U, class V = std::common_type_t <T, U>>
+// and long double coeffs
+// ?
+
     namespace 
 isto::iapws::r7
 {
@@ -39,54 +43,18 @@ critical_pressure = 22.064e6 ISTO_IAPWS_U_P;
 critical_density = 322.0 ISTO_IAPWS_U_D;
 
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_PRESSURE        pressure_t <T>
-#define ISTO_IAPWS_TEMPERATURE     temperature_t <T>
-#define ISTO_IAPWS_DENSITY         density_t <T>
-#define ISTO_IAPWS_MASSIC_ENTHALPY massic_enthalpy_t <T>
-#define ISTO_IAPWS_MASSIC_ENTROPY  massic_entropy_t <T>
+#define ISTO_IAPWS_P pressure_t <T>
+#define ISTO_IAPWS_T temperature_t <T>
+#define ISTO_IAPWS_D density_t <T>
+#define ISTO_IAPWS_H massic_enthalpy_t <T>
+#define ISTO_IAPWS_S massic_entropy_t <T>
 #else
-#define ISTO_IAPWS_PRESSURE        T
-#define ISTO_IAPWS_TEMPERATURE     T
-#define ISTO_IAPWS_DENSITY         T
-#define ISTO_IAPWS_MASSIC_ENTHALPY T
-#define ISTO_IAPWS_MASSIC_ENTROPY  T
+#define ISTO_IAPWS_P T
+#define ISTO_IAPWS_T T
+#define ISTO_IAPWS_D T
+#define ISTO_IAPWS_H T
+#define ISTO_IAPWS_S T
 #endif
-
-    namespace
-detail
-{
-
-// §4 Auxiliary Equation for the Boundary between Regions 2 and 3.
-    template <class T>  
-    constexpr auto
-b23 (ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        constexpr double
-    n1 =  0.34805185628969e3;
-        constexpr double 
-    n2 = -0.11671859879975e1;
-        constexpr double 
-    n3 =  0.10192970039326e-2;
-        auto const
-    t = temperature / (1 ISTO_IAPWS_U_T);
-    return (n1 + n2 * t + n3 * t * t) * (1e6 ISTO_IAPWS_U_P);
-}
-
-    template <class T>
-    /*constexpr*/ auto // Someday, std::sqrt might be constexpr.
-b23i (ISTO_IAPWS_PRESSURE const& pressure)
-{
-        using std::sqrt;
-        constexpr double 
-    n3 = 0.10192970039326e-2;
-        constexpr double 
-    n4 = 0.57254459862746e3;
-        constexpr double 
-    n5 = 0.13918839778870e2;
-        auto const
-    p = pressure / (1e6 ISTO_IAPWS_U_P);
-    return (n4 + sqrt ((p - n5) / n3)) * (1 ISTO_IAPWS_U_T);
-}
 
     namespace
 r4
@@ -110,15 +78,14 @@ n = array_t //{{{
 }; //}}}
 } // namespace detail
 } // namespace r4
-} // namespace detail
 
     template <class T>
     constexpr auto
-saturation_pressure (ISTO_IAPWS_TEMPERATURE const& temperature)
+saturation_pressure_t (ISTO_IAPWS_T const& temperature)
 {
         using std::pow;
         using std::sqrt;
-        using namespace detail::r4::detail;
+        using namespace r4::detail;
         auto const
     t = temperature / (1 ISTO_IAPWS_U_T);
         auto const
@@ -134,11 +101,11 @@ saturation_pressure (ISTO_IAPWS_TEMPERATURE const& temperature)
 
     template <class T>
     constexpr auto
-saturation_temperature (ISTO_IAPWS_PRESSURE const& pressure)
+saturation_temperature_p (ISTO_IAPWS_P const& pressure)
 {
         using std::pow;
         using std::sqrt;
-        using namespace detail::r4::detail;
+        using namespace r4::detail;
         auto const
     beta = pow (pressure / (1e6 ISTO_IAPWS_U_P), 0.25);
         auto const
@@ -151,18 +118,74 @@ saturation_temperature (ISTO_IAPWS_PRESSURE const& pressure)
     D = 2. * G / (-F - sqrt (F * F - 4. * E * G));
     return (n[9] + D - sqrt (pow (n[9] + D, 2) - 4. * (n[8] + n[9] * D))) / 2. ISTO_IAPWS_U_T;
 }
-
-    namespace
-detail
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    constexpr auto
+saturation_pressure (temperature_t <T> const& temperature)
 {
+    return saturation_pressure_t (temperature);
+}
+    template <class T>
+    constexpr auto
+saturation_temperature (pressure_t <T> const& pressure)
+{
+    return saturation_temperature_p (pressure);
+}
+#endif
+// §4 Auxiliary Equation for the Boundary between Regions 2 and 3.
+    template <class T>  
+    constexpr auto
+b23_t (ISTO_IAPWS_T const& temperature)
+{
+        constexpr double
+    n1 =  0.34805185628969e3;
+        constexpr double 
+    n2 = -0.11671859879975e1;
+        constexpr double 
+    n3 =  0.10192970039326e-2;
+        auto const
+    t = temperature / (1 ISTO_IAPWS_U_T);
+    return (n1 + n2 * t + n3 * t * t) * (1e6 ISTO_IAPWS_U_P);
+}
+
+    template <class T>
+    /*constexpr*/ auto // Someday, std::sqrt might be constexpr.
+b23_p (ISTO_IAPWS_P const& pressure)
+{
+        using std::sqrt;
+        constexpr double 
+    n3 = 0.10192970039326e-2;
+        constexpr double 
+    n4 = 0.57254459862746e3;
+        constexpr double 
+    n5 = 0.13918839778870e2;
+        auto const
+    p = pressure / (1e6 ISTO_IAPWS_U_P);
+    return (n4 + sqrt ((p - n5) / n3)) * (1 ISTO_IAPWS_U_T);
+}
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    constexpr auto
+b23 (temperature_t <T> const& temperature)
+{
+    return b23_t (temperature);
+}
+    template <class T>
+    constexpr auto
+b23 (pressure_t <T> const& pressure)
+{
+    return b23_p (pressure);
+}
+#endif
+
     template <class T>
     constexpr int
-region (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+region_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
     if (temperature <= (623.15 ISTO_IAPWS_U_T))
     {
             auto const
-        ps = saturation_pressure (temperature);
+        ps = saturation_pressure_t (temperature);
         if (pressure > ps) return 1;
         if (pressure < ps) return 2;
         return 4;
@@ -170,12 +193,20 @@ region (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& tempe
     if (temperature < 1073.15 ISTO_IAPWS_U_T)
     {
             auto const
-        p23 = detail::b23 (temperature);
+        p23 = b23_t (temperature);
         if (pressure < p23) return 2;
         return 3;
     }
     return 5;
 }
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    constexpr int
+region (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return region_pt (pressure, temperature);
+}
+#endif
 // §5  Equations for Region 1.
     namespace
 r1 
@@ -257,7 +288,6 @@ J //{{{
     , -40.0  // 33
     , -41.0  // 34
 }; //}}}
-
 
     constexpr array_t <double, 34>
 n //{{{
@@ -370,7 +400,7 @@ gamma_pt (T const& pi, T const& tau)
 
     template <class T>
     auto
-massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_volume_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -380,7 +410,7 @@ massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const
 }
     template <class T>
     auto
-massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_enthalpy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -390,7 +420,7 @@ massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE con
 }
     template <class T>
     auto
-massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_internal_energy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -400,7 +430,7 @@ massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERAT
 }
     template <class T>
     auto
-massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_entropy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -410,7 +440,7 @@ massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
 }
     template <class T>
     auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -420,7 +450,7 @@ massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_T
 }
     template <class T>
     auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
@@ -430,7 +460,7 @@ massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_
 }
     template <class T>
     auto
-speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+speed_of_sound_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         using std::pow;
         using std::sqrt;
@@ -450,88 +480,7 @@ speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
 }
     template <class T>
     auto
-pressure (ISTO_IAPWS_MASSIC_ENTHALPY const& massic_enthalpy, ISTO_IAPWS_MASSIC_ENTROPY const& massic_entropy)
-{
-        constexpr auto
-    I = array_t <double, 19>
-    {
-          0.
-        , 0.
-        , 0.
-        , 0.
-        , 0.
-        , 0.
-        , 0.
-        , 0.
-        , 1.
-        , 1.
-        , 1.
-        , 1.
-        , 2.
-        , 2.
-        , 2.
-        , 3.
-        , 4.
-        , 4.
-        , 5.
-    };
-        constexpr auto
-    J = array_t <double, 19>
-    {
-           0.
-        ,  1.
-        ,  2.
-        ,  4.
-        ,  5.
-        ,  6.
-        ,  8.
-        , 14.
-        ,  0.
-        ,  1.
-        ,  4.
-        ,  6.
-        ,  0.
-        ,  1.
-        , 10.
-        ,  4.
-        ,  1.
-        ,  4.
-        ,  0.
-    };
-        constexpr auto
-    n = array_t <double, 19>
-    {
-          -0.691997014660582  
-        , -0.183612548787560e2
-        , -0.928332409297335e1
-        ,  0.659639569909906e2
-        , -0.162060388912024e2
-        ,  0.450620017338667e3
-        ,  0.854680678224170e3
-        ,  0.607523214001162e4
-        ,  0.326487682621856e2
-        , -0.269408844582931e2
-        , -0.319947848334300e3
-        , -0.928354307043320e3
-        ,  0.303634537455249e2
-        , -0.650540422444146e2
-        , -0.430991316516130e4
-        , -0.747512324096068e3
-        ,  0.730000345529245e3
-        ,  0.114284032569021e4
-        , -0.436407041874559e3
-    };
-        using std::pow;
-        auto const
-    eta = massic_enthalpy / (3400e3 ISTO_IAPWS_U_H);
-        auto const
-    sigma = massic_entropy / (7.6e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (eta + 0.05, I) * pow (sigma + 0.05, J)) * (100. ISTO_IAPWS_U_P);
-}
-} // namespace r1
-// Region 1, backward equations
-    namespace
-r1b1
+temperature_ph (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& enthalpy)
 {
     constexpr auto
 I = array_t //{{{
@@ -605,20 +554,15 @@ n = array_t  //{{{
     ,  0.58265442020601e-14 // 19
     , -0.15020185953503e-16 // 20
 }; //}}}
-// Backward equations
-    template <class T>
-    auto
-temperature (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTHALPY const& enthalpy)
-{
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     eta = enthalpy / (2500e3 ISTO_IAPWS_U_H);
     return sum (n * pow (pi, I) * pow (eta + 1., J)) * (1 ISTO_IAPWS_U_T);
 }
-} // namespace r1b1
-    namespace
-r1b2
+    template <class T>
+    auto
+temperature_ps (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& entropy)
 {
     constexpr auto
 I = array_t //{{{
@@ -692,17 +636,167 @@ n = array_t //{{{
     ,  0.78124600459723e-28  // 19
     , -0.30732199903668e-30  // 20
 }; //}}}
-    template <class T>
-    auto
-temperature (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTROPY const& entropy)
-{
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     sigma = entropy / (1e3 ISTO_IAPWS_U_S);
     return sum (n * pow (pi, I) * pow (sigma + 2., J)) * (1 ISTO_IAPWS_U_T);
 }
-} // namespace r1b2
+    template <class T>
+    auto
+pressure_hs (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+        constexpr auto
+    I = array_t <double, 19> //{{{
+    {
+          0.
+        , 0.
+        , 0.
+        , 0.
+        , 0.
+        , 0.
+        , 0.
+        , 0.
+        , 1.
+        , 1.
+        , 1.
+        , 1.
+        , 2.
+        , 2.
+        , 2.
+        , 3.
+        , 4.
+        , 4.
+        , 5.
+    }; //}}}
+        constexpr auto
+    J = array_t <double, 19> //{{{
+    {
+           0.
+        ,  1.
+        ,  2.
+        ,  4.
+        ,  5.
+        ,  6.
+        ,  8.
+        , 14.
+        ,  0.
+        ,  1.
+        ,  4.
+        ,  6.
+        ,  0.
+        ,  1.
+        , 10.
+        ,  4.
+        ,  1.
+        ,  4.
+        ,  0.
+    }; //}}}
+        constexpr auto
+    n = array_t <double, 19> //{{{
+    {
+          -0.691997014660582  
+        , -0.183612548787560e2
+        , -0.928332409297335e1
+        ,  0.659639569909906e2
+        , -0.162060388912024e2
+        ,  0.450620017338667e3
+        ,  0.854680678224170e3
+        ,  0.607523214001162e4
+        ,  0.326487682621856e2
+        , -0.269408844582931e2
+        , -0.319947848334300e3
+        , -0.928354307043320e3
+        ,  0.303634537455249e2
+        , -0.650540422444146e2
+        , -0.430991316516130e4
+        , -0.747512324096068e3
+        ,  0.730000345529245e3
+        ,  0.114284032569021e4
+        , -0.436407041874559e3
+    }; //}}}
+        using std::pow;
+        auto const
+    eta = massic_enthalpy / (3400e3 ISTO_IAPWS_U_H);
+        auto const
+    sigma = massic_entropy / (7.6e3 ISTO_IAPWS_U_S);
+    return sum (n * pow (eta + 0.05, I) * pow (sigma + 0.05, J)) * (100. ISTO_IAPWS_U_P);
+}
+    template <class T>
+    constexpr auto
+temperature_hs (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    return temperature_ph (pressure_hs (massic_enthalpy, massic_entropy), massic_enthalpy);
+}
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    auto
+massic_volume (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_volume_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_enthalpy (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_enthalpy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_internal_energy (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_entropy (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_entropy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_isobaric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return massic_isochoric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+speed_of_sound (pressure_t <T> const& pressure, temperature_t <T> const& temperature)
+{
+    return speed_of_sound_pt (pressure, temperature);
+}
+    template <class T>
+    constexpr auto
+temperature (pressure_t <T> const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
+{
+    return temperature_ph (pressure, massic_enthalpy);
+}
+    template <class T>
+    constexpr auto
+temperature (pressure_t <T> const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+    return temperature_ps (pressure, massic_entropy);
+}
+    template <class T>
+    auto
+pressure (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    return pressure_hs (massic_enthalpy, massic_entropy);
+}
+    template <class T>
+    constexpr auto
+temperature (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    return temperature_hs (massic_enthalpy, massic_entropy);
+}
+#endif
+} // namespace r1
 // §5  Equations for Region 2.
     namespace
 r2
@@ -1043,7 +1137,7 @@ gamma_pt (T const& pi, T const& tau)
 // }}}
     template <class T>
     auto
-massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_volume_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1053,7 +1147,7 @@ massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const
 }
     template <class T>
     auto
-massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_enthalpy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1063,7 +1157,7 @@ massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE con
 }
     template <class T>
     auto
-massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_internal_energy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1073,7 +1167,7 @@ massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERAT
 }
     template <class T>
     auto
-massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_entropy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1083,7 +1177,7 @@ massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
 }
     template <class T>
     auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1093,7 +1187,7 @@ massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_T
 }
     template <class T>
     auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -1103,7 +1197,7 @@ massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_
 }
     template <class T>
     auto
-speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+speed_of_sound_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         using std::pow;
         using std::sqrt;
@@ -1121,362 +1215,41 @@ speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
         * massic_gas_constant * temperature
     );
 }
-} // namespace r2
-
-    namespace
-r2_metastable_vapor
-{
-    constexpr array_t <double, 9>
-n_0 //{{{
-{
-      -0.96937268393049e1   // 1
-    ,  0.10087275970006e2   // 2
-    , -0.56087911283020e-2  // 3
-    ,  0.71452738081455e-1  // 4
-    , -0.40710498223928     // 5
-    ,  0.14240819171444e1   // 6
-    , -0.43839511319450e1   // 7
-    , -0.28408632460772     // 8
-    ,  0.21268463753307e-1  // 9
-}; //}}}
-    constexpr array_t <double, 13>
-I_r //{{{
-{
-      1.
-    , 1.
-    , 1.
-    , 1.
-    , 2.
-    , 2.
-    , 2.
-    , 3.
-    , 3.
-    , 4.
-    , 4.
-    , 5.
-    , 5.
-}; //}}}
-    constexpr array_t <double, 13>
-J_r //{{{
-{
-       0.
-    ,  2.
-    ,  5.
-    , 11.
-    ,  1.
-    ,  7.
-    , 16.
-    ,  4.
-    , 16.
-    ,  7.
-    , 10.
-    ,  9.
-    , 10.
-}; //}}}
-    constexpr array_t <double, 13>
-n_r //{{{
-{
-      -0.73362260186506e-2 
-    , -0.88223831943146e-1 
-    , -0.72334555213245e-1 
-    , -0.40813178534455e-2 
-    ,  0.20097803380207e-2 
-    , -0.53045921898642e-1 
-    , -0.76190409086970e-2 
-    , -0.63498037657313e-2 
-    , -0.86043093028588e-1 
-    ,  0.75321581522770e-2 
-    , -0.79238375446139e-2 
-    , -0.22888160778447e-3
-    , -0.26456501482810e-2 
-}; //}}}
-// low-level dimensionless {{{
-
-    using r2::J_0;
-    template <class T>
-    T
-gamma_0 (const T& pi, const T& tau)
-{
-        using std::pow;
-        using std::log;
-    return log (pi) + sum (
-          n_0
-        * pow (tau, J_0)
-    );
-}
-    template <class T>
-    T
-gamma_0_p (T const& pi, T const& /*tau*/)
-{
-    return static_cast <T> (1) / pi;
-}
-    template <class T>
-    T
-gamma_0_pp (T const& pi, T const& /*tau*/)
-{
-    return - static_cast <T> (1) / pi / pi;
-}
-    template <class T>
-    T
-gamma_0_t (T const& /*pi*/, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_0 
-        * J_0 
-        * pow (tau, J_0 - 1.)
-    );
-}
-    template <class T>
-    T
-gamma_0_tt (T const& /*pi*/, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_0 
-        * J_0 
-        * (J_0 - 1.)
-        * pow (tau, J_0 - 2.)
-    );
-}
-    template <class T>
-    T
-gamma_0_pt (T const& pi, T const& tau)
-{
-    return static_cast <T> (0);
-}
-    template <class T>
-    T
-gamma_r (const T& pi, const T& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * pow (pi, I_r)
-        * pow (tau - 0.5, J_r)
-    );
-}
-    template <class T>
-    T
-gamma_r_p (T const& pi, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * I_r 
-        * pow (pi, I_r - 1)
-        * pow (tau - 0.5, J_r)
-    );
-}
-    template <class T>
-    T
-gamma_r_pp (T const& pi, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * I_r 
-        * (I_r - 1.) 
-        * pow (pi, I_r - 2)
-        * pow (tau - 0.5, J_r)
-    );
-}
-    template <class T>
-    T
-gamma_r_t (T const& pi, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * pow (pi, I_r)
-        * J_r 
-        * pow (tau - 0.5, J_r - 1.)
-    );
-}
-    template <class T>
-    T
-gamma_r_tt (T const& pi, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * pow (pi, I_r)
-        * J_r 
-        * (J_r - 1.) 
-        * pow (tau - 0.5, J_r - 2.)
-    );
-}
-    template <class T>
-    T
-gamma_r_pt (T const& pi, T const& tau)
-{
-        using std::pow;
-    return sum (
-          n_r
-        * I_r
-        * pow (pi, I_r - 1.)
-        * J_r 
-        * pow (tau - 0.5, J_r - 1.)
-    );
-}
-
-    template <class T>
-    T
-gamma (const T& pi, const T& tau)
-{
-    return gamma_0 (pi, tau) + gamma_r (pi, tau);
-}
-    template <class T>
-    T
-gamma_p (T const& pi, T const& tau)
-{
-    return gamma_0_p (pi, tau) + gamma_r_p (pi, tau);
-}
-    template <class T>
-    T
-gamma_t (T const& pi, T const& tau)
-{
-    return gamma_0_t (pi, tau) + gamma_r_t (pi, tau);
-}
-    template <class T>
-    T
-gamma_pp (T const& pi, T const& tau)
-{
-    return gamma_0_pp (pi, tau) + gamma_r_pp (pi, tau);
-}
-    template <class T>
-    T
-gamma_tt (T const& pi, T const& tau)
-{
-    return gamma_0_tt (pi, tau) + gamma_r_tt (pi, tau);
-}
-    template <class T>
-    T
-gamma_pt (T const& pi, T const& tau)
-{
-    return gamma_0_pt (pi, tau) + gamma_r_pt (pi, tau);
-}
-// }}}
-    template <class T>
-    auto
-massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
-}
-    template <class T>
-    auto
-massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
-}
-    template <class T>
-    auto
-massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
-}
-    template <class T>
-    auto
-massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
-}
-    template <class T>
-    auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
-}
-    template <class T>
-    auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
-}
-    template <class T>
-    auto
-speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
-{
-        using std::pow;
-        using std::sqrt;
-        auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return sqrt (
-          pow (1. + pi * gamma_r_p (pi, tau), 2)
-        / (
-              (1. - pi * pi * gamma_r_pp (pi, tau))
-            + pow (1. + pi * gamma_r_p (pi, tau) - tau * pi * gamma_r_pt (pi, tau), 2) 
-            / (tau * tau * gamma_tt (pi, tau))
-          )
-        * massic_gas_constant * temperature
-    );
-}
-} // namespace r2_metastable_vapor
-
-    namespace 
-r2b
-{
     template <class T>
     constexpr auto
-B2bc_h (ISTO_IAPWS_MASSIC_ENTHALPY const& massic_enthalpy)
+b2bc_h (ISTO_IAPWS_H const& massic_enthalpy)
 {
-        auto
+        auto const
     eta = massic_enthalpy / (1e3 ISTO_IAPWS_U_H);
     return (0.90584278514723e3 - 0.67955786399241 * eta + 0.12809002730136e-3 * eta * eta) * (1e6 ISTO_IAPWS_U_P);
 }
     template <class T>
     constexpr auto
-B2bc_p (ISTO_IAPWS_PRESSURE const& pressure)
+b2bc_p (ISTO_IAPWS_P const& pressure)
 {
         using std::sqrt;
-        auto
+        auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
     return (0.26526571908428e4 + sqrt ((pi - 0.45257578905948e1 ) / 0.12809002730136e-3)) * (1e3 ISTO_IAPWS_U_H);
 }
     template <class T>
     constexpr auto
-region_h (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTHALPY const& massic_enthalpy)
+region_ph (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
 {
     if (pressure < 4. * (1e6 ISTO_IAPWS_U_P)) return 1;
-    if (pressure < B2bc_h (massic_enthalpy)) return 2;
+    if (pressure < b2bc_h (massic_enthalpy)) return 2;
     return 3;
 }
     template <class T>
     constexpr auto
-region_s (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTROPY const& massic_entropy)
+region_ps (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
 {
     if (pressure < 4. * (1e6 ISTO_IAPWS_U_P)) return 1;
     if (massic_entropy >= 5.85 * (1e3 ISTO_IAPWS_U_S)) return 2;
     return 3;
 }
     namespace
-h
+t_ph
 {
     namespace
 a
@@ -1813,7 +1586,7 @@ n = array_t //{{{
 } // namespace cc
 } // namespace h
     namespace
-s
+t_ps
 {
     namespace
 a
@@ -2227,14 +2000,14 @@ n = array_t //{{{
 
     template <class T>
     constexpr auto
-temperature_h (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTHALPY const& massic_enthalpy)
+temperature_ph (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     eta = massic_enthalpy / (2000e3 ISTO_IAPWS_U_H);
-        using namespace h;
-    switch (region_h (pressure, massic_enthalpy))
+        using namespace t_ph;
+    switch (region_ph (pressure, massic_enthalpy))
     {
         case 1: return sum (a::n * pow (pi,       a::I) * pow (eta - 2.1, a::J)) ISTO_IAPWS_U_T;
         case 2: return sum (b::n * pow (pi - 2.,  b::I) * pow (eta - 2.6, b::J)) ISTO_IAPWS_U_T;
@@ -2244,12 +2017,12 @@ temperature_h (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTHALPY c
 }
     template <class T>
     constexpr auto
-temperature_s (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTROPY const& massic_entropy)
+temperature_ps (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
-        using namespace s;
-    switch (region_s (pressure, massic_entropy))
+        using namespace t_ps;
+    switch (region_ps (pressure, massic_entropy))
     {
         case 1: 
         {
@@ -2272,21 +2045,835 @@ temperature_s (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTROPY co
     }
     throw internal_error_e {};
 }
+    template <class T>
+    constexpr auto
+b2ab_s (ISTO_IAPWS_S const& massic_entropy)
+{
+        auto const
+    sigma = massic_entropy / (1e3 ISTO_IAPWS_U_S);
+    return (
+          -0.349898083432139e4
+        +  0.257560716905876e4 * sigma
+        + -0.421073558227969e3 * sigma * sigma
+        +  0.276349063799944e2 * sigma * sigma * sigma
+    ) * (1e3 ISTO_IAPWS_U_H);
+}
+    template <class T>
+    constexpr auto
+region_hs (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    if (massic_enthalpy < b2ab_s (massic_entropy)) return 1;
+    if (massic_entropy >= 5.85 * (1e3 ISTO_IAPWS_U_S)) return 2;
+    return 3;
+}
+
+    namespace
+p_hs
+{
+    namespace 
+a
+{
+    constexpr auto
+I = array_t ///{{{
+{
+      0.
+    , 0.
+    , 0.
+    , 0.
+    , 0.
+    , 0.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 1.
+    , 2.
+    , 2.
+    , 2.
+    , 3.
+    , 3.
+    , 3.
+    , 3.
+    , 3.
+    , 4.
+    , 5.
+    , 5.
+    , 6.
+    , 7.
+}; //}}}
+
+    constexpr auto
+J = array_t ///{{{
+{
+       1.
+    ,  3.
+    ,  6.
+    , 16.
+    , 20.
+    , 22.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  5.
+    ,  6.
+    , 10.
+    , 16.
+    , 20.
+    , 22.
+    ,  3.
+    , 16.
+    , 20.
+    ,  0.
+    ,  2.
+    ,  3.
+    ,  6.
+    , 16.
+    , 16.
+    ,  3.
+    , 16.
+    ,  3.
+    ,  1.
+}; //}}}
+
+    constexpr auto
+n = array_t ///{{{
+{
+      -0.182575361923032e-1
+    , -0.125229548799536   
+    ,  0.592290437320145   
+    ,  0.604769706185122e1 
+    ,  0.238624965444474e3 
+    , -0.298639090222922e3 
+    ,  0.512250813040750e-1
+    , -0.437266515606486   
+    ,  0.413336902999504   
+    , -0.516468254574773e1 
+    , -0.557014838445711e1 
+    ,  0.128555037824478e2 
+    ,  0.114144108953290e2 
+    , -0.119504225652714e3 
+    , -0.284777985961560e4 
+    ,  0.431757846408006e4  
+    ,  0.112894040802650e1 
+    ,  0.197409186206319e4
+    ,  0.151612444706087e4
+    ,  0.141324451421235e-1
+    ,  0.585501282219601  
+    , -0.297258075863012e1 
+    ,  0.594567314847319e1 
+    , -0.623656565798905e4  
+    ,  0.965986235133332e4  
+    ,  0.681500934948134e1
+    , -0.633207286824489e4  
+    , -0.558919224465760e1 
+    ,  0.400645798472063e-1 
+}; //}}}
+} // namespace a
+    namespace
+b 
+{
+    constexpr auto
+I = array_t ///{{{
+{
+       0.
+    ,  0.
+    ,  0.
+    ,  0.
+    ,  0.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  2.
+    ,  2.
+    ,  2.
+    ,  3.
+    ,  3.
+    ,  3.
+    ,  3.
+    ,  4.
+    ,  4.
+    ,  5.
+    ,  5.
+    ,  6.
+    ,  6.
+    ,  6.
+    ,  7.
+    ,  7.
+    ,  8.
+    ,  8.
+    ,  8.
+    ,  8.
+    , 12.
+    , 14.
+}; //}}}
+
+    constexpr auto
+J = array_t ///{{{
+{
+       0.
+    ,  1.
+    ,  2.
+    ,  4.
+    ,  8.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  5.
+    , 12.
+    ,  1.
+    ,  6.
+    , 18.
+    ,  0.
+    ,  1.
+    ,  7.
+    , 12.
+    ,  1.
+    , 16.
+    ,  1.
+    , 12.
+    ,  1.
+    ,  8.
+    , 18.
+    ,  1.
+    , 16.
+    ,  1.
+    ,  3.
+    , 14.
+    , 18.
+    , 10.
+    , 16.
+}; //}}}
+
+    constexpr auto
+n = array_t ///{{{
+{
+       0.801496989929495e-1
+    , -0.543862807146111   
+    ,  0.337455597421283   
+    ,  0.890555451157450e1 
+    ,  0.313840736431485e3 
+    ,  0.797367065977789   
+    , -0.121616973556240e1 
+    ,  0.872803386937477e1 
+    , -0.169769781757602e2 
+    , -0.186552827328416e3 
+    ,  0.951159274344237e5 
+    , -0.189168510120494e2 
+    , -0.433407037194840e4 
+    ,  0.543212633012715e9 
+    ,  0.144793408386013   
+    ,  0.128024559637516e3 
+    , -0.672309534071268e5  
+    ,  0.336972380095287e8
+    , -0.586634196762720e3 
+    , -0.221403224769889e11 
+    ,  0.171606668708389e4
+    , -0.570817595806302e9  
+    , -0.312109693178482e4  
+    , -0.207841384633010e7  
+    ,  0.305605946157786e13
+    ,  0.322157004314333e4  
+    ,  0.326810259797295e12  
+    , -0.144104158934487e4  
+    ,  0.410694867802691e3 
+    ,  0.109077066873024e12  
+    , -0.247964654258893e14  
+    ,  0.188801906865134e10
+    , -0.123651009018773e15  
+}; //}}}
+} // namespace b
+    namespace
+c
+{
+    constexpr auto
+I = array_t ///{{{
+{
+       0.
+    ,  0.
+    ,  0.
+    ,  0.
+    ,  0.
+    ,  0.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  2.
+    ,  2.
+    ,  2.
+    ,  2.
+    ,  2.
+    ,  3.
+    ,  3.
+    ,  3.
+    ,  3.
+    ,  3.
+    ,  4.
+    ,  5.
+    ,  5.
+    ,  5.
+    ,  5.
+    ,  6.
+    ,  6.
+    , 10.
+    , 12.
+    , 16.
+}; //}}}
+
+    constexpr auto
+J = array_t ///{{{
+{
+       0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  4.
+    ,  8.
+    ,  0.
+    ,  2.
+    ,  5.
+    ,  8.
+    , 14.
+    ,  2.
+    ,  3.
+    ,  7.
+    , 10.
+    , 18.
+    ,  0.
+    ,  5.
+    ,  8.
+    , 16.
+    , 18.
+    , 18.
+    ,  1.
+    ,  4.
+    ,  6.
+    , 14.
+    ,  8.
+    , 18.
+    ,  7.
+    ,  7.
+    , 10.
+}; //}}}
+
+    constexpr auto
+n = array_t ///{{{
+{
+       0.112225607199012  
+    , -0.339005953606712e1
+    , -0.320503911730094e2
+    , -0.197597305104900e3
+    , -0.407693861553446e3
+    ,  0.132943775222331e5
+    ,  0.170846839774007e1
+    ,  0.373694198142245e2
+    ,  0.358144365815434e4
+    ,  0.423014446424664e6
+    , -0.751071025760063e9
+    ,  0.523446127607898e2
+    , -0.228351290812417e3
+    , -0.960652417056937e6
+    , -0.807059292526074e8
+    ,  0.162698017225669e13
+    ,  0.772465073604171  
+    ,  0.463929973837746e5  
+    , -0.137317885134128e8 
+    ,  0.170470392630512e13  
+    , -0.251104628187308e14  
+    ,  0.317748830835520e14
+    ,  0.538685623675312e2
+    , -0.553089094625169e5  
+    , -0.102861522421405e7  
+    ,  0.204249418756234e13
+    ,  0.273918446626977e9  
+    , -0.263963146312685e16  
+    , -0.107890854108088e10  
+    , -0.296492620980124e11 
+    , -0.111754907323424e16
+}; //}}}
+} // namespace c
+} // namespace p_hs
+    template <class T>
+    constexpr auto
+pressure_hs (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+        using namespace p_hs;
+    switch (region_hs (massic_enthalpy, massic_entropy))
+    {
+        case 1: 
+        {
+                auto const
+            eta = massic_enthalpy / (4200e3 ISTO_IAPWS_U_H);
+                auto const
+            sigma = massic_entropy / (12e3 ISTO_IAPWS_U_S);
+            return pow (sum (a::n * pow (eta - 0.5, a::I) * pow (sigma - 1.2, a::J)), 4) * (4e6 ISTO_IAPWS_U_P);
+        }
+        case 2: 
+        {
+                auto const
+            eta = massic_enthalpy / (4100e3 ISTO_IAPWS_U_H);
+                auto const
+            sigma = massic_entropy / (7.9e3 ISTO_IAPWS_U_S);
+            return pow (sum (b::n * pow (eta - 0.6, b::I) * pow (sigma - 1.01, b::J)), 4) * (100e6 ISTO_IAPWS_U_P);
+        }
+        case 3: 
+        {
+                auto const
+            eta = massic_enthalpy / (3500e3 ISTO_IAPWS_U_H);
+                auto const
+            sigma = massic_entropy / (5.9e3 ISTO_IAPWS_U_S);
+            return pow (sum (c::n * pow (eta - 0.7, c::I) * pow (sigma - 1.1, c::J)), 4) * (100e6 ISTO_IAPWS_U_P);
+        }
+    }
+    throw internal_error_e {};
+}
+    template <class T>
+    constexpr auto
+temperature_hs (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    temperature_ph (pressure_hs (massic_enthalpy, massic_entropy), massic_enthalpy);
+}
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
     template <class T>
-    constexpr auto
-temperature (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTHALPY const& massic_enthalpy)
+    auto
+massic_volume (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
-    return temperature_h (pressure, massic_enthalpy);
+    return massic_volume_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_enthalpy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_enthalpy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_internal_energy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_entropy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_entropy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isobaric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isochoric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+speed_of_sound (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return speed_of_sound_pt (pressure, temperature);
 }
     template <class T>
     constexpr auto
-temperature (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_MASSIC_ENTROPY const& massic_entropy)
+temperature (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
 {
-    return temperature_s (pressure, massic_entropy);
+    return temperature_ph (pressure, massic_enthalpy);
+}
+    template <class T>
+    constexpr auto
+temperature (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+    return temperature_ps (pressure, massic_entropy);
+}
+    template <class T>
+    constexpr auto
+pressure (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    return pressure_hs (massic_enthalpy, massic_entropy);
+}
+    template <class T>
+    constexpr auto
+temperature (ISTO_IAPWS_H const& massic_enthalpy, ISTO_IAPWS_S const& massic_entropy)
+{
+    temperature_hs (massic_enthalpy, massic_entropy);
 }
 #endif
-} //namespace r2b
+} //namespace r2
+
+    namespace
+r2_metastable_vapor
+{
+    constexpr array_t <double, 9>
+n_0 //{{{
+{
+      -0.96937268393049e1   // 1
+    ,  0.10087275970006e2   // 2
+    , -0.56087911283020e-2  // 3
+    ,  0.71452738081455e-1  // 4
+    , -0.40710498223928     // 5
+    ,  0.14240819171444e1   // 6
+    , -0.43839511319450e1   // 7
+    , -0.28408632460772     // 8
+    ,  0.21268463753307e-1  // 9
+}; //}}}
+    constexpr array_t <double, 13>
+I_r //{{{
+{
+      1.
+    , 1.
+    , 1.
+    , 1.
+    , 2.
+    , 2.
+    , 2.
+    , 3.
+    , 3.
+    , 4.
+    , 4.
+    , 5.
+    , 5.
+}; //}}}
+    constexpr array_t <double, 13>
+J_r //{{{
+{
+       0.
+    ,  2.
+    ,  5.
+    , 11.
+    ,  1.
+    ,  7.
+    , 16.
+    ,  4.
+    , 16.
+    ,  7.
+    , 10.
+    ,  9.
+    , 10.
+}; //}}}
+    constexpr array_t <double, 13>
+n_r //{{{
+{
+      -0.73362260186506e-2 
+    , -0.88223831943146e-1 
+    , -0.72334555213245e-1 
+    , -0.40813178534455e-2 
+    ,  0.20097803380207e-2 
+    , -0.53045921898642e-1 
+    , -0.76190409086970e-2 
+    , -0.63498037657313e-2 
+    , -0.86043093028588e-1 
+    ,  0.75321581522770e-2 
+    , -0.79238375446139e-2 
+    , -0.22888160778447e-3
+    , -0.26456501482810e-2 
+}; //}}}
+// low-level dimensionless {{{
+
+    using r2::J_0;
+    template <class T>
+    T
+gamma_0 (const T& pi, const T& tau)
+{
+        using std::pow;
+        using std::log;
+    return log (pi) + sum (
+          n_0
+        * pow (tau, J_0)
+    );
+}
+    template <class T>
+    T
+gamma_0_p (T const& pi, T const& /*tau*/)
+{
+    return static_cast <T> (1) / pi;
+}
+    template <class T>
+    T
+gamma_0_pp (T const& pi, T const& /*tau*/)
+{
+    return - static_cast <T> (1) / pi / pi;
+}
+    template <class T>
+    T
+gamma_0_t (T const& /*pi*/, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_0 
+        * J_0 
+        * pow (tau, J_0 - 1.)
+    );
+}
+    template <class T>
+    T
+gamma_0_tt (T const& /*pi*/, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_0 
+        * J_0 
+        * (J_0 - 1.)
+        * pow (tau, J_0 - 2.)
+    );
+}
+    template <class T>
+    T
+gamma_0_pt (T const& pi, T const& tau)
+{
+    return static_cast <T> (0);
+}
+    template <class T>
+    T
+gamma_r (const T& pi, const T& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * pow (pi, I_r)
+        * pow (tau - 0.5, J_r)
+    );
+}
+    template <class T>
+    T
+gamma_r_p (T const& pi, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * I_r 
+        * pow (pi, I_r - 1)
+        * pow (tau - 0.5, J_r)
+    );
+}
+    template <class T>
+    T
+gamma_r_pp (T const& pi, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * I_r 
+        * (I_r - 1.) 
+        * pow (pi, I_r - 2)
+        * pow (tau - 0.5, J_r)
+    );
+}
+    template <class T>
+    T
+gamma_r_t (T const& pi, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * pow (pi, I_r)
+        * J_r 
+        * pow (tau - 0.5, J_r - 1.)
+    );
+}
+    template <class T>
+    T
+gamma_r_tt (T const& pi, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * pow (pi, I_r)
+        * J_r 
+        * (J_r - 1.) 
+        * pow (tau - 0.5, J_r - 2.)
+    );
+}
+    template <class T>
+    T
+gamma_r_pt (T const& pi, T const& tau)
+{
+        using std::pow;
+    return sum (
+          n_r
+        * I_r
+        * pow (pi, I_r - 1.)
+        * J_r 
+        * pow (tau - 0.5, J_r - 1.)
+    );
+}
+
+    template <class T>
+    T
+gamma (const T& pi, const T& tau)
+{
+    return gamma_0 (pi, tau) + gamma_r (pi, tau);
+}
+    template <class T>
+    T
+gamma_p (T const& pi, T const& tau)
+{
+    return gamma_0_p (pi, tau) + gamma_r_p (pi, tau);
+}
+    template <class T>
+    T
+gamma_t (T const& pi, T const& tau)
+{
+    return gamma_0_t (pi, tau) + gamma_r_t (pi, tau);
+}
+    template <class T>
+    T
+gamma_pp (T const& pi, T const& tau)
+{
+    return gamma_0_pp (pi, tau) + gamma_r_pp (pi, tau);
+}
+    template <class T>
+    T
+gamma_tt (T const& pi, T const& tau)
+{
+    return gamma_0_tt (pi, tau) + gamma_r_tt (pi, tau);
+}
+    template <class T>
+    T
+gamma_pt (T const& pi, T const& tau)
+{
+    return gamma_0_pt (pi, tau) + gamma_r_pt (pi, tau);
+}
+// }}}
+    template <class T>
+    auto
+massic_volume_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
+}
+    template <class T>
+    auto
+massic_enthalpy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
+}
+    template <class T>
+    auto
+massic_internal_energy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
+}
+    template <class T>
+    auto
+massic_entropy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+}
+    template <class T>
+    auto
+speed_of_sound_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+        using std::pow;
+        using std::sqrt;
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    return sqrt (
+          pow (1. + pi * gamma_r_p (pi, tau), 2)
+        / (
+              (1. - pi * pi * gamma_r_pp (pi, tau))
+            + pow (1. + pi * gamma_r_p (pi, tau) - tau * pi * gamma_r_pt (pi, tau), 2) 
+            / (tau * tau * gamma_tt (pi, tau))
+          )
+        * massic_gas_constant * temperature
+    );
+}
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    auto
+massic_volume (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_volume_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_enthalpy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_enthalpy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_internal_energy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_entropy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_entropy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isobaric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isochoric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+speed_of_sound (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return speed_of_sound_pt (pressure, temperature);
+}
+#endif
+} // namespace r2_metastable_vapor
+
 
 // §5  Equations for Region 3.
     namespace
@@ -2522,7 +3109,7 @@ phi_dt (T const& delta, T const& tau)
 // }}}
     template <class T>
     auto
-pressure (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+pressure_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2532,7 +3119,7 @@ pressure (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& tempe
 }
     template <class T>
     auto
-massic_internal_energy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_internal_energy_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2542,7 +3129,7 @@ massic_internal_energy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATUR
 }
     template <class T>
     auto
-massic_entropy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_entropy_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2552,7 +3139,7 @@ massic_entropy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const&
 }
     template <class T>
     auto
-massic_enthalpy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_enthalpy_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2562,7 +3149,7 @@ massic_enthalpy (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const
 }
     template <class T>
     auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isochoric_heat_capacity_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2572,7 +3159,7 @@ massic_isochoric_heat_capacity (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TE
 }
     template <class T>
     auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isobaric_heat_capacity_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2582,7 +3169,7 @@ massic_isobaric_heat_capacity (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEM
 }
     template <class T>
     auto
-speed_of_sound (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const& temperature)
+speed_of_sound_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -2595,7 +3182,50 @@ speed_of_sound (ISTO_IAPWS_DENSITY const& density, ISTO_IAPWS_TEMPERATURE const&
         / (tau * tau * phi_tt (delta, tau))
     ) * massic_gas_constant * temperature);
 }
-
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    auto
+pressure (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return pressure_dt (density, temperature);
+}
+    template <class T>
+    auto
+massic_internal_energy (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return massic_internal_energy_dt (density, temperature);
+}
+    template <class T>
+    auto
+massic_entropy (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return massic_entropy_dt (density, temperature);
+}
+    template <class T>
+    auto
+massic_enthalpy (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return massic_enthalpy_dt (density, temperature);
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isobaric_heat_capacity_dt (density, temperature);
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isobaric_heat_capacity_dt (density, temperature);
+}
+    template <class T>
+    auto
+speed_of_sound (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
+{
+    return speed_of_sound_dt (density, temperature);
+}
+#endif
 } // namespace r3
     namespace
 r5
@@ -2771,7 +3401,7 @@ gamma_pt (T const& pi, T const& tau)
 
     template <class T>
     auto
-massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_volume_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2781,7 +3411,7 @@ massic_volume (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const
 }
     template <class T>
     auto
-massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_enthalpy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2791,7 +3421,7 @@ massic_enthalpy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE con
 }
     template <class T>
     auto
-massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_internal_energy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2801,7 +3431,7 @@ massic_internal_energy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERAT
 }
     template <class T>
     auto
-massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_entropy_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2811,7 +3441,7 @@ massic_entropy (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
 }
     template <class T>
     auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2821,7 +3451,7 @@ massic_isobaric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_T
 }
     template <class T>
     auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         auto const
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
@@ -2831,7 +3461,7 @@ massic_isochoric_heat_capacity (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_
 }
     template <class T>
     auto
-speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+speed_of_sound_pt (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
         using std::pow;
         using std::sqrt;
@@ -2849,14 +3479,57 @@ speed_of_sound (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE cons
         * massic_gas_constant * temperature
     );
 }
+#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+    template <class T>
+    auto
+massic_volume (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_volume_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_enthalpy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_enthalpy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_internal_energy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_entropy (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_entropy_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isobaric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isobaric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+massic_isochoric_heat_capacity (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return massic_isochoric_heat_capacity_pt (pressure, temperature);
+}
+    template <class T>
+    auto
+speed_of_sound (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
+{
+    return speed_of_sound_pt (pressure, temperature);
+}
+#endif
 } // namespace r5
-} // namespace detail
 #if 0
 
 #define ISTO_THERMODYNAMICS_IAPWSR7_GEN(NAME)                                                           \
     template <class T>                                                                                  \
     auto                                                                                                \
-NAME (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)                   \
+NAME (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)                   \
 {                                                                                                       \
         using namespace detail;                                                                         \
     switch (region (pressure, temperature))                                                             \
@@ -2871,7 +3544,7 @@ NAME (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& tempera
 }                                                                                                       \
     template <class T>                                                                                  \
     auto                                                                                                \
-NAME (ISTO_IAPWS_TEMPERATURE const& temperature, ISTO_IAPWS_PRESSURE const& pressure)                   \
+NAME (ISTO_IAPWS_T const& temperature, ISTO_IAPWS_P const& pressure)                   \
 {                                                                                                       \
     return NAME (pressure, temperature);                                                                \
 }                                                                                                       \
@@ -2888,24 +3561,24 @@ ISTO_THERMODYNAMICS_IAPWSR7_GEN(speed_of_sound)
 
     template <class T>
     auto
-density (ISTO_IAPWS_PRESSURE const& pressure, ISTO_IAPWS_TEMPERATURE const& temperature)
+density (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
 {
     return pow <-1> (massic_volume (pressure, temperature));
 }
     template <class T>
     auto
-density (ISTO_IAPWS_TEMPERATURE const& temperature, ISTO_IAPWS_PRESSURE const& pressure)
+density (ISTO_IAPWS_T const& temperature, ISTO_IAPWS_P const& pressure)
 {
     return density (pressure, temperature);
 }
 
 #endif
 
-#undef ISTO_IAPWS_PRESSURE
-#undef ISTO_IAPWS_TEMPERATURE
-#undef ISTO_IAPWS_DENSITY
-#undef ISTO_IAPWS_MASSIC_ENTHALPY
-#undef ISTO_IAPWS_MASSIC_ENTROPY
+#undef ISTO_IAPWS_P
+#undef ISTO_IAPWS_T
+#undef ISTO_IAPWS_D
+#undef ISTO_IAPWS_H
+#undef ISTO_IAPWS_S
 
 #undef ISTO_IAPWS_U_GC
 #undef ISTO_IAPWS_U_T

@@ -29,18 +29,18 @@ TEST_CASE("r7.hpp (constrained)")
     }
     SUBCASE("regions")
     {
-            using namespace isto::iapws::r7::detail;
-        CHECK_U(b23 (0.62315e3_K), 0.165291643e2_MPa, eps);
-        CHECK_U(b23i (0.165291643e2_MPa), 0.62315e3_K, eps);
-        CHECK(region (50._MPa, 280._K) == 1);
+            using namespace isto::iapws::r7;
+        CHECK_U(b23 (0.62315e3_K),       0.165291643e2_MPa, eps);
+        CHECK_U(b23 (0.165291643e2_MPa), 0.62315e3_K,       eps);
+        CHECK(region (50._MPa, 280._K)  == 1);
         CHECK(region (50._MPa, 1070._K) == 2);
-        CHECK(region (50._MPa, 630._K) == 3);
+        CHECK(region (50._MPa, 630._K)  == 3);
         //CHECK(region (0.353658941e-2_MPa, 300._K) == 4);
-        CHECK(region (10._MPa, 1100._K) == 5);
+        CHECK(region (10._MPa, 1100._K)  == 5);
     }
     SUBCASE("iapws-r7-region-1")
     {
-            using namespace isto::iapws::r7::detail::r1;
+            using namespace isto::iapws::r7::r1;
         CHECK_US(massic_volume                 (3._MPa , 300._K), massic_volume_t        { 0.100215168e-2 }, 1e-2,  eps);
         CHECK_US(massic_volume                 (80._MPa, 300._K), massic_volume_t        { 0.971180894e-3 }, 1e-2,  eps);
         CHECK_US(massic_volume                 (3._MPa , 500._K), massic_volume_t        { 0.120241800e-2 }, 1e-2,  eps);
@@ -59,22 +59,20 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (3._MPa , 300._K), velocity_t             { 0.150773921e4  }, 1e4, eps);
         CHECK_US(speed_of_sound                (80._MPa, 300._K), velocity_t             { 0.163469054e4  }, 1e4, eps);
         CHECK_US(speed_of_sound                (3._MPa , 500._K), velocity_t             { 0.124071337e4  }, 1e4, eps);
-    };
-    SUBCASE("iapws-r7-region-1-backward")
-    {
-        // TODO template <class T, class U, class V = std::common_type_t <T, U>>
-        // and long double coeffs
-            using namespace isto::iapws::r7::detail;
-        CHECK_US(r1b1::temperature (pressure_t {  3e6 }, massic_enthalpy_t { 500e3 }), 0.391798509e3_K, 1e3, eps); 
-        CHECK_US(r1b1::temperature (pressure_t { 80e6 }, massic_enthalpy_t { 500e3 }), 0.378108626e3_K, 1e3, eps); 
-        CHECK_US(r1b1::temperature (pressure_t { 80e6 }, massic_enthalpy_t {1500e3 }), 0.611041229e3_K, 1e3, eps); 
-        CHECK_US(r1b2::temperature (pressure_t {  3e6 }, massic_entropy_t  { 0.5e3 }), 0.307842258e3_K, 1e3, eps); 
-        CHECK_US(r1b2::temperature (pressure_t { 80e6 }, massic_entropy_t  { 0.5e3 }), 0.309979785e3_K, 1e3, eps); 
-        CHECK_US(r1b2::temperature (pressure_t { 80e6 }, massic_entropy_t  { 3.0e3 }), 0.565899909e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {  3e6 }, massic_enthalpy_t { 500e3 }), 0.391798509e3_K, 1e3, eps); 
+        CHECK_US(temperature (pressure_t { 80e6 }, massic_enthalpy_t { 500e3 }), 0.378108626e3_K, 1e3, eps); 
+        CHECK_US(temperature (pressure_t { 80e6 }, massic_enthalpy_t {1500e3 }), 0.611041229e3_K, 1e3, eps); 
+        CHECK_US(temperature (pressure_t {  3e6 }, massic_entropy_t  { 0.5e3 }), 0.307842258e3_K, 1e3, eps); 
+        CHECK_US(temperature (pressure_t { 80e6 }, massic_entropy_t  { 0.5e3 }), 0.309979785e3_K, 1e3, eps); 
+        CHECK_US(temperature (pressure_t { 80e6 }, massic_entropy_t  { 3.0e3 }), 0.565899909e3_K, 1e3, eps);
+
+        CHECK_US(pressure (massic_enthalpy_t {0.001e3 }, massic_entropy_t {   0. }), pressure_t { 9.800980612e-4  }, 1e4, eps);
+        CHECK_US(pressure (massic_enthalpy_t {   90e3 }, massic_entropy_t {   0. }), pressure_t { 9.192954727e1   }, 1e1, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 1500e3 }, massic_entropy_t {3.4e3 }), pressure_t { 5.868294423e1   }, 1e1, eps);
     };
     SUBCASE("iapws-r7-region-2")
     {
-            using namespace isto::iapws::r7::detail::r2;
+            using namespace isto::iapws::r7::r2;
         CHECK_US(massic_volume                 (0.0035_MPa, 300._K), massic_volume_t        { 0.394913866e2         },  1e2, eps);
         CHECK_US(massic_volume                 (0.0035_MPa, 700._K), massic_volume_t        { 0.923015898e2         },  1e2, eps);
         CHECK_US(massic_volume                 (   30._MPa, 700._K), massic_volume_t        { 0.542946619e-2        }, 1e-2, eps);
@@ -93,10 +91,20 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (0.0035_MPa, 300._K), velocity_t             { 0.427920172e3         },  1e3, eps);
         CHECK_US(speed_of_sound                (0.0035_MPa, 700._K), velocity_t             { 0.644289068e3         },  1e3, eps);
         CHECK_US(speed_of_sound                (   30._MPa, 700._K), velocity_t             { 0.480386523e3         },  1e3, eps);
+
+        CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 6.5e3 }), pressure_t { 1.371012767e6 }, 1e6, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 9.5e3 }), pressure_t { 1.879743844e3 }, 1e9, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 4100e3 }, massic_entropy_t { 9.5e3 }), pressure_t { 1.024788997e5 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 6.0e3 }), pressure_t { 4.793911442e6 }, 1e6, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 3600e3 }, massic_entropy_t { 6.0e3 }), pressure_t { 8.395519209e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 3600e3 }, massic_entropy_t { 7.0e3 }), pressure_t { 7.527161441e6 }, 1e6, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 5.1e3 }), pressure_t { 9.439202060e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 5.8e3 }), pressure_t { 8.414574124e6 }, 1e6, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 3400e3 }, massic_entropy_t { 5.8e3 }), pressure_t { 8.376903879e7 }, 1e7, eps);
     };
     SUBCASE("iapws-r7-region-2-metastable-vapor")
     {
-            using namespace isto::iapws::r7::detail::r2_metastable_vapor;
+            using namespace isto::iapws::r7::r2_metastable_vapor;
         CHECK_US(massic_volume                 (1.0_MPa, 450._K), massic_volume_t        { 0.192516540          }, 1e0, eps);
         CHECK_US(massic_volume                 (1.0_MPa, 440._K), massic_volume_t        { 0.186212297          }, 1e0, eps);
         CHECK_US(massic_volume                 (1.5_MPa, 450._K), massic_volume_t        { 0.121685206          }, 1e0, eps);
@@ -119,9 +127,9 @@ TEST_CASE("r7.hpp (constrained)")
     };
     SUBCASE("iapws-r7-region-2-backward")
     {
-            using namespace isto::iapws::r7::detail::r2b;
-        CHECK_US(B2bc_p (pressure_t        { 0.100000000e9  }), massic_enthalpy_t { 0.3516004323e7 }, 1e7, eps);
-        CHECK_US(B2bc_h (massic_enthalpy_t { 0.3516004323e7 }), pressure_t        { 0.100000000e9 }, 1e9, eps);
+            using namespace isto::iapws::r7::r2;
+        CHECK_US(b2bc_p (pressure_t        { 0.100000000e9  }), massic_enthalpy_t { 0.3516004323e7 }, 1e7, eps);
+        CHECK_US(b2bc_h (massic_enthalpy_t { 0.3516004323e7 }), pressure_t        { 0.100000000e9 }, 1e9, eps);
         CHECK_US(temperature (pressure_t { 0.001e6 }, massic_enthalpy_t { 3000e3 }), 0.534433241e3_K, 1e3, eps);
         CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 3000e3 }), 0.575373370e3_K, 1e3, eps);
         CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 4000e3 }), 0.101077577e4_K, 1e3, eps);
@@ -143,7 +151,7 @@ TEST_CASE("r7.hpp (constrained)")
     };
     SUBCASE("iapws-r7-region-3")
     {
-            using namespace isto::iapws::r7::detail::r3;
+            using namespace isto::iapws::r7::r3;
         CHECK_US(pressure                      (500._kg_per_m3, 650._K), pressure_t             { 0.255837018e2 * 1e6 }, 1e8, eps);
         CHECK_US(pressure                      (200._kg_per_m3, 650._K), pressure_t             { 0.222930643e2 * 1e6 }, 1e8, eps);
         CHECK_US(pressure                      (500._kg_per_m3, 750._K), pressure_t             { 0.783095639e2 * 1e6 }, 1e8, eps);
@@ -163,9 +171,10 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (200._kg_per_m3, 650._K), velocity_t             { 0.383444594e3       }, 1e3, eps);
         CHECK_US(speed_of_sound                (500._kg_per_m3, 750._K), velocity_t             { 0.760696041e3       }, 1e3, eps);
     };
+    /*
     SUBCASE("iapws-r7-region-4")
     {
-            using namespace isto::iapws::r7::detail::r4;
+            using namespace isto::iapws::r7::r4;
         CHECK_US(saturation_pressure    (300._K)  , 0.353658941e-2_MPa, 1e-2, eps);
         CHECK_US(saturation_pressure    (500._K)  , 0.263889776e1_MPa,  1e1, eps);
         CHECK_US(saturation_pressure    (600._K)  , 0.123443146e2_MPa,  1e2, eps);
@@ -173,9 +182,10 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(saturation_temperature (  1._MPa), 0.453035632e3_K,    1e3, eps);
         CHECK_US(saturation_temperature ( 10._MPa), 0.584149488e3_K,    1e3, eps);
     };
+    */
     SUBCASE("iapws-r7-region-5")
     {
-            using namespace isto::iapws::r7::detail::r5;
+            using namespace isto::iapws::r7::r5;
         CHECK_US(massic_volume                 (0.5_MPa, 1500._K), massic_volume_t        { 0.138455090e1         }, 1e1,  eps);
         CHECK_US(massic_volume                 (30._MPa, 1500._K), massic_volume_t        { 0.230761299e-1        }, 1e-1, eps);
         CHECK_US(massic_volume                 (30._MPa, 2000._K), massic_volume_t        { 0.311385219e-1        }, 1e-1, eps);
