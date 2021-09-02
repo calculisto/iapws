@@ -101,6 +101,27 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 5.1e3 }), pressure_t { 9.439202060e7 }, 1e7, eps);
         CHECK_US(pressure (massic_enthalpy_t { 2800e3 }, massic_entropy_t { 5.8e3 }), pressure_t { 8.414574124e6 }, 1e6, eps);
         CHECK_US(pressure (massic_enthalpy_t { 3400e3 }, massic_entropy_t { 5.8e3 }), pressure_t { 8.376903879e7 }, 1e7, eps);
+
+        CHECK_US(b2bc_p (pressure_t        { 0.100000000e9  }), massic_enthalpy_t { 0.3516004323e7 }, 1e7, eps);
+        CHECK_US(b2bc_h (massic_enthalpy_t { 0.3516004323e7 }), pressure_t        { 0.100000000e9 }, 1e9, eps);
+        CHECK_US(temperature (pressure_t { 0.001e6 }, massic_enthalpy_t { 3000e3 }), 0.534433241e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 3000e3 }), 0.575373370e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 4000e3 }), 0.101077577e4_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {     5e6 }, massic_enthalpy_t { 3500e3 }), 0.801299102e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {     5e6 }, massic_enthalpy_t { 4000e3 }), 0.101531583e4_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {    25e6 }, massic_enthalpy_t { 3500e3 }), 0.875279054e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {    40e6 }, massic_enthalpy_t { 2700e3 }), 0.743056411e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {    60e6 }, massic_enthalpy_t { 2700e3 }), 0.791137067e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {    60e6 }, massic_enthalpy_t { 3200e3 }), 0.882756860e3_K, 1e3, eps);
+        CHECK_US(temperature (pressure_t {   0.1e6 }, massic_entropy_t  {  7.5e3 }), 0.399517097e3_K, 1e3, 1e-6);
+        CHECK_US(temperature (pressure_t {   0.1e6 }, massic_entropy_t  {    8e3 }), 0.514127081e3_K, 1e3, 1e-6);
+        CHECK_US(temperature (pressure_t {   2.5e6 }, massic_entropy_t  {    8e3 }), 0.103984917e4_K, 1e4, 1e-6);
+        CHECK_US(temperature (pressure_t {     8e6 }, massic_entropy_t  {    6e3 }), 0.600484040e3_K, 1e3, 1e-6);
+        CHECK_US(temperature (pressure_t {     8e6 }, massic_entropy_t  {  7.5e3 }), 0.106495556e4_K, 1e4, 1e-6);
+        CHECK_US(temperature (pressure_t {    90e6 }, massic_entropy_t  {    6e3 }), 0.103801126e4_K, 1e4, 1e-6);
+        CHECK_US(temperature (pressure_t {    20e6 }, massic_entropy_t  { 5.75e3 }), 0.697992849e3_K, 1e3, 1e-6);
+        CHECK_US(temperature (pressure_t {    80e6 }, massic_entropy_t  { 5.25e3 }), 0.854011484e3_K, 1e3, 1e-6);
+        CHECK_US(temperature (pressure_t {    80e6 }, massic_entropy_t  { 5.75e3 }), 0.949017998e3_K, 1e3, 1e-6);
     };
     SUBCASE("iapws-r7-region-2-metastable-vapor")
     {
@@ -125,30 +146,6 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (1.5_MPa, 450._K), velocity_t             { 0.481941819e3        }, 1e3, eps);
 
     };
-    SUBCASE("iapws-r7-region-2-backward")
-    {
-            using namespace isto::iapws::r7::r2;
-        CHECK_US(b2bc_p (pressure_t        { 0.100000000e9  }), massic_enthalpy_t { 0.3516004323e7 }, 1e7, eps);
-        CHECK_US(b2bc_h (massic_enthalpy_t { 0.3516004323e7 }), pressure_t        { 0.100000000e9 }, 1e9, eps);
-        CHECK_US(temperature (pressure_t { 0.001e6 }, massic_enthalpy_t { 3000e3 }), 0.534433241e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 3000e3 }), 0.575373370e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {     3e6 }, massic_enthalpy_t { 4000e3 }), 0.101077577e4_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {     5e6 }, massic_enthalpy_t { 3500e3 }), 0.801299102e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {     5e6 }, massic_enthalpy_t { 4000e3 }), 0.101531583e4_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {    25e6 }, massic_enthalpy_t { 3500e3 }), 0.875279054e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {    40e6 }, massic_enthalpy_t { 2700e3 }), 0.743056411e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {    60e6 }, massic_enthalpy_t { 2700e3 }), 0.791137067e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {    60e6 }, massic_enthalpy_t { 3200e3 }), 0.882756860e3_K, 1e3, eps);
-        CHECK_US(temperature (pressure_t {   0.1e6 }, massic_entropy_t  {  7.5e3 }), 0.399517097e3_K, 1e3, 1e-6);
-        CHECK_US(temperature (pressure_t {   0.1e6 }, massic_entropy_t  {    8e3 }), 0.514127081e3_K, 1e3, 1e-6);
-        CHECK_US(temperature (pressure_t {   2.5e6 }, massic_entropy_t  {    8e3 }), 0.103984917e4_K, 1e4, 1e-6);
-        CHECK_US(temperature (pressure_t {     8e6 }, massic_entropy_t  {    6e3 }), 0.600484040e3_K, 1e3, 1e-6);
-        CHECK_US(temperature (pressure_t {     8e6 }, massic_entropy_t  {  7.5e3 }), 0.106495556e4_K, 1e4, 1e-6);
-        CHECK_US(temperature (pressure_t {    90e6 }, massic_entropy_t  {    6e3 }), 0.103801126e4_K, 1e4, 1e-6);
-        CHECK_US(temperature (pressure_t {    20e6 }, massic_entropy_t  { 5.75e3 }), 0.697992849e3_K, 1e3, 1e-6);
-        CHECK_US(temperature (pressure_t {    80e6 }, massic_entropy_t  { 5.25e3 }), 0.854011484e3_K, 1e3, 1e-6);
-        CHECK_US(temperature (pressure_t {    80e6 }, massic_entropy_t  { 5.75e3 }), 0.949017998e3_K, 1e3, 1e-6);
-    };
     SUBCASE("iapws-r7-region-3")
     {
             using namespace isto::iapws::r7::r3;
@@ -170,6 +167,37 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (500._kg_per_m3, 650._K), velocity_t             { 0.502005554e3       }, 1e3, eps);
         CHECK_US(speed_of_sound                (200._kg_per_m3, 650._K), velocity_t             { 0.383444594e3       }, 1e3, eps);
         CHECK_US(speed_of_sound                (500._kg_per_m3, 750._K), velocity_t             { 0.760696041e3       }, 1e3, eps);
+
+        CHECK_US(temperature (pressure_t {  20e6 }, massic_enthalpy_t {  1700e3 }), temperature_t { 6.293083892e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  50e6 }, massic_enthalpy_t {  2000e3 }), temperature_t { 6.905718338e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t { 100e6 }, massic_enthalpy_t {  2100e3 }), temperature_t { 7.336163014e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  20e6 }, massic_enthalpy_t {  2500e3 }), temperature_t { 6.418418053e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  50e6 }, massic_enthalpy_t {  2400e3 }), temperature_t { 7.351848618e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t { 100e6 }, massic_enthalpy_t {  2700e3 }), temperature_t { 8.420460876e2 }, 1e2, eps);
+        CHECK_US(massic_volume (pressure_t {  20e6 }, massic_enthalpy_t {  1700e3 }), massic_volume_t { 1.749903962e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  50e6 }, massic_enthalpy_t {  2000e3 }), massic_volume_t { 1.908139035e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t { 100e6 }, massic_enthalpy_t {  2100e3 }), massic_volume_t { 1.676229776e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  20e6 }, massic_enthalpy_t {  2500e3 }), massic_volume_t { 6.670547043e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  50e6 }, massic_enthalpy_t {  2400e3 }), massic_volume_t { 2.801244590e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t { 100e6 }, massic_enthalpy_t {  2700e3 }), massic_volume_t { 2.404234998e-3 }, 1e-3, eps);
+        CHECK_US(temperature (pressure_t {  20e6 }, massic_entropy_t {  3.8e3 }), temperature_t { 6.282959869e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  50e6 }, massic_entropy_t {  3.6e3 }), temperature_t { 6.297158726e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t { 100e6 }, massic_entropy_t {  4.0e3 }), temperature_t { 7.056880237e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  20e6 }, massic_entropy_t {  5.0e3 }), temperature_t { 6.401176443e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t {  50e6 }, massic_entropy_t {  4.5e3 }), temperature_t { 7.163687517e2 }, 1e2, eps);
+        CHECK_US(temperature (pressure_t { 100e6 }, massic_entropy_t {  5.0e3 }), temperature_t { 8.474332825e2 }, 1e2, eps);
+        CHECK_US(massic_volume (pressure_t {  20e6 }, massic_entropy_t {   3.8e3 }), massic_volume_t { 1.733791463e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  50e6 }, massic_entropy_t {   3.6e3 }), massic_volume_t { 1.469680170e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t { 100e6 }, massic_entropy_t {   4.0e3 }), massic_volume_t { 1.555893131e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  20e6 }, massic_entropy_t {   5.0e3 }), massic_volume_t { 6.262101987e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t {  50e6 }, massic_entropy_t {   4.5e3 }), massic_volume_t { 2.332634294e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (pressure_t { 100e6 }, massic_entropy_t {   5.0e3 }), massic_volume_t { 2.449610757e-3 }, 1e-3, eps);
+        CHECK_US(saturation_pressure (massic_enthalpy_t { 1700e3 }), pressure_t { 1.724175718e7 }, 1e7, eps);
+        CHECK_US(saturation_pressure (massic_enthalpy_t { 2000e3 }), pressure_t { 2.193442957e7 }, 1e7, eps);
+        CHECK_US(saturation_pressure (massic_enthalpy_t { 2400e3 }), pressure_t { 2.018090839e7 }, 1e7, eps);
+        CHECK_US(saturation_pressure (massic_entropy_t { 3.8e3 }), pressure_t { 1.687755057e7 }, 1e7, eps);
+        CHECK_US(saturation_pressure (massic_entropy_t { 4.2e3 }), pressure_t { 2.164451789e7 }, 1e7, eps);
+        CHECK_US(saturation_pressure (massic_entropy_t { 5.2e3 }), pressure_t { 1.668968482e7 }, 1e7, eps);
     };
     /*
     SUBCASE("iapws-r7-region-4")

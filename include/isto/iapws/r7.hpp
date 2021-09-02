@@ -19,6 +19,7 @@ r7_97_2012
 #define ISTO_IAPWS_U_T  * unit::kelvin <>
 #define ISTO_IAPWS_U_P  * unit::pascal <>
 #define ISTO_IAPWS_U_D  * unit::kilogram <> / pow <3> (unit::metre <>)
+#define ISTO_IAPWS_U_V  * pow <3> (unit::metre <>) / unit::kilogram <>
 #define ISTO_IAPWS_U_H  * unit::joule <> / unit::kilogram <>
 #define ISTO_IAPWS_U_S  * unit::joule <> / unit::kilogram <> / unit::kelvin <>
 #else
@@ -26,6 +27,7 @@ r7_97_2012
 #define ISTO_IAPWS_U_T
 #define ISTO_IAPWS_U_P
 #define ISTO_IAPWS_U_D
+#define ISTO_IAPWS_U_V
 #define ISTO_IAPWS_U_H
 #define ISTO_IAPWS_U_S
 #endif
@@ -2879,6 +2881,9 @@ speed_of_sound (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_T const& temperature)
     namespace
 r3
 {
+    namespace
+d
+{
     constexpr array_t <double, 39>
 I
 { //{{{
@@ -3010,12 +3015,13 @@ n //{{{
     , -0.16557679795037e-3  // 39                 -0.16557679795037e-3
     , -0.44923899061815e-4  // 40                 -0.44923899061815e-4
 }; //}}}
-
+} // namespace d
 // low-level dimensionless {{{
     template <class T>
     auto
 phi (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::log;
         using std::pow;
     return 
@@ -3032,6 +3038,7 @@ phi (T const& delta, T const& tau)
     auto
 phi_d (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::pow;
     return 
           n1
@@ -3048,6 +3055,7 @@ phi_d (T const& delta, T const& tau)
     auto
 phi_dd (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::pow;
     return 
         - n1
@@ -3066,6 +3074,7 @@ phi_dd (T const& delta, T const& tau)
     auto
 phi_t (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::pow;
     return 
           sum (
@@ -3080,6 +3089,7 @@ phi_t (T const& delta, T const& tau)
     auto
 phi_tt (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::pow;
     return 
           sum (
@@ -3095,6 +3105,7 @@ phi_tt (T const& delta, T const& tau)
     auto
 phi_dt (T const& delta, T const& tau)
 {
+        using namespace d;
         using std::pow;
     return 
           sum (
@@ -3182,6 +3193,1091 @@ speed_of_sound_dt (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
         / (tau * tau * phi_tt (delta, tau))
     ) * massic_gas_constant * temperature);
 }
+    template <class T>
+    constexpr auto
+b3ab_p (ISTO_IAPWS_P const& pressure)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    return (
+           0.201464004206875e4
+        +  0.374696550136983e1  * pi
+        + -0.219921901054187e-1 * pi * pi
+        +  0.875131686009950e-4 * pi * pi * pi
+    ) * ( 1e3 ISTO_IAPWS_U_H);
+}
+    namespace
+t_ph
+{
+    namespace
+a
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -5.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   3.
+    ,   3.
+    ,   4.
+    ,   4.
+    ,  10.
+    ,  12.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  2.
+    ,  6.
+    , 14.
+    , 16.
+    , 20.
+    , 22.
+    ,  1.
+    ,  5.
+    , 12.
+    ,  0.
+    ,  2.
+    ,  4.
+    , 10.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  3.
+    ,  4.
+    ,  0.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  1.
+    ,  0.
+    ,  1.
+    ,  0.
+    ,  3.
+    ,  4.
+    ,  5.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+      -0.133645667811215e-6 
+    ,  0.455912656802978e-5 
+    , -0.146294640700979e-4 
+    ,  0.639341312970080e-2 
+    ,  0.372783927268847e3  
+    , -0.718654377460447e4  
+    ,  0.573494752103400e6  
+    , -0.267569329111439e7  
+    , -0.334066283302614e-4 
+    , -0.245479214069597e-1 
+    ,  0.478087847764996e2  
+    ,  0.764664131818904e-5 
+    ,  0.128350627676972e-2 
+    ,  0.171219081377331e-1 
+    , -0.851007304583213e1  
+    , -0.136513461629781e-1
+    , -0.384460997596657e-5
+    ,  0.337423807911655e-2
+    , -0.551624873066791
+    ,  0.729202277107470
+    , -0.992522757376041e-2
+    , -0.119308831407288
+    ,  0.793929190615421
+    ,  0.454270731799386
+    ,  0.209998591259910
+    , -0.642109823904738e-2
+    , -0.235155868604540e-1
+    ,  0.252233108341612e-2
+    , -0.764885133368119e-2
+    ,  0.136176427574291e-1
+    , -0.133027883575669e-1
+}; //}}}
+} // namespace a
+    namespace
+b
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -4.
+    ,  -4.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   3.
+    ,   5.
+    ,   6.
+    ,   8.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  0.
+    ,  1.
+    ,  5.
+    , 10.
+    , 12.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  4.
+    , 10.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  5.
+    ,  0.
+    ,  4.
+    ,  2.
+    ,  4.
+    ,  6.
+    , 10.
+    , 14.
+    , 16.
+    ,  0.
+    ,  2.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.323254573644920e-4 
+    , -0.127575556587181e-3 
+    , -0.475851877356068e-3 
+    ,  0.156183014181602e-2 
+    ,  0.105724860113781    
+    , -0.858514221132534e2  
+    ,  0.724140095480911e3  
+    ,  0.296475810273257e-2 
+    , -0.592721983365988e-2 
+    , -0.126305422818666e-1 
+    , -0.115716196364853    
+    ,  0.849000969739595e2  
+    , -0.108602260086615e-1 
+    ,  0.154304475328851e-1 
+    ,  0.750455441524466e-1 
+    ,  0.252520973612982e-1 
+    , -0.602507901232996e-1
+    , -0.307622221350501e1
+    , -0.574011959864879e-1
+    ,  0.503471360939849e1
+    , -0.925081888584834
+    ,  0.391733882917546e1
+    , -0.773146007130190e2
+    ,  0.949308762098587e4
+    , -0.141043719679409e7
+    ,  0.849166230819026e7
+    ,  0.861095729446704
+    ,  0.323346442811720
+    ,  0.873281936020439
+    , -0.436653048526683
+    ,  0.286596714529479
+    , -0.131778331276228
+    ,  0.676682064330275e-2
+}; //}}}
+} // namespace b
+} // namespace t_ph
+    template <class T>
+    constexpr auto
+temperature_ph (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
+{
+        using namespace t_ph;
+        auto const
+    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    if (massic_enthalpy < b3ab_p (pressure))
+    {
+            auto const
+        eta = massic_enthalpy / (2300e3 ISTO_IAPWS_U_H);
+        return sum (a::n * pow (pi + 0.240, a::I) * pow (eta - 0.615, a::J)) * (760 ISTO_IAPWS_U_T);
+    }
+        auto const
+    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
+    return sum (b::n * pow (pi + 0.298, b::I) * pow (eta - 0.720, b::J)) * (860 ISTO_IAPWS_U_T);
+}
+    namespace
+v_ph
+{
+    namespace
+a
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -4.
+    ,  -4.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   1.
+    ,   1.
+    ,   2.
+    ,   2.
+    ,   3.
+    ,   4.
+    ,   5.
+    ,   8.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       6.
+    ,  8.
+    , 12.
+    , 18.
+    ,  4.
+    ,  7.
+    , 10.
+    ,  5.
+    , 12.
+    ,  3.
+    ,  4.
+    , 22.
+    ,  2.
+    ,  3.
+    ,  7.
+    ,  3.
+    , 16.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  0.
+    ,  1.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  0.
+    ,  2.
+    ,  0.
+    ,  2.
+    ,  2.
+    ,  2.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.529944062966028e-2
+    , -0.170099690234461
+    ,  0.111323814312927e2
+    , -0.217898123145125e4
+    , -0.506061827980875e-3
+    ,  0.556495239685324
+    , -0.943672726094016e1
+    , -0.297856807561527
+    ,  0.939353943717186e2
+    ,  0.192944939465981e-1
+    ,  0.421740664704763
+    , -0.368914126282330e7
+    , -0.737566847600639e-2
+    , -0.354753242424366
+    , -0.199768169338727e1
+    ,  0.115456297059049e1
+    ,  0.568366875815960e4
+    ,  0.808169540124668e-2
+    ,  0.172416341519307
+    ,  0.104270175292927e1
+    , -0.297691372792847
+    ,  0.560394465163593
+    ,  0.275234661176914
+    , -0.148347894866012
+    , -0.651142513478515e-1
+    , -0.292468715386302e1
+    ,  0.664876096952665e-1
+    ,  0.352335014263844e1
+    , -0.146340792313332e-1
+    , -0.224503486668184e1
+    ,  0.110533464706142e1
+    , -0.408757344495612e-1
+}; //}}}
+} //namespace a
+    namespace
+b
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -4.
+    ,  -4.
+    ,  -4.
+    ,  -3.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   1.
+    ,   1.
+    ,   2.
+    ,   2.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  0.
+    ,  1.
+    ,  3.
+    ,  6.
+    ,  7.
+    ,  8.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  5.
+    ,  6.
+    , 10.
+    ,  3.
+    ,  6.
+    , 10.
+    ,  0.
+    ,  2.
+    ,  1.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  4.
+    ,  5.
+    ,  0.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  6.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+      -0.225196934336318e-8
+    ,  0.140674363313486e-7
+    ,  0.233784085280560e-5
+    , -0.331833715229001e-4
+    ,  0.107956778514318e-2
+    , -0.271382067378863
+    ,  0.107202262490333e1
+    , -0.853821329075382
+    , -0.215214194340526e-4
+    ,  0.769656088222730e-3
+    , -0.431136580433864e-2
+    ,  0.453342167309331
+    , -0.507749535873652
+    , -0.100475154528389e3
+    , -0.219201924648793
+    , -0.321087965668917e1
+    ,  0.607567815637771e3
+    ,  0.557686450685932e-3
+    ,  0.187499040029550
+    ,  0.905368030448107e-2
+    ,  0.285417173048685
+    ,  0.329924030996098e-1
+    ,  0.239897419685483
+    ,  0.482754995951394e1
+    , -0.118035753702231e2
+    ,  0.169490044091791
+    , -0.179967222507787e-1
+    ,  0.371810116332674e-1
+    , -0.536288335065096e-1
+    ,  0.160697101092520e1
+}; //}}}
+} // namespace b
+} //namespace v_ph
+    template <class T>
+    constexpr auto
+massic_volume_ph (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
+{
+        using namespace v_ph;
+        auto const
+    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    if (massic_enthalpy < b3ab_p (pressure))
+    {
+            auto const
+        eta = massic_enthalpy / (2100e3 ISTO_IAPWS_U_H);
+        return sum (a::n * pow (pi + 0.128, a::I) * pow (eta - 0.727, a::J)) * (0.0028 ISTO_IAPWS_U_V);
+    }
+        auto const
+    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
+    return sum (b::n * pow (pi + 0.0661, b::I) * pow (eta - 0.720, b::J)) * (0.0088 ISTO_IAPWS_U_V);
+}
+    namespace
+t_ps
+{
+    namespace
+a
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -5.
+    ,  -5.
+    ,  -5.
+    ,  -4.
+    ,  -4.
+    ,  -4.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   2.
+    ,   2.
+    ,   3.
+    ,   8.
+    ,   8.
+    ,  10.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+      28.
+    , 32.
+    ,  4.
+    , 10.
+    , 12.
+    , 14.
+    ,  5.
+    ,  7.
+    ,  8.
+    , 28.
+    ,  2.
+    ,  6.
+    , 32.
+    ,  0.
+    , 14.
+    , 32.
+    ,  6.
+    , 10.
+    , 36.
+    ,  1.
+    ,  4.
+    ,  1.
+    ,  6.
+    ,  0.
+    ,  1.
+    ,  4.
+    ,  0.
+    ,  0.
+    ,  3.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  2.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.150042008263875e10
+    , -0.159397258480424e12
+    ,  0.502181140217975e-3
+    , -0.672057767855466e2
+    ,  0.145058545404456e4
+    , -0.823889534888890e4
+    , -0.154852214233853
+    ,  0.112305046746695e2
+    , -0.297000213482822e2
+    ,  0.438565132635495e11
+    ,  0.137837838635464e-2
+    , -0.297478527157462e1
+    ,  0.971777947349413e13
+    , -0.571527767052398e-4
+    ,  0.288307949778420e5
+    , -0.744428289262703e14
+    ,  0.128017324848921e2
+    , -0.368275545889071e3
+    ,  0.664768904779177e16
+    ,  0.449359251958880e-1
+    , -0.422897836099655e1
+    , -0.240614376434179
+    , -0.474341365254924e1
+    ,  0.724093999126110
+    ,  0.923874349695897
+    ,  0.399043655281015e1
+    ,  0.384066651868009e-1
+    , -0.359344365571848e-2
+    , -0.735196448821653
+    ,  0.188367048396131
+    ,  0.141064266818704e-3
+    , -0.257418501496337e-2
+    ,  0.123220024851555e-2
+}; //}}}
+} // namespace a
+    namespace
+b
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -12.
+    , -12.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -6.
+    ,  -6.
+    ,  -5.
+    ,  -5.
+    ,  -5.
+    ,  -5.
+    ,  -5.
+    ,  -4.
+    ,  -3.
+    ,  -3.
+    ,  -2.
+    ,   0.
+    ,   2.
+    ,   3.
+    ,   4.
+    ,   5.
+    ,   6.
+    ,   8.
+    ,  12.
+    ,  14.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       1.
+    ,  3.
+    ,  4.
+    ,  7.
+    ,  0.
+    ,  1.
+    ,  3.
+    ,  0.
+    ,  2.
+    ,  4.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  4.
+    ,  6.
+    , 12.
+    ,  1.
+    ,  6.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  1.
+    ,  0.
+    , 24.
+    ,  0.
+    ,  3.
+    ,  1.
+    ,  2.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.527111701601660
+    , -0.401317830052742e2
+    ,  0.153020073134484e3
+    , -0.224799398218827e4
+    , -0.193993484669048
+    , -0.140467557893768e1
+    ,  0.426799878114024e2
+    ,  0.752810643416743
+    ,  0.226657238616417e2
+    , -0.622873556909932e3
+    , -0.660823667935396
+    ,  0.841267087271658
+    , -0.253717501764397e2
+    ,  0.485708963532948e3
+    ,  0.880531517490555e3
+    ,  0.265015592794626e7
+    , -0.359287150025783
+    , -0.656991567673753e3
+    ,  0.241768149185367e1
+    ,  0.856873461222588
+    ,  0.655143675313458
+    , -0.213535213206406
+    ,  0.562974957606348e-2
+    , -0.316955725450471e15
+    , -0.699997000152457e-3
+    ,  0.119845803210767e-1
+    ,  0.193848122022095e-4
+    , -0.215095749182309e-4
+}; //}}}
+} // namespace b
+} // namespace t_ps
+    template <class T>
+    constexpr auto
+temperature_ps (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+        using namespace t_ps;
+        auto const
+    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    if (massic_entropy < 4.41202148223476e3)
+    {
+            auto const
+        sigma = massic_entropy / (4.4e3 ISTO_IAPWS_U_S);
+        return sum (a::n * pow (pi + 0.240, a::I) * pow (sigma - 0.703, a::J)) * (760 ISTO_IAPWS_U_T);
+    }
+        auto const
+    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
+    return sum (b::n * pow (pi + 0.760, b::I) * pow (sigma - 0.818, b::J)) * (860 ISTO_IAPWS_U_T);
+}
+    namespace
+v_ps
+{
+    namespace
+a
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -8.
+    ,  -6.
+    ,  -5.
+    ,  -4.
+    ,  -3.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -1.
+    ,  -1.
+    ,   0.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   2.
+    ,   4.
+    ,   5.
+    ,   6.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+      10.
+    , 12.
+    , 14.
+    ,  4.
+    ,  8.
+    , 10.
+    , 20.
+    ,  5.
+    ,  6.
+    , 14.
+    , 16.
+    , 28.
+    ,  1.
+    ,  5.
+    ,  2.
+    ,  4.
+    ,  3.
+    ,  8.
+    ,  1.
+    ,  2.
+    ,  0.
+    ,  1.
+    ,  3.
+    ,  0.
+    ,  0.
+    ,  2.
+    ,  2.
+    ,  0.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.795544074093975e2
+    , -0.238261242984590e4
+    ,  0.176813100617787e5
+    , -0.110524727080379e-2
+    , -0.153213833655326e2
+    ,  0.297544599376982e3
+    , -0.350315206871242e8
+    ,  0.277513761062119
+    , -0.523964271036888
+    , -0.148011182995403e6
+    ,  0.160014899374266e7
+    ,  0.170802322663427e13
+    ,  0.246866996006494e-3
+    ,  0.165326084797980e1
+    , -0.118008384666987
+    ,  0.253798642355900e1
+    ,  0.965127704669424
+    , -0.282172420532826e2
+    ,  0.203224612353823
+    ,  0.110648186063513e1
+    ,  0.526127948451280
+    ,  0.277000018736321
+    ,  0.108153340501132e1
+    , -0.744127885357893e-1
+    ,  0.164094443541384e-1
+    , -0.680468275301065e-1
+    ,  0.257988576101640e-1
+    , -0.145749861944416e-3
+}; //}}}
+} // namespace a
+    namespace
+b
+{
+    constexpr auto
+I = array_t //{{{
+{
+      -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -12.
+    , -10.
+    , -10.
+    , -10.
+    , -10.
+    ,  -8.
+    ,  -5.
+    ,  -5.
+    ,  -5.
+    ,  -4.
+    ,  -4.
+    ,  -4.
+    ,  -4.
+    ,  -3.
+    ,  -2.
+    ,  -2.
+    ,  -2.
+    ,  -2.
+    ,  -2.
+    ,  -2.
+    ,   0.
+    ,   0.
+    ,   0.
+    ,   1.
+    ,   1.
+    ,   2.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  5.
+    ,  6.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  4.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  1.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  3.
+    ,  4.
+    , 12.
+    ,  0.
+    ,  1.
+    ,  2.
+    ,  0.
+    ,  2.
+    ,  2.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.591599780322238e-4
+    , -0.185465997137856e-2
+    ,  0.104190510480013e-1
+    ,  0.598647302038590e-2
+    , -0.771391189901699
+    ,  0.172549765557036e1
+    , -0.467076079846526e-3
+    ,  0.134533823384439e-1
+    , -0.808094336805495e-1
+    ,  0.508139374365767
+    ,  0.128584643361683e-2
+    , -0.163899353915435e1
+    ,  0.586938199318063e1
+    , -0.292466667918613e1
+    , -0.614076301499537e-2
+    ,  0.576199014049172e1
+    , -0.121613320606788e2
+    ,  0.167637540957944e1
+    , -0.744135838773463e1
+    ,  0.378168091437659e-1
+    ,  0.401432203027688e1
+    ,  0.160279837479185e2
+    ,  0.317848779347728e1
+    , -0.358362310304853e1
+    , -0.115995260446827e7
+    ,  0.199256573577909
+    , -0.122270624794624
+    , -0.191449143716586e2
+    , -0.150448002905284e-1
+    ,  0.146407900162154e2
+    , -0.327477787188230e1
+}; //}}}
+} // namespace b
+} // namespace v_ps
+    template <class T>
+    constexpr auto
+massic_volume_ps (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+        using namespace v_ps;
+        auto const
+    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    if (massic_entropy < 4.41202148223476e3)
+    {
+            auto const
+        sigma = massic_entropy / (4.4e3 ISTO_IAPWS_U_S);
+        return sum (a::n * pow (pi + 0.187, a::I) * pow (sigma - 0.755, a::J)) * (0.0028 ISTO_IAPWS_U_V);
+    }
+        auto const
+    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
+    return sum (b::n * pow (pi + 0.298, b::I) * pow (sigma - 0.816, b::J)) * (0.0088 ISTO_IAPWS_U_V);
+}
+    namespace
+p_sat_h
+{
+    constexpr auto
+I = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  1.
+    ,  5.
+    ,  7.
+    ,  8.
+    , 14.
+    , 20.
+    , 22.
+    , 24.
+    , 28.
+    , 36.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  3.
+    ,  4.
+    , 36.
+    ,  3.
+    ,  0.
+    , 24.
+    , 16.
+    , 16.
+    ,  3.
+    , 18.
+    ,  8.
+    , 24.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.600073641753024
+    , -0.936203654849857e1
+    ,  0.246590798594147e2
+    , -0.107014222858224e3
+    , -0.915821315805768e14
+    , -0.862332011700662e4
+    , -0.235837344740032e2
+    ,  0.252304969384128e18
+    , -0.389718771997719e19
+    , -0.333775713645296e23
+    ,  0.356499469636328e11
+    , -0.148547544720641e27
+    ,  0.330611514838798e19
+    ,  0.813641294467829e38
+}; //}}}
+} // namespace p_sat_h
+    template <class T>
+    constexpr auto
+saturation_pressure_h (ISTO_IAPWS_H const& massic_enthalpy)
+{
+        using namespace p_sat_h;
+        auto const
+    eta = massic_enthalpy / (2600e3 ISTO_IAPWS_U_H);
+    return sum (n * pow (eta - 1.02, I) * pow (eta - 0.608, J)) * (22e6 ISTO_IAPWS_U_P);
+}
+    namespace
+p_sat_s
+{
+    constexpr auto
+I = array_t //{{{
+{
+       0.
+    ,  1.
+    ,  1.
+    ,  4.
+    , 12.
+    , 12.
+    , 16.
+    , 24.
+    , 28.
+    , 32.
+}; //}}}
+    constexpr auto
+J = array_t //{{{
+{
+       0.
+    ,  1.
+    , 32.
+    ,  7.
+    ,  4.
+    , 14.
+    , 36.
+    , 10.
+    ,  0.
+    , 18.
+}; //}}}
+    constexpr auto
+n = array_t //{{{
+{
+       0.639767553612785
+    , -0.129727445396014e2
+    , -0.224595125848403e16
+    ,  0.177466741801846e7
+    ,  0.717079349571538e10
+    , -0.378829107169011e18
+    , -0.955586736431328e35
+    ,  0.187269814676188e24
+    ,  0.119254746466473e12
+    ,  0.110649277244882e37
+}; //}}}
+} //namespace p_sat_s
+    template <class T>
+    constexpr auto
+saturation_pressure_s (ISTO_IAPWS_S const& massic_entropy)
+{
+        using namespace p_sat_s;
+        auto const
+    sigma = massic_entropy / (5.2e3 ISTO_IAPWS_U_S);
+    return sum (n * pow (sigma - 1.03, I) * pow (sigma - 0.699, J)) * (22e6 ISTO_IAPWS_U_P);
+}
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
     template <class T>
     auto
@@ -3224,6 +4320,42 @@ massic_isobaric_heat_capacity (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& 
 speed_of_sound (ISTO_IAPWS_D const& density, ISTO_IAPWS_T const& temperature)
 {
     return speed_of_sound_dt (density, temperature);
+}
+    template <class T>
+    constexpr auto
+temperature (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
+{
+    return temperature_ph (pressure, massic_enthalpy);
+}
+    template <class T>
+    constexpr auto
+massic_volume (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_H const& massic_enthalpy)
+{
+    return massic_volume_ph (pressure, massic_enthalpy);
+}
+    template <class T>
+    constexpr auto
+temperature (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+    return temperature_ps (pressure, massic_entropy);
+}
+    template <class T>
+    constexpr auto
+massic_volume (ISTO_IAPWS_P const& pressure, ISTO_IAPWS_S const& massic_entropy)
+{
+    return massic_volume_ps (pressure, massic_entropy);
+}
+    template <class T>
+    constexpr auto
+saturation_pressure (ISTO_IAPWS_H const& massic_enthalpy)
+{
+    return saturation_pressure_h (massic_enthalpy);
+}
+    template <class T>
+    constexpr auto
+saturation_pressure (ISTO_IAPWS_S const& massic_entropy)
+{
+    return saturation_pressure_s (massic_entropy);
 }
 #endif
 } // namespace r3

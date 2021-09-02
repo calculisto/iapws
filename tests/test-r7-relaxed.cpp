@@ -193,6 +193,38 @@ TEST_CASE("r7.hpp (relaxed)")
         CHECK(speed_of_sound_dt                (500., 650.) == Approx { 0.502005554e3       }.scale (1e3).epsilon (eps));
         CHECK(speed_of_sound_dt                (200., 650.) == Approx { 0.383444594e3       }.scale (1e3).epsilon (eps));
         CHECK(speed_of_sound_dt                (500., 750.) == Approx { 0.760696041e3       }.scale (1e3).epsilon (eps));
+
+        CHECK(b3ab_p (25e6) == Approx { 2.095936454e6 }.scale (1e6).epsilon (eps));
+        CHECK(temperature_ph ( 20e6, 1700e3) == Approx { 6.293083892e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ph ( 50e6, 2000e3) == Approx { 6.905718338e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ph (100e6, 2100e3) == Approx { 7.336163014e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ph ( 20e6, 2500e3) == Approx { 6.418418053e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ph ( 50e6, 2400e3) == Approx { 7.351848618e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ph (100e6, 2700e3) == Approx { 8.420460876e2 }.scale (1e2).epsilon (eps));
+        CHECK(massic_volume_ph ( 20e6, 1700e3) == Approx { 1.749903962e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ph ( 50e6, 2000e3) == Approx { 1.908139035e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ph (100e6, 2100e3) == Approx { 1.676229776e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ph ( 20e6, 2500e3) == Approx { 6.670547043e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ph ( 50e6, 2400e3) == Approx { 2.801244590e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ph (100e6, 2700e3) == Approx { 2.404234998e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(temperature_ps ( 20e6, 3.8e3) == Approx { 6.282959869e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ps ( 50e6, 3.6e3) == Approx { 6.297158726e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ps (100e6, 4.0e3) == Approx { 7.056880237e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ps ( 20e6, 5.0e3) == Approx { 6.401176443e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ps ( 50e6, 4.5e3) == Approx { 7.163687517e2 }.scale (1e2).epsilon (eps));
+        CHECK(temperature_ps (100e6, 5.0e3) == Approx { 8.474332825e2 }.scale (1e2).epsilon (eps));
+        CHECK(massic_volume_ps ( 20e6,  3.8e3) == Approx { 1.733791463e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ps ( 50e6,  3.6e3) == Approx { 1.469680170e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ps (100e6,  4.0e3) == Approx { 1.555893131e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ps ( 20e6,  5.0e3) == Approx { 6.262101987e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ps ( 50e6,  4.5e3) == Approx { 2.332634294e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(massic_volume_ps (100e6,  5.0e3) == Approx { 2.449610757e-3 }.scale (1e-3).epsilon (eps));
+        CHECK(saturation_pressure_h (1700e3) == Approx { 1.724175718e7 }.scale (1e7).epsilon (eps));
+        CHECK(saturation_pressure_h (2000e3) == Approx { 2.193442957e7 }.scale (1e7).epsilon (eps));
+        CHECK(saturation_pressure_h (2400e3) == Approx { 2.018090839e7 }.scale (1e7).epsilon (eps));
+        CHECK(saturation_pressure_s (3.8e3) == Approx { 1.687755057e7 }.scale (1e7).epsilon (eps));
+        CHECK(saturation_pressure_s (4.2e3) == Approx { 2.164451789e7 }.scale (1e7).epsilon (eps));
+        CHECK(saturation_pressure_s (5.2e3) == Approx { 1.668968482e7 }.scale (1e7).epsilon (eps));
     };
     /*
     SUBCASE("iapws-r7-region-4")
