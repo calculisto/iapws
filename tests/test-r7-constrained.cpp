@@ -198,6 +198,16 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(saturation_pressure (massic_entropy_t { 3.8e3 }), pressure_t { 1.687755057e7 }, 1e7, eps);
         CHECK_US(saturation_pressure (massic_entropy_t { 4.2e3 }), pressure_t { 2.164451789e7 }, 1e7, eps);
         CHECK_US(saturation_pressure (massic_entropy_t { 5.2e3 }), pressure_t { 1.668968482e7 }, 1e7, eps);
+
+        CHECK_US(pressure (massic_enthalpy_t { 1700e3 }, massic_entropy_t { 3.8e3 }), pressure_t { 2.555703246e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2000e3 }, massic_entropy_t { 4.2e3 }), pressure_t { 4.540873468e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2100e3 }, massic_entropy_t { 4.3e3 }), pressure_t { 6.078123340e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2600e3 }, massic_entropy_t { 5.1e3 }), pressure_t { 3.434999263e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2400e3 }, massic_entropy_t { 4.7e3 }), pressure_t { 6.363924887e7 }, 1e7, eps);
+        CHECK_US(pressure (massic_enthalpy_t { 2700e3 }, massic_entropy_t { 5.0e3 }), pressure_t { 8.839043281e7 }, 1e7, eps);
+        CHECK_US(saturation_temperature (massic_enthalpy_t { 1800e3 }, massic_entropy_t { 5.3e3 }), temperature_t { 3.468475498e2 }, 1e2, eps);
+        CHECK_US(saturation_temperature (massic_enthalpy_t { 2400e3 }, massic_entropy_t { 6.0e3 }), temperature_t { 4.251373305e2 }, 1e2, eps);
+        CHECK_US(saturation_temperature (massic_enthalpy_t { 2500e3 }, massic_entropy_t { 5.5e3 }), temperature_t { 5.225579013e2 }, 1e2, eps);
     };
     /*
     SUBCASE("iapws-r7-region-4")

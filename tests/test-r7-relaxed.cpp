@@ -225,6 +225,34 @@ TEST_CASE("r7.hpp (relaxed)")
         CHECK(saturation_pressure_s (3.8e3) == Approx { 1.687755057e7 }.scale (1e7).epsilon (eps));
         CHECK(saturation_pressure_s (4.2e3) == Approx { 2.164451789e7 }.scale (1e7).epsilon (eps));
         CHECK(saturation_pressure_s (5.2e3) == Approx { 1.668968482e7 }.scale (1e7).epsilon (eps));
+
+        CHECK(pressure_hs (1700e3, 3.8e3) == Approx { 2.555703246e7 }.scale (1e7).epsilon (eps));
+        CHECK(pressure_hs (2000e3, 4.2e3) == Approx { 4.540873468e7 }.scale (1e7).epsilon (eps));
+        CHECK(pressure_hs (2100e3, 4.3e3) == Approx { 6.078123340e7 }.scale (1e7).epsilon (eps));
+        CHECK(pressure_hs (2600e3, 5.1e3) == Approx { 3.434999263e7 }.scale (1e7).epsilon (eps));
+        CHECK(pressure_hs (2400e3, 4.7e3) == Approx { 6.363924887e7 }.scale (1e7).epsilon (eps));
+        CHECK(pressure_hs (2700e3, 5.0e3) == Approx { 8.839043281e7 }.scale (1e7).epsilon (eps));
+        CHECK(h_p_s (1.0e3) == Approx { 3.085509647e5 }.scale (1e5).epsilon (eps));
+        CHECK(h_p_s (2.0e3) == Approx { 7.006304472e5 }.scale (1e5).epsilon (eps));
+        CHECK(h_p_s (3.0e3) == Approx { 1.198359754e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_p_s (3.8e3) == Approx { 1.685025565e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_p_s (4.0e3) == Approx { 1.816891476e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_p_s (4.2e3) == Approx { 1.949352563e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (7.0e3) == Approx { 2.723729985e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (8.0e3) == Approx { 2.599047210e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (9.0e3) == Approx { 2.511861477e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (5.5e3) == Approx { 2.687693850e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (5.0e3) == Approx { 2.451623609e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_pp_s (4.5e3) == Approx { 2.144360448e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_b13_s (3.7e3) == Approx { 1.632525047e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_b13_s (3.6e3) == Approx { 1.593027214e6 }.scale (1e6).epsilon (eps));
+        CHECK(h_b13_s (3.5e3) == Approx { 1.566104611e6 }.scale (1e6).epsilon (eps));
+        CHECK(t_b23_hs (2600e3, 5.10e3) == Approx { 7.135259364e2 }.scale (1e2).epsilon (eps));
+        CHECK(t_b23_hs (2700e3, 5.15e3) == Approx { 7.685345532e2 }.scale (1e2).epsilon (eps));
+        CHECK(t_b23_hs (2800e3, 5.20e3) == Approx { 8.176202120e2 }.scale (1e2).epsilon (eps));
+        CHECK(saturation_temperature_hs (1800e3, 5.3e3) == Approx { 3.468475498e2 }.scale (1e2).epsilon (eps));
+        CHECK(saturation_temperature_hs (2400e3, 6.0e3) == Approx { 4.251373305e2 }.scale (1e2).epsilon (eps));
+        CHECK(saturation_temperature_hs (2500e3, 5.5e3) == Approx { 5.225579013e2 }.scale (1e2).epsilon (eps));
     };
     /*
     SUBCASE("iapws-r7-region-4")
