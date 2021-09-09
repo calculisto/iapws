@@ -208,6 +208,59 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(saturation_temperature (massic_enthalpy_t { 1800e3 }, massic_entropy_t { 5.3e3 }), temperature_t { 3.468475498e2 }, 1e2, eps);
         CHECK_US(saturation_temperature (massic_enthalpy_t { 2400e3 }, massic_entropy_t { 6.0e3 }), temperature_t { 4.251373305e2 }, 1e2, eps);
         CHECK_US(saturation_temperature (massic_enthalpy_t { 2500e3 }, massic_entropy_t { 5.5e3 }), temperature_t { 5.225579013e2 }, 1e2, eps);
+
+        CHECK_US(massic_volume (50.0_MPa,   630.00_K), massic_volume_t { 1.470853100e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (80.0_MPa,   670.00_K), massic_volume_t { 1.503831359e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (50.0_MPa,   710.00_K), massic_volume_t { 2.204728587e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (80.0_MPa,   750.00_K), massic_volume_t { 1.973692940e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (20.0_MPa,   630.00_K), massic_volume_t { 1.761696406e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (30.0_MPa,   650.00_K), massic_volume_t { 1.819560617e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (26.0_MPa,   656.00_K), massic_volume_t { 2.245587720e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (30.0_MPa,   670.00_K), massic_volume_t { 2.506897702e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (26.0_MPa,   661.00_K), massic_volume_t { 2.970225962e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (30.0_MPa,   675.00_K), massic_volume_t { 3.004627086e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (26.0_MPa,   671.00_K), massic_volume_t { 5.019029401e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (30.0_MPa,   690.00_K), massic_volume_t { 4.656470142e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.6_MPa,   649.00_K), massic_volume_t { 2.163198378e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (24.0_MPa,   650.00_K), massic_volume_t { 2.166044161e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.6_MPa,   652.00_K), massic_volume_t { 2.651081407e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (24.0_MPa,   654.00_K), massic_volume_t { 2.967802335e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.6_MPa,   653.00_K), massic_volume_t { 3.273916816e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (24.0_MPa,   655.00_K), massic_volume_t { 3.550329864e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.5_MPa,   655.00_K), massic_volume_t { 4.545001142e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (24.0_MPa,   660.00_K), massic_volume_t { 5.100267704e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.0_MPa,   660.00_K), massic_volume_t { 6.109525997e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (24.0_MPa,   670.00_K), massic_volume_t { 6.427325645e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.6_MPa,   646.00_K), massic_volume_t { 2.117860851e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (23.0_MPa,   646.00_K), massic_volume_t { 2.062374674e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.6_MPa,   648.60_K), massic_volume_t { 2.533063780e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.8_MPa,   649.30_K), massic_volume_t { 2.572971781e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.6_MPa,   649.00_K), massic_volume_t { 2.923432711e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.8_MPa,   649.70_K), massic_volume_t { 2.913311494e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.6_MPa,   649.10_K), massic_volume_t { 3.131208996e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.8_MPa,   649.90_K), massic_volume_t { 3.221160278e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.6_MPa,   649.40_K), massic_volume_t { 3.715596186e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.8_MPa,   650.20_K), massic_volume_t { 3.664754790e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (21.1_MPa,   640.00_K), massic_volume_t { 1.970999272e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (21.8_MPa,   643.00_K), massic_volume_t { 2.043919161e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (21.1_MPa,   644.00_K), massic_volume_t { 5.251009921e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (21.8_MPa,   648.00_K), massic_volume_t { 5.256844741e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (19.1_MPa,   635.00_K), massic_volume_t { 1.932829079e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (20.0_MPa,   638.00_K), massic_volume_t { 1.985387227e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (17.0_MPa,   626.00_K), massic_volume_t { 8.483262001e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (20.0_MPa,   640.00_K), massic_volume_t { 6.227528101e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (21.5_MPa,   644.60_K), massic_volume_t { 2.268366647e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.0_MPa,   646.10_K), massic_volume_t { 2.296350553e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.5_MPa,   648.60_K), massic_volume_t { 2.832373260e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.3_MPa,   647.90_K), massic_volume_t { 2.811424405e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.15_MPa,  647.50_K), massic_volume_t { 3.694032281e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.3_MPa,   648.10_K), massic_volume_t { 3.622226305e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.11_MPa,  648.00_K), massic_volume_t { 4.528072649e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.3_MPa,   649.00_K), massic_volume_t { 4.556905799e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.0_MPa,   646.84_K), massic_volume_t { 2.698354719e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.064_MPa, 647.05_K), massic_volume_t { 2.717655648e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.0_MPa,   646.89_K), massic_volume_t { 3.798732962e-3 }, 1e-3, eps);
+        CHECK_US(massic_volume (22.064_MPa, 647.15_K), massic_volume_t { 3.701940010e-3 }, 1e-3, eps);
     };
     /*
     SUBCASE("iapws-r7-region-4")
@@ -242,7 +295,6 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(speed_of_sound                (0.5_MPa, 1500._K), velocity_t             { 0.917068690e3         }, 1e3,  eps);
         CHECK_US(speed_of_sound                (30._MPa, 1500._K), velocity_t             { 0.928548002e3         }, 1e3,  eps);
         CHECK_US(speed_of_sound                (30._MPa, 2000._K), velocity_t             { 0.106736948e4         }, 1e4,  eps);
-
     };
 }
 
