@@ -10,4 +10,7 @@
 #   define ISTO_IAPWS_FLAVOR_RELAXED 1
 #   undef ISTO_IAPWS_FLAVOR_CONSTRAINED 
 #endif
+    struct not_implemented_e {};
+    struct not_yet_implemented_e {};
+    struct internal_error_e {};
 
