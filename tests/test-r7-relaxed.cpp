@@ -29,16 +29,6 @@ TEST_CASE("r7.hpp (relaxed)")
         CHECK(saturation_temperature_hs (2400e3, 6.0e3) == Approx { 4.251373305e2 }.scale (1e2).epsilon (eps));
         CHECK(saturation_temperature_hs (2500e3, 5.5e3) == Approx { 5.225579013e2 }.scale (1e2).epsilon (eps));
     }
-    SUBCASE("regions")
-    {
-        CHECK(p_b23_t (0.62315e3)     == Approx { 0.165291643e8 }.scale (1e8).epsilon (eps));
-        CHECK(t_b23_p (0.165291643e8) == Approx { 0.62315e3     }.scale (1e3).epsilon (eps));
-        CHECK(region_pt (50e6, 280.) == 1);
-        CHECK(region_pt (50e6, 1070.) == 2);
-        CHECK(region_pt (50e6, 630.) == 3);
-        //CHECK(region_pt (0.353658941e-2 * 1e6, 300.) == 4);
-        CHECK(region_pt (10e6, 1100.) == 5);
-    }
     SUBCASE("iapws-r7-region-1")
     {
         CHECK(r1::massic_volume_pt                 (3. * 1e6, 300.) == Approx { 0.100215168e-2 }.scale (1e-2).epsilon (eps));
@@ -382,6 +372,16 @@ TEST_CASE("r7.hpp (relaxed)")
         CHECK(r5::speed_of_sound_pt                (30.e6, 1500.) == Approx { 0.928548002e3        }.scale (1e3).epsilon (eps));
         CHECK(r5::speed_of_sound_pt                (30.e6, 2000.) == Approx { 0.106736948e4        }.scale (1e4).epsilon (eps));
     };
+    SUBCASE("region P-T")
+    {
+        CHECK(p_b23_t (0.62315e3)     == Approx { 0.165291643e8 }.scale (1e8).epsilon (eps));
+        CHECK(t_b23_p (0.165291643e8) == Approx { 0.62315e3     }.scale (1e3).epsilon (eps));
+        CHECK(region_pt (50e6, 280.) == 1);
+        CHECK(region_pt (50e6, 1070.) == 2);
+        CHECK(region_pt (50e6, 630.) == 3);
+        //CHECK(region_pt (0.353658941e-2 * 1e6, 300.) == 4);
+        CHECK(region_pt (10e6, 1100.) == 5);
+    }
     SUBCASE("region H-S")
     {
         CHECK(detail::h_p_1_s (1.0e3) == Approx { 3.085509647e5 }.scale (1e5).epsilon (eps));

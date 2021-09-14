@@ -41,10 +41,14 @@ SUBCASE("main API")
 {
     for(const auto& e: table_7)
     {
-        CHECK(pressure (e.D, e.T) == Approx { e.P }.epsilon (1e-8));
-        CHECK(massic_isochoric_heat_capacity (e.D, e.T) == Approx { e.Cv }.epsilon (1e-8));
-        CHECK(speed_of_sound (e.D, e.T) == Approx { e.W }.epsilon (1e-8));
-        CHECK(massic_entropy (e.D, e.T) == Approx { e.S }.epsilon (1e-8));
+        CHECK(pressure_dt (e.D, e.T) == Approx { e.P }.epsilon (1e-8));
+        CHECK(massic_isochoric_heat_capacity_dt (e.D, e.T) == Approx { e.Cv }.epsilon (1e-8));
+        CHECK(speed_of_sound_dt (e.D, e.T) == Approx { e.W }.epsilon (1e-8));
+        CHECK(massic_entropy_dt (e.D, e.T) == Approx { e.S }.epsilon (1e-8));
     }
 } // SUBCASE("main API")
+SUBCASE("mixed arguments")
+{
+    CHECK(pressure_dt (1e3, 300.0l));
+}
 } // TEST_CASE("r6.hpp (relaxed)")

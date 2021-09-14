@@ -23,10 +23,10 @@ NAMES = $(subst test_,,$(basename $(SRC)))
 TEMPLATE = $(join test_, $(1)).o: $(join test_, $(1)).cpp $(foreach h, $(subst $(SEPARATOR), ,$(1)), $(join ../include/isto/${PROJECT}/, $(h)).hpp)
 $(foreach name, $(NAMES), $(eval $(call TEMPLATE,$(name))))
 
-test-r6-relaxed.o: test-r6-relaxed.cpp ../include/isto/iapws/r6.hpp
-test-r6-constrained.o: test-r6-constrained.cpp ../include/isto/iapws/r6.hpp
-test-r7-relaxed.o: test-r7-relaxed.cpp ../include/isto/iapws/r7.hpp
-test-r7-constrained.o: test-r7-constrained.cpp ../include/isto/iapws/r7.hpp
+test-r6-relaxed.o: test-r6-relaxed.cpp ../include/isto/iapws/r6.hpp ../include/isto/iapws/detail/common.hpp
+test-r6-constrained.o: test-r6-constrained.cpp ../include/isto/iapws/r6.hpp ../include/isto/iapws/detail/common.hpp
+test-r7-relaxed.o: test-r7-relaxed.cpp ../include/isto/iapws/r7.hpp ../include/isto/iapws/detail/common.hpp
+test-r7-constrained.o: test-r7-constrained.cpp ../include/isto/iapws/r7.hpp ../include/isto/iapws/detail/common.hpp
 
 clean: 
 	rm -f tests *.o 

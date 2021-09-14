@@ -61,4 +61,8 @@ SUBCASE("main API")
         );
     }
 } // SUBCASE("main API")
+SUBCASE("mixed arguments")
+{
+    CHECK_U(pressure (density_t { 0.9965560e3 }, temperature_t { 300.0l }), pressure_t { 0.992418352e-1 * 1e6l }, 1e-8);
+}
 } // TEST_CASE("r6.hpp (constrained)")
