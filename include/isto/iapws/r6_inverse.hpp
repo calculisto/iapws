@@ -34,7 +34,7 @@ r6_95_2016
 density_pt (
       ISTO_IAPWS_P1 const& pressure
     , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& epsilon = 1e-6 ISTO_IAPWS_U_D
+    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
 ){
         using namespace r6;
         auto
@@ -54,7 +54,8 @@ density_pt (
         , r7::density_pt (pressure, temperature)
         , [=](auto x)
           { 
-            return fabs (x) < epsilon; 
+                using std::abs;
+            return abs (x) < epsilon; 
           }
         , {} // options
         , info
@@ -66,7 +67,7 @@ density_pt (
 density_tp (
       ISTO_IAPWS_T2 const& temperature
     , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_D3 const& epsilon = 1e-6 ISTO_IAPWS_U_D
+    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
 ){
     return density_pt (pressure, temperature, epsilon);
 }
@@ -119,7 +120,7 @@ temperature_pd (
 density (
       ISTO_IAPWS_P1 const& pressure
     , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& epsilon = 1e-6 ISTO_IAPWS_U_D
+    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
 ){
     return density_pt (pressure, temperature, epsilon);
 }
@@ -128,7 +129,7 @@ density (
 density (
       ISTO_IAPWS_T2 const& temperature
     , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_D3 const& epsilon = 1e-6 ISTO_IAPWS_U_D
+    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
 ){
     return density_tp (temperature, pressure, epsilon);
 }

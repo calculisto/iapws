@@ -293,12 +293,8 @@ speed_of_sound_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperatu
     );
 }
     template <class T, class U>
-    auto
+    constexpr auto
 density_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
-#if ISTO_IAPWS_FLAVOR_CONSTRAINED
-    -> density_t <T>
-#else
-#endif
 {
     return 1 / (massic_volume_pt (pressure, temperature));
 }
@@ -1046,7 +1042,7 @@ speed_of_sound_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperatu
     );
 }
     template <class T, class U>
-    auto
+    constexpr auto
 density_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
 {
     return 1 / massic_volume_pt (pressure, temperature);
@@ -9642,9 +9638,9 @@ region (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_S2 const& massic_entropy)
 // Main API
 // P-T
 #define ISTO_IAPWS_R7_GEN_PT(NAME)                                                                      \
-    template <class T, class U>                                                                                  \
+    template <class T, class U>                                                                         \
     auto                                                                                                \
-NAME##_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)                               \
+NAME##_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)                             \
 {                                                                                                       \
     switch (region_pt (pressure, temperature))                                                          \
     {                                                                                                   \
@@ -9656,9 +9652,9 @@ NAME##_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)     
         default: throw internal_error_e {};                                                             \
     }                                                                                                   \
 }                                                                                                       \
-    template <class T, class U>                                                                                  \
+    template <class T, class U>                                                                         \
     auto                                                                                                \
-NAME##_tp (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_P2 const& pressure)                               \
+NAME##_tp (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_P2 const& pressure)                             \
 {                                                                                                       \
     return NAME##_pt (pressure, temperature);                                                           \
 }
@@ -9672,18 +9668,18 @@ ISTO_IAPWS_R7_GEN_PT(massic_isochoric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PT(speed_of_sound)
 #undef ISTO_IAPWS_R7_GEN_PT
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R7_GEN_PT(NAME)                                   \
-    template <class T, class U>                                               \
-    auto                                                             \
+#define ISTO_IAPWS_R7_GEN_PT(NAME)                                     \
+    template <class T, class U>                                        \
+    auto                                                               \
 NAME (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature) \
-{                                                                    \
-    return NAME##_pt (pressure, temperature);                        \
-}                                                                    \
-    template <class T, class U>                                               \
-    auto                                                             \
+{                                                                      \
+    return NAME##_pt (pressure, temperature);                          \
+}                                                                      \
+    template <class T, class U>                                        \
+    auto                                                               \
 NAME (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_P2 const& pressure) \
-{                                                                    \
-    return NAME##_tp (temperature, pressure);                             \
+{                                                                      \
+    return NAME##_tp (temperature, pressure);                          \
 }
 ISTO_IAPWS_R7_GEN_PT(massic_volume)
 ISTO_IAPWS_R7_GEN_PT(density)

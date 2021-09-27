@@ -12,14 +12,15 @@ check: tests
 SRC = $(wildcard test_*.cpp)
 OBJ = $(subst .cpp,.o, $(SRC))
 
-tests: tests.o $(OBJ)         \
-	test-r6-relaxed.o         \
-	test-r6-constrained.o     \
-	test-r7-relaxed.o         \
-	test-r7-constrained.o     \
-	test-r6_inverse-relaxed.o \
-	#test-r10-relaxed.o        \
-	#test-r10-constrained.o    \
+tests: tests.o $(OBJ)             \
+	test-r6-relaxed.o             \
+	test-r6-constrained.o         \
+	test-r7-relaxed.o             \
+	test-r7-constrained.o         \
+	test-r6_inverse-relaxed.o     \
+	test-r6_inverse-constrained.o \
+	#test-r10-relaxed.o           \
+	#test-r10-constrained.o       \
 
 SEPARATOR=+
 NAMES = $(subst test_,,$(basename $(SRC)))
