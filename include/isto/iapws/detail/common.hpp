@@ -34,26 +34,44 @@
 #endif
 
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
+
 #define ISTO_IAPWS_P1 pressure_t <T>
 #define ISTO_IAPWS_T1 temperature_t <T>
 #define ISTO_IAPWS_D1 density_t <T>
 #define ISTO_IAPWS_H1 massic_enthalpy_t <T>
 #define ISTO_IAPWS_S1 massic_entropy_t <T>
+
 #define ISTO_IAPWS_P2 pressure_t <U>
 #define ISTO_IAPWS_T2 temperature_t <U>
 #define ISTO_IAPWS_D2 density_t <U>
 #define ISTO_IAPWS_H2 massic_enthalpy_t <U>
 #define ISTO_IAPWS_S2 massic_entropy_t <U>
+
+#define ISTO_IAPWS_P3 pressure_t <V>
+#define ISTO_IAPWS_T3 temperature_t <V>
+#define ISTO_IAPWS_D3 density_t <V>
+#define ISTO_IAPWS_H3 massic_enthalpy_t <V>
+#define ISTO_IAPWS_S3 massic_entropy_t <V>
+
 #else
+
 #define ISTO_IAPWS_P1 T
 #define ISTO_IAPWS_T1 T
 #define ISTO_IAPWS_D1 T
 #define ISTO_IAPWS_H1 T
 #define ISTO_IAPWS_S1 T
+
 #define ISTO_IAPWS_P2 U
 #define ISTO_IAPWS_T2 U
 #define ISTO_IAPWS_D2 U
 #define ISTO_IAPWS_H2 U
 #define ISTO_IAPWS_S2 U
+
+#define ISTO_IAPWS_P3 V
+#define ISTO_IAPWS_T3 V
+#define ISTO_IAPWS_D3 V
+#define ISTO_IAPWS_H3 V
+#define ISTO_IAPWS_S3 V
+
 #endif
 

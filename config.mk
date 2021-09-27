@@ -1,10 +1,11 @@
 FMTLIB_HEADERS=../../external/fmtlib/fmt/include
 FMTLIB_LIBRARY=../../external/fmtlib/fmt/build
 DOCTEST_HEADERS=../../external/onqtam/doctest
-DEPENDENCIES_HEADERS=\
-	 ../../external/isto/array/include\
-	 ../../external/isto/units/include\
-	 ../../external/isto/hash_combine/include\
+DEPENDENCIES_HEADERS=                         \
+	 ../../external/isto/array/include        \
+	 ../../external/isto/units/include        \
+	 ../../external/isto/hash_combine/include \
+	 ../../external/isto/root_finding/include \
 
 PROJECT=iapws
 LINK.o=${LINK.cc}
