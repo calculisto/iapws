@@ -19,8 +19,8 @@ tests: tests.o $(OBJ)             \
 	test-r7-constrained.o         \
 	test-r6_inverse-relaxed.o     \
 	test-r6_inverse-constrained.o \
-	#test-r10-relaxed.o           \
-	#test-r10-constrained.o       \
+	test-r10-relaxed.o            \
+	test-r10-constrained.o        \
 
 SEPARATOR=+
 NAMES = $(subst test_,,$(basename $(SRC)))
