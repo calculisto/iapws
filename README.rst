@@ -8,7 +8,7 @@ A C++20 headers-only library implementing (some) formulations released by the
 Requirements
 ------------
 
-Otionally, the `isto::units library <https://github.com/le-migou/units>`_. See
+Optionally, the `isto::units library <https://github.com/le-migou/units>`_. See
 `Flavors`_ below.
 
 To run the tests:
