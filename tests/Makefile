@@ -21,6 +21,8 @@ tests: tests.o $(OBJ)             \
 	test-r6_inverse-constrained.o \
 	test-r10-relaxed.o            \
 	test-r10-constrained.o        \
+	test-r14-relaxed.o            \
+	test-r14-constrained.o        \
 
 SEPARATOR=+
 NAMES = $(subst test_,,$(basename $(SRC)))
@@ -34,6 +36,8 @@ test-r7-constrained.o:     test-r7-constrained.cpp     ../include/isto/iapws/r7.
 test-r6_inverse-relaxed.o: test-r6_inverse-relaxed.cpp ../include/isto/iapws/r6_inverse.hpp ../include/isto/iapws/detail/common.hpp
 test-r10-relaxed.o:        test-r10-relaxed.cpp        ../include/isto/iapws/r10.hpp        ../include/isto/iapws/detail/common.hpp
 test-r10-constrained.o:    test-r10-constrained.cpp    ../include/isto/iapws/r10.hpp        ../include/isto/iapws/detail/common.hpp
+test-r14-relaxed.o:        test-r14-relaxed.cpp        ../include/isto/iapws/r14.hpp        ../include/isto/iapws/detail/common.hpp
+test-r14-constrained.o:    test-r14-constrained.cpp    ../include/isto/iapws/r14.hpp        ../include/isto/iapws/detail/common.hpp
 
 clean: 
 	rm -f tests *.o 
