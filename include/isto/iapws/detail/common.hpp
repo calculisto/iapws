@@ -53,6 +53,12 @@
 #define ISTO_IAPWS_H3 massic_enthalpy_t <V>
 #define ISTO_IAPWS_S3 massic_entropy_t <V>
 
+#define ISTO_IAPWS_P4 pressure_t <W>
+#define ISTO_IAPWS_T4 temperature_t <W>
+#define ISTO_IAPWS_D4 density_t <W>
+#define ISTO_IAPWS_H4 massic_enthalpy_t <W>
+#define ISTO_IAPWS_S4 massic_entropy_t <W>
+
 #else
 
 #define ISTO_IAPWS_P1 T
@@ -72,6 +78,12 @@
 #define ISTO_IAPWS_D3 V
 #define ISTO_IAPWS_H3 V
 #define ISTO_IAPWS_S3 V
+
+#define ISTO_IAPWS_P4 W
+#define ISTO_IAPWS_T4 W
+#define ISTO_IAPWS_D4 W
+#define ISTO_IAPWS_H4 W
+#define ISTO_IAPWS_S4 W
 
 #endif
 

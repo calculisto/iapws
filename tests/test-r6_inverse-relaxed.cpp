@@ -9,11 +9,18 @@
 
 TEST_CASE("r6_inverse.hpp (relaxed)")
 {
+        using namespace isto::iapws;
     for(const auto& e: table_7)
     {
         // the convergence espilon is 1e-6.
         CHECK (density_pt (e.P, e.T) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         CHECK (density_tp (e.T, e.P) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        // With initial guess
+        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        // And convergence criterion
+        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         /*
         CHECK (temperature_dp (e.D, e.P) == Approx { e.T }.epsilon (1e-8));
         CHECK (temperature_pd (e.P, e.D) == Approx { e.T }.epsilon (1e-8));

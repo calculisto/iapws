@@ -29,12 +29,13 @@ isto::iapws::r6_inverse
     inline namespace
 r6_95_2016
 {
-    template <class T, class U, class V = std::common_type_t <T, U>>
+    template <class T, class U, class V, class W>
     auto
 density_pt (
       ISTO_IAPWS_P1 const& pressure
     , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
+    , ISTO_IAPWS_D3 const& initial_guess
+    , ISTO_IAPWS_P4 const& epsilon
 ){
         using namespace r6;
         auto
@@ -51,7 +52,7 @@ density_pt (
             delta = density / critical_density;
             return (1 + 2 * delta * phi_r_d (delta, tau) + delta * delta * phi_r_dd (delta, tau)) * massic_gas_constant * temperature;
           }
-        , r7::density_pt (pressure, temperature)
+        , initial_guess
         , [=](auto x)
           { 
                 using std::abs;
@@ -62,14 +63,49 @@ density_pt (
     );
     return density;
 }
-    template <class T, class U, class V = std::common_type_t <T, U>>
+    template <class T, class U, class V>
+    auto
+density_pt (
+      ISTO_IAPWS_P1 const& pressure
+    , ISTO_IAPWS_T2 const& temperature
+    , ISTO_IAPWS_D3 const& initial_guess
+){
+    return density_pt (pressure, temperature, initial_guess, 1e-6 ISTO_IAPWS_U_P);
+}
+    template <class T, class U>
+    auto
+density_pt (
+      ISTO_IAPWS_P1 const& pressure
+    , ISTO_IAPWS_T2 const& temperature
+){
+    return density_pt (pressure, temperature, r7::density_pt (pressure, temperature));
+}
+    template <class T, class U, class V, class W>
     auto
 density_tp (
-      ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+    , ISTO_IAPWS_D3 const& initial_guess
+    , ISTO_IAPWS_P4 const& epsilon
 ){
-    return density_pt (pressure, temperature, epsilon);
+    return density_pt (pressure, temperature, initial_guess, epsilon);
+}
+    template <class T, class U, class V>
+    auto
+density_tp (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+    , ISTO_IAPWS_D3 const& initial_guess
+){
+    return density_pt (pressure, temperature, initial_guess);
+}
+    template <class T, class U>
+    auto
+density_tp (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+){
+    return density_pt (pressure, temperature);
 }
 /*
     template <class T, class U, class V = std::common_type_t <T, U>>
@@ -115,23 +151,77 @@ temperature_pd (
 }
 */
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    template <class T, class U, class V = std::common_type_t <T, U>>
+    template <class T, class U, class V, class W>
     auto
 density (
       ISTO_IAPWS_P1 const& pressure
     , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
+    , ISTO_IAPWS_D3 const& initial_guess
+    , ISTO_IAPWS_P4 const& epsilon
 ){
-    return density_pt (pressure, temperature, epsilon);
+    return density_pt (pressure, temperature, initial_guess, epsilon);
 }
-    template <class T, class U, class V = std::common_type_t <T, U>>
+    template <class T, class U, class V>
     auto
 density (
-      ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_P3 const& epsilon = 1e-6 ISTO_IAPWS_U_P
+      ISTO_IAPWS_P1 const& pressure
+    , ISTO_IAPWS_T2 const& temperature
+    , ISTO_IAPWS_D3 const& initial_guess
 ){
-    return density_tp (temperature, pressure, epsilon);
+    return density_pt (pressure, temperature, initial_guess);
+}
+    template <class T, class U, class V>
+    auto
+density (
+      ISTO_IAPWS_P1 const& pressure
+    , ISTO_IAPWS_T2 const& temperature
+    , ISTO_IAPWS_P3 const& epsilon
+){
+    return density_pt (pressure, temperature, r7::density_pt (pressure, temperature), epsilon);
+}
+    template <class T, class U>
+    auto
+density (
+      ISTO_IAPWS_P1 const& pressure
+    , ISTO_IAPWS_T2 const& temperature
+){
+    return density_pt (pressure, temperature);
+}
+    template <class T, class U, class V, class W>
+    auto
+density (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+    , ISTO_IAPWS_D3 const& initial_guess
+    , ISTO_IAPWS_P4 const& epsilon
+){
+    return density_tp (temperature, pressure, initial_guess, epsilon);
+}
+    template <class T, class U, class V>
+    auto
+density (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+    , ISTO_IAPWS_D3 const& initial_guess
+){
+    return density_tp (temperature, pressure, initial_guess);
+}
+    template <class T, class U, class V>
+    auto
+density (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+    , ISTO_IAPWS_P3 const& epsilon
+){
+    return density_tp (temperature, pressure, r7::density_tp (temperature, pressure), epsilon);
+}
+    template <class T, class U>
+    auto
+density (
+      ISTO_IAPWS_T1 const& temperature
+    , ISTO_IAPWS_P2 const& pressure
+){
+    return density_tp (temperature, pressure);
 }
 /*
     template <class T, class U, class V = std::common_type_t <T, U>>
