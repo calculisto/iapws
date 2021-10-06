@@ -26,4 +26,11 @@ TEST_CASE("r6_inverse.hpp (relaxed)")
         CHECK (temperature_pd (e.P, e.D) == Approx { e.T }.epsilon (1e-8));
         */
     }
+        auto
+    [ r, i ] = density_tp (300.0,  0.992418352e-1 * 1e6, info::convergence);
+    CHECK(i.convergence.size () > 1);
+    for (auto&& [ v, f, df ]: i.convergence)
+    {
+        MESSAGE (v, ", ", f, ", ", df);
+    }
 } // TEST_CASE("r6_inverse.hpp (relaxed)")
