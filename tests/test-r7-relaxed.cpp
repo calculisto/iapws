@@ -681,5 +681,34 @@ TEST_CASE("r7.hpp (relaxed)")
         CHECK(temperature_ps                   (8e6     , 7.5e3 ) == Approx { 0.106495556e4       } .scale (1e4 ).epsilon (eps));
         CHECK(temperature_ps                   (90e6    , 6e3   ) == Approx { 0.103801126e4       } .scale (1e4 ).epsilon (eps));
     }
+    SUBCASE("expansion, compressibility, etc.")
+    {
+            using namespace detail;
+        for (auto it = 0u; it != T.size (); ++it)
+        {
+                auto const
+            t = T.at (it) + 273.15;
+            for (auto ip = 0u; ip != P.size (); ++ip)
+            {
+                    auto const
+                p = P.at (ip) * 1e5;
+                    auto const
+                a = table_9.at (it).at (ip) * 1e-6;
+                    auto const
+                b = table_10.at (it).at (ip) * 1e-9;
+                    auto const
+                c = table_19.at (it).at (ip) * 1e-3;
+                    auto const
+                d = table_20.at (it).at (ip);
+                    auto const
+                r = region_pt (p, t);
+                INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", region = ", r);
+                CHECK(isobaric_cubic_expansion_coefficient_pt (p, t) == Approx { a }.scale (fabs (a)).epsilon (1e-4));
+                CHECK(isothermal_compressibility_pt           (p, t) == Approx { b }.scale (b).epsilon (1e-4));
+                CHECK(relative_pressure_coefficient_pt        (p, t) == Approx { c }.scale (fabs (c)).epsilon (1e-4));
+                CHECK(isothermal_stress_coefficient_pt        (p, t) == Approx { d }.scale (fabs (d)).epsilon (1e-4));
+            }
+        }
+    }
 }
 

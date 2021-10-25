@@ -3,7 +3,10 @@
 #include "test.hpp"
 #define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r6.hpp"
+#include "../include/isto/iapws/r6_inverse.hpp"
+    using namespace isto::iapws;
     using namespace isto::iapws::r6;
+#include "../include/isto/iapws/r7.hpp"
 #include "../include/isto/iapws/detail/data_for_the_tests.hpp"
     using namespace r6_95_2016::detail;
 
@@ -50,5 +53,65 @@ SUBCASE("main API")
 SUBCASE("mixed arguments")
 {
     CHECK(pressure_dt (1e3, 300.0l));
+}
+SUBCASE("expansion, compressibility, etc.")
+{
+        using namespace isto::iapws::r7::detail;
+    for (auto it = 1u; it != T.size (); ++it)
+    {
+            auto const
+        t = T.at (it) + 273.15;
+        for (auto ip = 0u; ip != P.size (); ++ip)
+        {
+                auto const
+            p = P.at (ip) * 1e5;
+                auto const
+            A = table_9.at (it).at (ip) * 1e-6;
+                auto const
+            B = table_10.at (it).at (ip) * 1e-9;
+                auto const
+            C = table_19.at (it).at (ip) * 1e-3;
+                auto const
+            D = table_20.at (it).at (ip);
+                auto const
+            AA = r7::isobaric_cubic_expansion_coefficient_pt (p, t);
+                auto const
+            BB = r7::isothermal_compressibility_pt           (p, t);
+                auto const
+            CC = r7::relative_pressure_coefficient_pt        (p, t);
+                auto const
+            DD = r7::isothermal_stress_coefficient_pt        (p, t);
+                auto const
+            d7 = r7::density_pt (p, t);
+                auto const
+            [ d, i ] = r6_inverse::density_pt (p, t, 1e-4, info::convergence);
+            if (i.converged)
+            {
+                {
+                    INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", rho_0 = ", d7, ", rho = ", d, ", r7: ", AA);
+                    CHECK(isobaric_cubic_expansion_coefficient_dt (d, t) == Approx { A }.scale (fabs (A)).epsilon (1e-2));
+                }{
+                    INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", rho_0 = ", d7, ", rho = ", d, ", r7: ", BB);
+                    CHECK(isothermal_compressibility_dt           (d, t) == Approx { B }.scale (B).epsilon (1e-2));
+                }{
+                    INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", rho_0 = ", d7, ", rho = ", d, ", r7: ", CC);
+                    CHECK(relative_pressure_coefficient_dt        (d, t) == Approx { C }.scale (fabs (C)).epsilon (1e-2));
+                }{
+                    INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", rho_0 = ", d7, ", rho = ", d, ", r7: ", DD);
+                    CHECK(isothermal_stress_coefficient_dt        (d, t) == Approx { D }.scale (fabs (D)).epsilon (1e-2));
+                }
+            }
+            else
+            {
+                MESSAGE("Failed with ""P = ", p * 1e-5, ", T = ", t - 273.15, ", rho_0 = ", d7);
+                /*
+                for (auto&& [ v, f, df ]: i.convergence)
+                {
+                    MESSAGE("  ", v, ", ", f, ", ", df);
+                }
+                */
+            }
+        }
+    }
 }
 } // TEST_CASE("r6.hpp (relaxed)")

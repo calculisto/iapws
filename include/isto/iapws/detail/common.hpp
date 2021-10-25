@@ -23,6 +23,7 @@
 #define ISTO_IAPWS_U_V  * pow <3> (unit::metre <>) / unit::kilogram <>
 #define ISTO_IAPWS_U_H  * unit::joule <> / unit::kilogram <>
 #define ISTO_IAPWS_U_S  * unit::joule <> / unit::kilogram <> / unit::kelvin <>
+#define ISTO_IAPWS_U_M  * unit::pascal <> * unit::second <>
 #else
 #define ISTO_IAPWS_U_GC
 #define ISTO_IAPWS_U_T
@@ -31,6 +32,7 @@
 #define ISTO_IAPWS_U_V
 #define ISTO_IAPWS_U_H
 #define ISTO_IAPWS_U_S
+#define ISTO_IAPWS_U_M
 #endif
 
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED

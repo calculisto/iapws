@@ -1,25 +1,329 @@
 include ../config.mk
-CXXFLAGS+=-I../../../external/isto/root_finding/include \
+CXXFLAGS+=-I../../../external/isto/root_finding/include    \
 		  -I../../../external/isto/uncertain_value/include \
-		  -I../../../external/isto/template_pow/include  \
-		  -I../../../external/onqtam/doctest
+		  -I../../../external/isto/template_pow/include    \
+		  -I../../../external/onqtam/doctest               \
+		  -O3
+		  
+LDFLAGS=-lpthread
 
-all: density_r7.png          \
-	density_r7_plog.png      \
-	density_r7_dlog.png      \
-	density_r7_plog_dlog.png \
-	lines.png
+dats=                                                                 \
+	density_r6_inv_ext_ylin.dat                                       \
+	density_r6_inv_ext_ylin_failed.dat                                \
+	massic_enthalpy_r6_inv_ext_ylin.dat                               \
+	massic_gibbs_free_energy_r6_inv_ext_ylin.dat                      \
+	massic_internal_energy_r6_inv_ext_ylin.dat                        \
+	massic_entropy_r6_inv_ext_ylin.dat                                \
+	massic_isobaric_heat_capacity_r6_inv_ext_ylin.dat                 \
+	massic_isochoric_heat_capacity_r6_inv_ext_ylin.dat                \
+	speed_of_sound_r6_inv_ext_ylin.dat                                \
+	isobaric_cubic_expansion_coefficient_r6_inv_ext_ylin.dat          \
+	isothermal_compressibility_r6_inv_ext_ylin.dat                    \
+	relative_pressure_coefficient_r6_inv_ext_ylin.dat                 \
+	isothermal_stress_coefficient_r6_inv_ext_ylin.dat                 \
+	density_r6_inv_ext_ylog.dat                                       \
+	density_r6_inv_ext_ylog_failed.dat                                \
+	massic_enthalpy_r6_inv_ext_ylog.dat                               \
+	massic_gibbs_free_energy_r6_inv_ext_ylog.dat                      \
+	massic_internal_energy_r6_inv_ext_ylog.dat                        \
+	massic_entropy_r6_inv_ext_ylog.dat                                \
+	massic_isobaric_heat_capacity_r6_inv_ext_ylog.dat                 \
+	massic_isochoric_heat_capacity_r6_inv_ext_ylog.dat                \
+	speed_of_sound_r6_inv_ext_ylog.dat                                \
+	isobaric_cubic_expansion_coefficient_r6_inv_ext_ylog.dat          \
+	isothermal_compressibility_r6_inv_ext_ylog.dat                    \
+	relative_pressure_coefficient_r6_inv_ext_ylog.dat                 \
+	isothermal_stress_coefficient_r6_inv_ext_ylog.dat                 \
+	                                                                  \
+	density_r6_inv_ylin.dat                                           \
+	density_r6_inv_ylin_failed.dat                                    \
+	massic_enthalpy_r6_inv_ylin.dat                                   \
+	massic_gibbs_free_energy_r6_inv_ylin.dat                          \
+	massic_internal_energy_r6_inv_ylin.dat                            \
+	massic_entropy_r6_inv_ylin.dat                                    \
+	massic_isobaric_heat_capacity_r6_inv_ylin.dat                     \
+	massic_isochoric_heat_capacity_r6_inv_ylin.dat                    \
+	speed_of_sound_r6_inv_ylin.dat                                    \
+	isobaric_cubic_expansion_coefficient_r6_inv_ylin.dat              \
+	isothermal_compressibility_r6_inv_ylin.dat                        \
+	relative_pressure_coefficient_r6_inv_ylin.dat                     \
+	isothermal_stress_coefficient_r6_inv_ylin.dat                     \
+	density_r6_inv_ylog.dat                                           \
+	density_r6_inv_ylog_failed.dat                                    \
+	massic_enthalpy_r6_inv_ylog.dat                                   \
+	massic_gibbs_free_energy_r6_inv_ylog.dat                          \
+	massic_internal_energy_r6_inv_ylog.dat                            \
+	massic_entropy_r6_inv_ylog.dat                                    \
+	massic_isobaric_heat_capacity_r6_inv_ylog.dat                     \
+	massic_isochoric_heat_capacity_r6_inv_ylog.dat                    \
+	speed_of_sound_r6_inv_ylog.dat                                    \
+	isobaric_cubic_expansion_coefficient_r6_inv_ylog.dat              \
+	isothermal_compressibility_r6_inv_ylog.dat                        \
+	relative_pressure_coefficient_r6_inv_ylog.dat                     \
+	isothermal_stress_coefficient_r6_inv_ylog.dat                     \
+	                                                                  \
+	density_r7_ylin.dat                                               \
+	massic_enthalpy_r7_ylin.dat                                       \
+	massic_internal_energy_r7_ylin.dat                                \
+	massic_entropy_r7_ylin.dat                                        \
+	massic_isobaric_heat_capacity_r7_ylin.dat                         \
+	massic_isochoric_heat_capacity_r7_ylin.dat                        \
+	speed_of_sound_r7_ylin.dat                                        \
+	isobaric_cubic_expansion_coefficient_r7_ylin.dat                  \
+	isothermal_compressibility_r7_ylin.dat                            \
+	relative_pressure_coefficient_r7_ylin.dat                         \
+	isothermal_stress_coefficient_r7_ylin.dat                         \
+	density_r7_ylog.dat                                               \
+	massic_enthalpy_r7_ylog.dat                                       \
+	massic_internal_energy_r7_ylog.dat                                \
+	massic_entropy_r7_ylog.dat                                        \
+	massic_isobaric_heat_capacity_r7_ylog.dat                         \
+	massic_isochoric_heat_capacity_r7_ylog.dat                        \
+	speed_of_sound_r7_ylog.dat                                        \
+	isobaric_cubic_expansion_coefficient_r7_ylog.dat                  \
+	isothermal_compressibility_r7_ylog.dat                            \
+	relative_pressure_coefficient_r7_ylog.dat                         \
+	isothermal_stress_coefficient_r7_ylog.dat                         \
+	                                                                  \
+	density_r7_vs_r6_inv_error_ylin.dat                               \
+	density_r7_vs_r6_inv_iter_ylin.dat                                \
+	massic_enthalpy_r7_vs_r6_inv_error_ylin.dat                       \
+	massic_internal_energy_r7_vs_r6_inv_error_ylin.dat                \
+	massic_entropy_r7_vs_r6_inv_error_ylin.dat                        \
+	massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylin.dat         \
+	massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylin.dat        \
+	speed_of_sound_r7_vs_r6_inv_error_ylin.dat                        \
+	isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylin.dat  \
+	isothermal_compressibility_r7_vs_r6_inv_error_ylin.dat            \
+	relative_pressure_coefficient_r7_vs_r6_inv_error_ylin.dat         \
+	isothermal_stress_coefficient_r7_vs_r6_inv_error_ylin.dat         \
+	density_r7_vs_r6_inv_error_ylog.dat                               \
+	density_r7_vs_r6_inv_iter_ylog.dat                                \
+	massic_enthalpy_r7_vs_r6_inv_error_ylog.dat                       \
+	massic_internal_energy_r7_vs_r6_inv_error_ylog.dat                \
+	massic_entropy_r7_vs_r6_inv_error_ylog.dat                        \
+	massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylog.dat         \
+	massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylog.dat        \
+	speed_of_sound_r7_vs_r6_inv_error_ylog.dat                        \
+	isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylog.dat  \
+	isothermal_compressibility_r7_vs_r6_inv_error_ylog.dat            \
+	relative_pressure_coefficient_r7_vs_r6_inv_error_ylog.dat         \
+	isothermal_stress_coefficient_r7_vs_r6_inv_error_ylog.dat         \
+	                                                                  \
+	saturation.dat                                                    \
+	sublimation.dat                                                   \
+	melting_ih.dat                                                    \
+	melting_iii.dat                                                   \
+	melting_v.dat                                                     \
+	melting_vi.dat                                                    \
+	melting_vii.dat                                                   \
+	                                                                  \
+    sublimation_dt.dat                                                \
+    saturation_gaz_dt.dat                                             \
+    saturation_liq_dt.dat                                             \
+    melting_ih_dt.dat                                                 \
+    melting_iii_dt.dat                                                \
+    melting_v_dt.dat                                                  \
+    melting_vi_dt.dat                                                 \
+    melting_vii_dt.dat                                                \
 
+pngs =                                                                    \
+    density_r6_inv_ext_ylin_zlin.png                                      \
+    density_r6_inv_ext_ylin_zlog.png                                      \
+    density_r6_inv_ext_ylog_zlin.png                                      \
+    density_r6_inv_ext_ylog_zlog.png                                      \
+    massic_enthalpy_r6_inv_ext_ylin_zlin.png                              \
+    massic_enthalpy_r6_inv_ext_ylin_zlog.png                              \
+    massic_enthalpy_r6_inv_ext_ylog_zlin.png                              \
+    massic_enthalpy_r6_inv_ext_ylog_zlog.png                              \
+    massic_gibbs_free_energy_r6_inv_ext_ylin_zlin.png                     \
+    massic_gibbs_free_energy_r6_inv_ext_ylin_zlog.png                     \
+    massic_gibbs_free_energy_r6_inv_ext_ylog_zlin.png                     \
+    massic_gibbs_free_energy_r6_inv_ext_ylog_zlog.png                     \
+    massic_internal_energy_r6_inv_ext_ylin_zlin.png                       \
+    massic_internal_energy_r6_inv_ext_ylin_zlog.png                       \
+    massic_internal_energy_r6_inv_ext_ylog_zlin.png                       \
+    massic_internal_energy_r6_inv_ext_ylog_zlog.png                       \
+    massic_entropy_r6_inv_ext_ylin_zlin.png                               \
+    massic_entropy_r6_inv_ext_ylin_zlog.png                               \
+    massic_entropy_r6_inv_ext_ylog_zlin.png                               \
+    massic_entropy_r6_inv_ext_ylog_zlog.png                               \
+    massic_isobaric_heat_capacity_r6_inv_ext_ylin_zlin.png                \
+    massic_isobaric_heat_capacity_r6_inv_ext_ylin_zlog.png                \
+    massic_isobaric_heat_capacity_r6_inv_ext_ylog_zlin.png                \
+    massic_isobaric_heat_capacity_r6_inv_ext_ylog_zlog.png                \
+    massic_isochoric_heat_capacity_r6_inv_ext_ylin_zlin.png               \
+    massic_isochoric_heat_capacity_r6_inv_ext_ylin_zlog.png               \
+    massic_isochoric_heat_capacity_r6_inv_ext_ylog_zlin.png               \
+    massic_isochoric_heat_capacity_r6_inv_ext_ylog_zlog.png               \
+    speed_of_sound_r6_inv_ext_ylin_zlin.png                               \
+    speed_of_sound_r6_inv_ext_ylin_zlog.png                               \
+    speed_of_sound_r6_inv_ext_ylog_zlin.png                               \
+    speed_of_sound_r6_inv_ext_ylog_zlog.png                               \
+    isobaric_cubic_expansion_coefficient_r6_inv_ext_ylin_zlin.png         \
+    isobaric_cubic_expansion_coefficient_r6_inv_ext_ylin_zlog.png         \
+    isobaric_cubic_expansion_coefficient_r6_inv_ext_ylog_zlin.png         \
+    isobaric_cubic_expansion_coefficient_r6_inv_ext_ylog_zlog.png         \
+    isothermal_compressibility_r6_inv_ext_ylin_zlin.png                   \
+    isothermal_compressibility_r6_inv_ext_ylin_zlog.png                   \
+    isothermal_compressibility_r6_inv_ext_ylog_zlin.png                   \
+    isothermal_compressibility_r6_inv_ext_ylog_zlog.png                   \
+    relative_pressure_coefficient_r6_inv_ext_ylin_zlin.png                \
+    relative_pressure_coefficient_r6_inv_ext_ylin_zlog.png                \
+    relative_pressure_coefficient_r6_inv_ext_ylog_zlin.png                \
+    relative_pressure_coefficient_r6_inv_ext_ylog_zlog.png                \
+    isothermal_stress_coefficient_r6_inv_ext_ylin_zlin.png                \
+    isothermal_stress_coefficient_r6_inv_ext_ylin_zlog.png                \
+    isothermal_stress_coefficient_r6_inv_ext_ylog_zlin.png                \
+    isothermal_stress_coefficient_r6_inv_ext_ylog_zlog.png                \
+    density_r6_inv_ylin_zlin.png                                          \
+    density_r6_inv_ylin_zlog.png                                          \
+    density_r6_inv_ylog_zlin.png                                          \
+    density_r6_inv_ylog_zlog.png                                          \
+    massic_enthalpy_r6_inv_ylin_zlin.png                                  \
+    massic_enthalpy_r6_inv_ylin_zlog.png                                  \
+    massic_enthalpy_r6_inv_ylog_zlin.png                                  \
+    massic_enthalpy_r6_inv_ylog_zlog.png                                  \
+    massic_gibbs_free_energy_r6_inv_ylin_zlin.png                         \
+    massic_gibbs_free_energy_r6_inv_ylin_zlog.png                         \
+    massic_gibbs_free_energy_r6_inv_ylog_zlin.png                         \
+    massic_gibbs_free_energy_r6_inv_ylog_zlog.png                         \
+    massic_internal_energy_r6_inv_ylin_zlin.png                           \
+    massic_internal_energy_r6_inv_ylin_zlog.png                           \
+    massic_internal_energy_r6_inv_ylog_zlin.png                           \
+    massic_internal_energy_r6_inv_ylog_zlog.png                           \
+    massic_entropy_r6_inv_ylin_zlin.png                                   \
+    massic_entropy_r6_inv_ylin_zlog.png                                   \
+    massic_entropy_r6_inv_ylog_zlin.png                                   \
+    massic_entropy_r6_inv_ylog_zlog.png                                   \
+    massic_isobaric_heat_capacity_r6_inv_ylin_zlin.png                    \
+    massic_isobaric_heat_capacity_r6_inv_ylin_zlog.png                    \
+    massic_isobaric_heat_capacity_r6_inv_ylog_zlin.png                    \
+    massic_isobaric_heat_capacity_r6_inv_ylog_zlog.png                    \
+    massic_isochoric_heat_capacity_r6_inv_ylin_zlin.png                   \
+    massic_isochoric_heat_capacity_r6_inv_ylin_zlog.png                   \
+    massic_isochoric_heat_capacity_r6_inv_ylog_zlin.png                   \
+    massic_isochoric_heat_capacity_r6_inv_ylog_zlog.png                   \
+    speed_of_sound_r6_inv_ylin_zlin.png                                   \
+    speed_of_sound_r6_inv_ylin_zlog.png                                   \
+    speed_of_sound_r6_inv_ylog_zlin.png                                   \
+    speed_of_sound_r6_inv_ylog_zlog.png                                   \
+    isobaric_cubic_expansion_coefficient_r6_inv_ylin_zlin.png             \
+    isobaric_cubic_expansion_coefficient_r6_inv_ylin_zlog.png             \
+    isobaric_cubic_expansion_coefficient_r6_inv_ylog_zlin.png             \
+    isobaric_cubic_expansion_coefficient_r6_inv_ylog_zlog.png             \
+    isothermal_compressibility_r6_inv_ylin_zlin.png                       \
+    isothermal_compressibility_r6_inv_ylin_zlog.png                       \
+    isothermal_compressibility_r6_inv_ylog_zlin.png                       \
+    isothermal_compressibility_r6_inv_ylog_zlog.png                       \
+    relative_pressure_coefficient_r6_inv_ylin_zlin.png                    \
+    relative_pressure_coefficient_r6_inv_ylin_zlog.png                    \
+    relative_pressure_coefficient_r6_inv_ylog_zlin.png                    \
+    relative_pressure_coefficient_r6_inv_ylog_zlog.png                    \
+    isothermal_stress_coefficient_r6_inv_ylin_zlin.png                    \
+    isothermal_stress_coefficient_r6_inv_ylin_zlog.png                    \
+    isothermal_stress_coefficient_r6_inv_ylog_zlin.png                    \
+    isothermal_stress_coefficient_r6_inv_ylog_zlog.png                    \
+    density_r7_ylin_zlin.png                                              \
+    density_r7_ylin_zlog.png                                              \
+    density_r7_ylog_zlin.png                                              \
+    density_r7_ylog_zlog.png                                              \
+    massic_enthalpy_r7_ylin_zlin.png                                      \
+    massic_enthalpy_r7_ylin_zlog.png                                      \
+    massic_enthalpy_r7_ylog_zlin.png                                      \
+    massic_enthalpy_r7_ylog_zlog.png                                      \
+    massic_internal_energy_r7_ylin_zlin.png                               \
+    massic_internal_energy_r7_ylin_zlog.png                               \
+    massic_internal_energy_r7_ylog_zlin.png                               \
+    massic_internal_energy_r7_ylog_zlog.png                               \
+    massic_entropy_r7_ylin_zlin.png                                       \
+    massic_entropy_r7_ylin_zlog.png                                       \
+    massic_entropy_r7_ylog_zlin.png                                       \
+    massic_entropy_r7_ylog_zlog.png                                       \
+    massic_isobaric_heat_capacity_r7_ylin_zlin.png                        \
+    massic_isobaric_heat_capacity_r7_ylin_zlog.png                        \
+    massic_isobaric_heat_capacity_r7_ylog_zlin.png                        \
+    massic_isobaric_heat_capacity_r7_ylog_zlog.png                        \
+    massic_isochoric_heat_capacity_r7_ylin_zlin.png                       \
+    massic_isochoric_heat_capacity_r7_ylin_zlog.png                       \
+    massic_isochoric_heat_capacity_r7_ylog_zlin.png                       \
+    massic_isochoric_heat_capacity_r7_ylog_zlog.png                       \
+    speed_of_sound_r7_ylin_zlin.png                                       \
+    speed_of_sound_r7_ylin_zlog.png                                       \
+    speed_of_sound_r7_ylog_zlin.png                                       \
+    speed_of_sound_r7_ylog_zlog.png                                       \
+    isobaric_cubic_expansion_coefficient_r7_ylin_zlin.png                 \
+    isobaric_cubic_expansion_coefficient_r7_ylin_zlog.png                 \
+    isobaric_cubic_expansion_coefficient_r7_ylog_zlin.png                 \
+    isobaric_cubic_expansion_coefficient_r7_ylog_zlog.png                 \
+    isothermal_compressibility_r7_ylin_zlin.png                           \
+    isothermal_compressibility_r7_ylin_zlog.png                           \
+    isothermal_compressibility_r7_ylog_zlin.png                           \
+    isothermal_compressibility_r7_ylog_zlog.png                           \
+    relative_pressure_coefficient_r7_ylin_zlin.png                        \
+    relative_pressure_coefficient_r7_ylin_zlog.png                        \
+    relative_pressure_coefficient_r7_ylog_zlin.png                        \
+    relative_pressure_coefficient_r7_ylog_zlog.png                        \
+    isothermal_stress_coefficient_r7_ylin_zlin.png                        \
+    isothermal_stress_coefficient_r7_ylin_zlog.png                        \
+    isothermal_stress_coefficient_r7_ylog_zlin.png                        \
+    isothermal_stress_coefficient_r7_ylog_zlog.png                        \
+    density_r7_vs_r6_inv_error_ylin_zlin.png                              \
+    density_r7_vs_r6_inv_error_ylin_zlog.png                              \
+    density_r7_vs_r6_inv_error_ylog_zlin.png                              \
+    density_r7_vs_r6_inv_error_ylog_zlog.png                              \
+    density_r7_vs_r6_inv_iter_ylin_zlin.png                               \
+    density_r7_vs_r6_inv_iter_ylin_zlog.png                               \
+    density_r7_vs_r6_inv_iter_ylog_zlin.png                               \
+    density_r7_vs_r6_inv_iter_ylog_zlog.png                               \
+    massic_enthalpy_r7_vs_r6_inv_error_ylin_zlin.png                      \
+    massic_enthalpy_r7_vs_r6_inv_error_ylin_zlog.png                      \
+    massic_enthalpy_r7_vs_r6_inv_error_ylog_zlin.png                      \
+    massic_enthalpy_r7_vs_r6_inv_error_ylog_zlog.png                      \
+    massic_internal_energy_r7_vs_r6_inv_error_ylin_zlin.png               \
+    massic_internal_energy_r7_vs_r6_inv_error_ylin_zlog.png               \
+    massic_internal_energy_r7_vs_r6_inv_error_ylog_zlin.png               \
+    massic_internal_energy_r7_vs_r6_inv_error_ylog_zlog.png               \
+    massic_entropy_r7_vs_r6_inv_error_ylin_zlin.png                       \
+    massic_entropy_r7_vs_r6_inv_error_ylin_zlog.png                       \
+    massic_entropy_r7_vs_r6_inv_error_ylog_zlin.png                       \
+    massic_entropy_r7_vs_r6_inv_error_ylog_zlog.png                       \
+    massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylin_zlin.png        \
+    massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylin_zlog.png        \
+    massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylog_zlin.png        \
+    massic_isobaric_heat_capacity_r7_vs_r6_inv_error_ylog_zlog.png        \
+    massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylin_zlin.png       \
+    massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylin_zlog.png       \
+    massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylog_zlin.png       \
+    massic_isochoric_heat_capacity_r7_vs_r6_inv_error_ylog_zlog.png       \
+    speed_of_sound_r7_vs_r6_inv_error_ylin_zlin.png                       \
+    speed_of_sound_r7_vs_r6_inv_error_ylin_zlog.png                       \
+    speed_of_sound_r7_vs_r6_inv_error_ylog_zlin.png                       \
+    speed_of_sound_r7_vs_r6_inv_error_ylog_zlog.png                       \
+    isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylin_zlin.png \
+    isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylin_zlog.png \
+    isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylog_zlin.png \
+    isobaric_cubic_expansion_coefficient_r7_vs_r6_inv_error_ylog_zlog.png \
+    isothermal_compressibility_r7_vs_r6_inv_error_ylin_zlin.png           \
+    isothermal_compressibility_r7_vs_r6_inv_error_ylin_zlog.png           \
+    isothermal_compressibility_r7_vs_r6_inv_error_ylog_zlin.png           \
+    isothermal_compressibility_r7_vs_r6_inv_error_ylog_zlog.png           \
+    relative_pressure_coefficient_r7_vs_r6_inv_error_ylin_zlin.png        \
+    relative_pressure_coefficient_r7_vs_r6_inv_error_ylin_zlog.png        \
+    relative_pressure_coefficient_r7_vs_r6_inv_error_ylog_zlin.png        \
+    relative_pressure_coefficient_r7_vs_r6_inv_error_ylog_zlog.png        \
+    isothermal_stress_coefficient_r7_vs_r6_inv_error_ylin_zlin.png        \
+    isothermal_stress_coefficient_r7_vs_r6_inv_error_ylin_zlog.png        \
+    isothermal_stress_coefficient_r7_vs_r6_inv_error_ylog_zlin.png        \
+    isothermal_stress_coefficient_r7_vs_r6_inv_error_ylog_zlog.png        \
 
-density_r7.png: density_r7.dat density_r7.gpl
-	gnuplot -c density_r7.gpl
-density_r7_plog.png: density_r7_plog.dat density_r7_plog.gpl
-	gnuplot -c density_r7_plog.gpl
-density_r7_dlog.png: density_r7.dat density_r7_dlog.gpl
-	gnuplot -c density_r7_dlog.gpl
-density_r7_plog_dlog.png: density_r7_plog.dat density_r7_plog_dlog.gpl
-	gnuplot -c density_r7_plog_dlog.gpl
-lines.png: lines.gpl        \
+gpls = $(subst .png,.gpl,$(pngs))
+thbs = $(subst .png,-thumb.png,$(pngs)) lines-thumb.png lines_dt-thumb.png
+
+#all: thumbs
+all: $(thbs)
+
+lines.png: lines.gpl    \
 		melting_ih.dat  \
 		melting_iii.dat \
 		melting_v.dat   \
@@ -29,10 +333,40 @@ lines.png: lines.gpl        \
 		sublimation.dat 
 	gnuplot -c lines.gpl
 
-%.dat: diagram
-	./diagram
+lines_dt.png: lines_dt.gpl    \
+		melting_ih_dt.dat     \
+		melting_iii_dt.dat    \
+		melting_v_dt.dat      \
+		melting_vi_dt.dat     \
+		melting_vii_dt.dat    \
+		saturation_liq_dt.dat \
+		saturation_gaz_dt.dat \
+		sublimation_dt.dat 
+	gnuplot -c lines_dt.gpl
 
-diagram: diagram.cpp
+$(filter %_ylin_zlin.png, $(pngs)): %_ylin_zlin.png: %_ylin.dat %_ylin_zlin.gpl
+	gnuplot -c $*_ylin_zlin.gpl
+$(filter %_ylin_zlog.png, $(pngs)): %_ylin_zlog.png: %_ylin.dat %_ylin_zlog.gpl
+	gnuplot -c $*_ylin_zlog.gpl
+$(filter %_ylog_zlin.png, $(pngs)): %_ylog_zlin.png: %_ylog.dat %_ylog_zlin.gpl
+	gnuplot -c $*_ylog_zlin.gpl
+$(filter %_ylog_zlog.png, $(pngs)): %_ylog_zlog.png: %_ylog.dat %_ylog_zlog.gpl
+	gnuplot -c $*_ylog_zlog.gpl
+
+$(gpls) lines.gpl lines_dt.gpl &: make_gpl
+	./make_gpl
+
+$(dats) &: make_data
+	./make_data
+
+$(filter %-thumb.png, $(thbs)): %-thumb.png: %.png
+	convert $< -thumbnail 320x240 $@
+
+#thumbs: $(pngs) lines.png lines_dt.png
+#	parallel-moreutils -j 8 -i sh -c 'convert {} -thumbnail 320x240 $$(echo {} | sed s/.png/-thumb.png/)' -- $(pngs) lines.png lines_dt.png
 
 clean:
-	rm -f *.png *.dat
+	rm -f *.png *.gpl
+
+cleaner: clean
+	rm -f *.dat *.txt

@@ -1,5 +1,7 @@
 #pragma once
 #include "detail/common.hpp"
+#include <isto/template_pow/template_pow.hpp>
+    using isto::template_pow::pow;
 
 // TODO long double coeffs ?
 
@@ -270,7 +272,7 @@ massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 
     pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
         auto const
     tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     template <class T, class U>
     auto
@@ -297,6 +299,38 @@ speed_of_sound_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperatu
 density_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
 {
     return 1 / (massic_volume_pt (pressure, temperature));
+}
+    template <class T, class U>
+    constexpr auto
+isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+        auto const
+    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    return (1. - tau * gamma_pt (pi, tau) / gamma_p (pi, tau)) / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+        auto const
+    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    return (- pi * gamma_pp (pi, tau) / gamma_p (pi, tau)) / pressure;
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
     template <class T, class U>
     auto
@@ -599,6 +633,30 @@ density (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
 }
     template <class T, class U>
     constexpr auto
+isobaric_cubic_expansion_coefficient (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isothermal_compressibility_pt (pressure, temperature); 
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return relative_pressure_coefficient_pt (pressure, temperature); 
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isothermal_stress_coefficient_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
 temperature (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_H2 const& massic_enthalpy)
 {
     return temperature_ph (pressure, massic_enthalpy);
@@ -845,7 +903,7 @@ gamma_0_tt (T const& /*pi*/, U const& tau)
 }
     template <class T, class U>
     T
-gamma_0_pt (T const& pi, U const& tau)
+gamma_0_pt (T const& /*pi*/, U const& /*tau*/)
 {
     return static_cast <T> (0);
 }
@@ -1019,7 +1077,7 @@ massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     template <class T, class U>
     auto
@@ -1046,6 +1104,38 @@ speed_of_sound_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperatu
 density_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
 {
     return 1 / massic_volume_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = (540. ISTO_IAPWS_U_T) / temperature;
+    return (1. - tau * gamma_pt (pi, tau) / gamma_p (pi, tau)) / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = (540. ISTO_IAPWS_U_T) / temperature;
+    return (- pi * gamma_pp (pi, tau) / gamma_p (pi, tau)) / pressure;
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
     template <class T>
     constexpr auto
@@ -2644,7 +2734,7 @@ massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     template <class T, class U>
     auto
@@ -3359,6 +3449,46 @@ speed_of_sound_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperatur
         - pow (delta * phi_d (delta, tau) - delta * tau * phi_dt (delta, tau), 2)
         / (tau * tau * phi_tt (delta, tau))
     ) * massic_gas_constant * temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isobaric_cubic_expansion_coefficient_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    delta = density / critical_density;
+        auto const
+    tau = critical_temperature / temperature;
+    return ((phi_d (delta, tau) - tau * phi_dt (delta, tau)) / (2. * phi_d (delta, tau) + delta * phi_dd (delta, tau))) / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    delta = density / critical_density;
+        auto const
+    tau = critical_temperature / temperature;
+    return (1. / (2. * delta * phi_d (delta, tau) + delta * delta * phi_dd (delta, tau))) / density / massic_gas_constant / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    delta = density / critical_density;
+        auto const
+    tau = critical_temperature / temperature;
+    return (1. - tau * phi_dt (delta, tau) / phi_d (delta, tau)) / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    delta = density / critical_density;
+        auto const
+    tau = critical_temperature / temperature;
+    return (2. + delta * phi_dd (delta, tau) / phi_d (delta, tau)) * density;
 }
     template <class T>
     constexpr auto
@@ -8432,6 +8562,30 @@ speed_of_sound_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperatu
 {
     return speed_of_sound_dt (density_pt (pressure, temperature), temperature);
 }
+    template <class T, class U>
+    constexpr auto
+isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isobaric_cubic_expansion_coefficient_dt (density_pt (pressure, temperature), temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isothermal_compressibility_dt (density_pt (pressure, temperature), temperature);
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return relative_pressure_coefficient_dt (density_pt (pressure, temperature), temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isothermal_stress_coefficient_dt (density_pt (pressure, temperature), temperature);
+}
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
     template <class T, class U>
     constexpr auto
@@ -8713,7 +8867,7 @@ massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 
     pi = pressure / (1e6 ISTO_IAPWS_U_P);
         auto const
     tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pp (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     template <class T, class U>
     auto
@@ -8741,6 +8895,39 @@ density_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
 {
     return 1 / massic_volume_pt (pressure, temperature);
 }
+    template <class T, class U>
+    constexpr auto
+isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+        auto const
+    tau = (100. ISTO_IAPWS_U_T) / temperature;
+    return ((1. + pi * gamma_r_p (pi, tau) - tau * pi * gamma_r_pt (pi, tau)) / (1. + pi * gamma_r_p (pi, tau))) / temperature;
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_compressibility_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+        auto const
+    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+        auto const
+    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    return ((1. - pi * pi * gamma_r_pp (pi, tau)) / (1. + pi * gamma_r_p (pi, tau))) / pressure;
+}
+    template <class T, class U>
+    constexpr auto
+relative_pressure_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
+}
+    template <class T, class U>
+    constexpr auto
+isothermal_stress_coefficient_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
+{
+    return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
+}
+
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
     template <class T, class U>
     auto
@@ -8850,11 +9037,11 @@ region_pt (ISTO_IAPWS_P1 const& pressure, ISTO_IAPWS_T2 const& temperature)
         if (pressure < ps) return 2;
         return 4;
     }
-    if (temperature < 1073.15 ISTO_IAPWS_U_T)
+    if (temperature <= 1073.15 ISTO_IAPWS_U_T)
     {
             auto const
         p23 = p_b23_t (temperature);
-        if (pressure < p23) return 2;
+        if (pressure <= p23) return 2;
         return 3;
     }
     return 5;
@@ -9666,6 +9853,10 @@ ISTO_IAPWS_R7_GEN_PT(massic_entropy)
 ISTO_IAPWS_R7_GEN_PT(massic_isobaric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PT(massic_isochoric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PT(speed_of_sound)
+ISTO_IAPWS_R7_GEN_PT(isobaric_cubic_expansion_coefficient)
+ISTO_IAPWS_R7_GEN_PT(isothermal_compressibility)
+ISTO_IAPWS_R7_GEN_PT(relative_pressure_coefficient)
+ISTO_IAPWS_R7_GEN_PT(isothermal_stress_coefficient)
 #undef ISTO_IAPWS_R7_GEN_PT
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
 #define ISTO_IAPWS_R7_GEN_PT(NAME)                                     \
@@ -9689,6 +9880,10 @@ ISTO_IAPWS_R7_GEN_PT(massic_entropy)
 ISTO_IAPWS_R7_GEN_PT(massic_isobaric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PT(massic_isochoric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PT(speed_of_sound)
+ISTO_IAPWS_R7_GEN_PT(isobaric_cubic_expansion_coefficient)
+ISTO_IAPWS_R7_GEN_PT(isothermal_compressibility)
+ISTO_IAPWS_R7_GEN_PT(relative_pressure_coefficient)
+ISTO_IAPWS_R7_GEN_PT(isothermal_stress_coefficient)
 #undef ISTO_IAPWS_R7_GEN_PT
 #endif
 

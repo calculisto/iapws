@@ -606,5 +606,34 @@ TEST_CASE("r7.hpp (constrained)")
         CHECK_US(temperature                      (pressure_t { 8e6      }, massic_entropy_t  { 7.5e3  }), temperature_t { 0.106495556e4 }, 1e4, eps);
         CHECK_US(temperature                      (pressure_t { 90e6     }, massic_entropy_t  { 6e3    }), temperature_t { 0.103801126e4 }, 1e4, eps);
     }
+    SUBCASE("expansion, compressibility, etc.")
+    {
+            using namespace isto::iapws::r7::detail;
+        for (auto it = 0u; it != T.size (); ++it)
+        {
+                auto const
+            t = T.at (it) + 273.15;
+            for (auto ip = 0u; ip != P.size (); ++ip)
+            {
+                    auto const
+                p = P.at (ip) * 1e5;
+                    auto const
+                a = table_9.at (it).at (ip) * 1e-6;
+                    auto const
+                b = table_10.at (it).at (ip) * 1e-9;
+                    auto const
+                c = table_19.at (it).at (ip) * 1e-3;
+                    auto const
+                d = table_20.at (it).at (ip);
+                    auto const
+                r = region (pressure_t { p }, temperature_t { t });
+                INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", region = ", r);
+                CHECK_US(isobaric_cubic_expansion_coefficient (pressure_t { p }, temperature_t { t }), thermal_expansion_t { a }, fabs (a), 1e-4);
+                CHECK_US(isothermal_compressibility           (pressure_t { p }, temperature_t { t }), compressibility_t   { b },       b , 1e-4);
+                CHECK_US(relative_pressure_coefficient        (pressure_t { p }, temperature_t { t }), thermal_expansion_t { c }, fabs (c), 1e-4);
+                CHECK_US(isothermal_stress_coefficient        (pressure_t { p }, temperature_t { t }), density_t           { d }, fabs (d), 1e-4);
+            }
+        }
+    }
 }
 
