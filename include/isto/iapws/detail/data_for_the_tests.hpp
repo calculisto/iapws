@@ -4,12 +4,12 @@ isto::iapws::r7
 {
     inline namespace 
 r7_97_2012
-{
+{ //{{{
     namespace 
 detail
 {
     //doi.org/10.1007/978-3-662-53219-5
-    // WRNING: °C !
+    // WARNING: °C !
         constexpr auto
     T = std::array
     {
@@ -298,7 +298,7 @@ detail
 /* 800. */ , 0.0012341 , 0.0020190 , 0.020190 , 0.20190  , 0.40381  , 0.80761  , 1.2114   , 1.6152   , 2.0190   , 4.0381   , 8.0762 , 12.114 , 16.153 , 20.193 , 24.233 , 28.275 , 32.320 , 36.368 , 40.419 , 44.476 , 48.538 , 52.608 , 56.686 , 60.773 , 81.408 , 102.54 , 124.44 , 147.41 , 171.74 , 224.70
     };
 } // namespace detail
-} // namespace r7_97_2012
+} // namespace r7_97_2012 }}}
 } // namespace isto::iapws::r7
     namespace
 isto::iapws::r6::r6_95_2016::detail

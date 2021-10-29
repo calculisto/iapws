@@ -3,3 +3,5 @@
 *.gpl
 *.html
 *.txt
+make_data
+make_gpl
