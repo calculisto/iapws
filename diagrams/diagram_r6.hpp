@@ -76,8 +76,8 @@ topic_r6 = topic_t <double (double, double)>
         , { "massic_isobaric_heat_capacity",        "density", "temperature", r6::massic_isobaric_heat_capacity_dt        <double, double> }
         , { "massic_isochoric_heat_capacity",       "density", "temperature", r6::massic_isochoric_heat_capacity_dt       <double, double> }
         , { "speed_of_sound",                       "density", "temperature", r6::speed_of_sound_dt                       <double, double> }
-        , { "isobaric_cubic_expansion_coefficient", "density", "temperature", r6::isobaric_cubic_expansion_coefficient_dt <double, double> }
-        , { "isothermal_compressibility",           "density", "temperature", r6::isothermal_compressibility_dt           <double, double> }
+        //, { "isobaric_cubic_expansion_coefficient", "density", "temperature", r6::isobaric_cubic_expansion_coefficient_dt <double, double> }
+        //, { "isothermal_compressibility",           "density", "temperature", r6::isothermal_compressibility_dt           <double, double> }
         , { "relative_pressure_coefficient",        "density", "temperature", r6::relative_pressure_coefficient_dt        <double, double> }
         , { "isothermal_stress_coefficient",        "density", "temperature", r6::isothermal_stress_coefficient_dt        <double, double> }
       }

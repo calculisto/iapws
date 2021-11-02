@@ -1,4 +1,4 @@
-#include "diagram_r6_inverse.hpp"
+#include "diagram_r6_inverse_extended.hpp"
 
     int
 main ()

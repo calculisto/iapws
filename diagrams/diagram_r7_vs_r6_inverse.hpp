@@ -150,8 +150,8 @@ topic_r7_vs_r6_inverse = topic_t <double (double, double, double)>
         , { "delta_massic_isobaric_heat_capacity",        "temperature", "pressure", delta { r6::massic_isobaric_heat_capacity_dt        <double, double>, r7::massic_isobaric_heat_capacity_tp        <double, double> }}
         , { "delta_massic_isochoric_heat_capacity",       "temperature", "pressure", delta { r6::massic_isochoric_heat_capacity_dt       <double, double>, r7::massic_isochoric_heat_capacity_tp       <double, double> }}
         , { "delta_speed_of_sound",                       "temperature", "pressure", delta { r6::speed_of_sound_dt                       <double, double>, r7::speed_of_sound_tp                       <double, double> }}
-        , { "delta_isobaric_cubic_expansion_coefficient", "temperature", "pressure", delta { r6::isobaric_cubic_expansion_coefficient_dt <double, double>, r7::isobaric_cubic_expansion_coefficient_tp <double, double> }}
-        , { "delta_isothermal_compressibility",           "temperature", "pressure", delta { r6::isothermal_compressibility_dt           <double, double>, r7::isothermal_compressibility_tp           <double, double> }}
+        //, { "delta_isobaric_cubic_expansion_coefficient", "temperature", "pressure", delta { r6::isobaric_cubic_expansion_coefficient_dt <double, double>, r7::isobaric_cubic_expansion_coefficient_tp <double, double> }}
+        //, { "delta_isothermal_compressibility",           "temperature", "pressure", delta { r6::isothermal_compressibility_dt           <double, double>, r7::isothermal_compressibility_tp           <double, double> }}
         , { "delta_relative_pressure_coefficient",        "temperature", "pressure", delta { r6::relative_pressure_coefficient_dt        <double, double>, r7::relative_pressure_coefficient_tp        <double, double> }}
         , { "delta_isothermal_stress_coefficient",        "temperature", "pressure", delta { r6::isothermal_stress_coefficient_dt        <double, double>, r7::isothermal_stress_coefficient_tp        <double, double> }}
       }
