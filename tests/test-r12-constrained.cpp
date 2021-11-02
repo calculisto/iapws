@@ -6,7 +6,6 @@
 
 TEST_CASE("r12.hpp (relaxed)")
 {
-#if 0
 SUBCASE("main API")
 {
     CHECK_US(viscosity (temperature_t {  298.15 }, density_t {  998. }), viscosity_t {  889.735100e-6 }, 1e-3, 1e-6);
@@ -31,6 +30,7 @@ SUBCASE("main API")
     CHECK_US(viscosity (density_t {    1. }, temperature_t { 1173.15 }), viscosity_t {   44.217245e-6 }, 1e-4, 1e-6);
     CHECK_US(viscosity (density_t {  100. }, temperature_t { 1173.15 }), viscosity_t {   47.640433e-6 }, 1e-4, 1e-6);
     CHECK_US(viscosity (density_t {  400. }, temperature_t { 1173.15 }), viscosity_t {   64.154608e-6 }, 1e-4, 1e-6);
+    /* with near critical point correction
     CHECK_US(viscosity (temperature_t {  647.35 }, density_t {  122. }), viscosity_t {   25.520677e-6 }, 1e-5, 1e-8);
     CHECK_US(viscosity (temperature_t {  647.35 }, density_t {  222. }), viscosity_t {   31.337589e-6 }, 1e-5, 1e-8);
     CHECK_US(viscosity (temperature_t {  647.35 }, density_t {  272. }), viscosity_t {   36.228143e-6 }, 1e-5, 1e-8);
@@ -43,6 +43,6 @@ SUBCASE("main API")
     CHECK_US(viscosity (density_t {  322. }, temperature_t {  647.35 }), viscosity_t {   42.961579e-6 }, 1e-5, 1e-8);
     CHECK_US(viscosity (density_t {  372. }, temperature_t {  647.35 }), viscosity_t {   45.688204e-6 }, 1e-5, 1e-8);
     CHECK_US(viscosity (density_t {  422. }, temperature_t {  647.35 }), viscosity_t {   49.436256e-6 }, 1e-5, 1e-8);
+    */
 } // SUBCASE("main API")
-#endif
 } // TEST_CASE("r12.hpp (relaxed)")
