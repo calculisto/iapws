@@ -1,5 +1,6 @@
 #pragma once
 #include "r6.hpp"
+#include "r7.hpp"
 
 #include <fmt/format.h>
 
@@ -30,9 +31,9 @@ detail
             using std::sqrt, std::pow;
         return 100. * sqrt (t) / (
               1.67752 
-            + 2.20462 / t 
+            + 2.20462   / t 
             + 0.6366564 / t / t 
-            - 0.241605 / t / t / t
+            - 0.241605  / t / t / t
         );
     }
         template <class T, class U>
@@ -69,7 +70,7 @@ detail
             using std::exp, std::pow;
         t = (1. / t) - 1.;
         d = d - 1.;
-        return exp (d * (
+        return exp ((d + 1.) * (
                            (H00 + H01 * d + H02 * pow (d, 2) + H03 * pow (d, 3) + H04 * pow (d, 4)                                      )
             + t          * (H10 + H11 * d + H12 * pow (d, 2) + H13 * pow (d, 3)                                                         )
             + pow (t, 2) * (H20 + H21 * d + H22 * pow (d, 2)                                                                            )
@@ -88,7 +89,7 @@ detail
             constexpr auto
         gamma = 1.239;
             constexpr auto
-        xi_0 = 0.13e-9;
+        xi_0 = 0.13/*e-9*/;
             constexpr auto
         gamma_0 = 0.06;
             constexpr auto
@@ -101,17 +102,22 @@ detail
             auto const
         T_r = T_b_r * (647.096 ISTO_IAPWS_U_T);
             auto const
-        p_b = r6::pressure_td (temperature, density) / (22.064 ISTO_IAPWS_U_P);
+        p = r6::pressure_td (temperature, density);
             auto const
-        p_b_R = r6::pressure_td (T_r, density) / (22.064 ISTO_IAPWS_U_P);
+        p_b = p / (22.064 ISTO_IAPWS_U_P);
             auto const
-        A = rho_b / p_b * density / r6::isothermal_stress_coefficient_td (temperature, density);
+        p_R = r6::pressure_td (T_r, density);
             auto const
-        B = rho_b / p_b_R * density / r6::isothermal_stress_coefficient_td (T_r, density);
+        p_b_R = p_R / (22.064 ISTO_IAPWS_U_P);
+            auto const
+        A = rho_b / p_b * density / r7::isothermal_stress_coefficient_pt (p_b, temperature);//td (temperature, density);
+            auto const
+        B = rho_b / p_b_R * density / r7::isothermal_stress_coefficient_pt (p_b, temperature);//td (T_r, density);
 fmt::print (" *** {}  {}  {}  {}\n", p_b, p_b_R, A, B);
             auto const
         DX = rho_b * (A - T_b_r / T_b * B);
-        return xi_0 * pow (DX < 0. ? 0. : DX / gamma_0, nu / gamma);
+fmt::print (" *** {}\n", DX);
+        return DX < 0. ? 0. : xi_0 * pow (DX / gamma_0, nu / gamma);
     }
     
         template <class T, class U>
@@ -161,9 +167,11 @@ viscosity_td (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
     t = temperature / (647.096 ISTO_IAPWS_U_T);
         auto const
     d = density / (322. ISTO_IAPWS_U_D);
+        /*
         auto const
     mu2 = near_critical_point (temperature, density) ? mu_2 (temperature, density) : 1.;
-    return (mu_0 (t) * mu_1 (t, d) * mu2) * (1e-6 ISTO_IAPWS_U_M);
+    */
+    return (mu_0 (t) * mu_1 (t, d) /* * mu2 */) * (1e-6 ISTO_IAPWS_U_M);
 }
     template <class T, class U>
     constexpr auto
