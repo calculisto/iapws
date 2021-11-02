@@ -93,6 +93,8 @@ graph_t
     ytag;
         std::function <F>//std::function <double (double, double)>
     function;
+        bool
+    skip_zlog = false;
 };
 
     template <class F>
@@ -256,6 +258,7 @@ plot "{}.dat" using ($1*{}):($2*{}):($3*{}) w p pt 5 ps 0.3 lc palette z notitle
                 , quantities.at (graph.ztag).scale
             );
             o.close ();
+            if (graph.skip_zlog) continue;
             o.open (base + "_zlog.gpl");
             o << format (R"(set terminal pngcairo size 1280,960 enhanced
 set xlabel "{}"

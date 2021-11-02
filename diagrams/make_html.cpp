@@ -1,7 +1,11 @@
 #include "diagram_r6.hpp"
 #include "diagram_r6_inverse.hpp"
+#include "diagram_r6_inverse_extended.hpp"
 #include "diagram_r7.hpp"
 #include "diagram_r7_vs_r6_inverse.hpp"
+#include "diagram_r10.hpp"
+#include <chrono>
+#include <fmt/chrono.h>
 
     const auto
 topics = std::vector
@@ -10,6 +14,7 @@ topics = std::vector
     , topic_r6_inverse
     , topic_r6_inverse_extended
     , topic_r7
+    , topic_r10
 };
 // topic_r7_vs_r6_inverse
 // lines
@@ -77,6 +82,44 @@ main ()
     <body> 
         <p>/!\ Work in progress, you might want to press Ctrl-F5 from time to time</p>
         <h1>Phase diagrams of ordinary water</h1>
+        <p>
+        On this page are presented some phase diagrams for water. Every data point 
+        plotted on the graphs shown below was computed using one or a combination of 
+        several models published by the International Association for the 
+        Properties of Water and Steam (IAPWS). These publications (Realeases in 
+        the IAPWS lingo) are identified by the letter R and a number. Very 
+        briefly:
+        <ul>
+        <li>R6 is the "master equation" that has been carefully fitted over a 
+        wide range of experimental results and represents the state of the art 
+        for the evaluation of the thermodynamic properties of water. 
+        It is expressed in terms of Helmholtz energy as a function of density 
+        and temperature, from which all the other properties can be obtained by 
+        some combinations of derivatives.</li>
+        <li>R7 is an approximation of R6 that allow direct and fast calculations 
+        of properties, e.g. as functions of temperature and pressure, where R6 
+        would require a computational expensive inversion. Below are presented 
+        diagrams built with R7 as well as the same obtained by inverting R6 
+        (under the sobriquet "R6 inverse"), and the differences between the two
+        ("R7 vs. R6 inverse")</li>
+        <li>R14 describes the boundaries between fluid water and various phases 
+        of ice (a.k.a. melting and sublimation curves). The saturation curve can
+        be directly calculated in the P-T plane using R7.</li>
+        <li>R10 describes ice Ih.</li>
+        <li>R12 provides the viscosity of liquid and gaseous water.</li>
+        </ul>
+
+        The implementation of the IAPWS models used to compute the data is 
+        <a href="https://github.com/le-migou/iapws">isto/iapws</a>.
+
+        When needed, the inversions were performed using the 
+        <a href="https://github.com/le-migou/root_finding">isto/root_finding</a> 
+        library.
+
+        The plots were rendered using <a href="http://www.gnuplot.info/">Gnuplot</a>.
+        </p>
+        <p>
+        </p>
 )";
         auto
     content = std::string {};
@@ -106,7 +149,7 @@ main ()
                 if (range.logscale.first)  content += "logarithmic in " + quantities.at (graph.xtag).label + ", ";
                 if (range.logscale.second) content += "logarithmic in " + quantities.at (graph.ytag).label + ", ";
                 content += "linear in " + quantities.at (graph.ztag).label + "</div></a></div>\n";
-
+                if (graph.skip_zlog) continue;
                 content += format (
                       "<div class='thumb'><a href='{}_zlog.png'><img src='{}_zlog-thumb.png'/><div>"
                     , base
@@ -144,7 +187,7 @@ main ()
                 if (range.logscale.first)  content += "logarithmic in " + quantities.at (graph.xtag).label + ", ";
                 if (range.logscale.second) content += "logarithmic in " + quantities.at (graph.ytag).label + ", ";
                 content += "linear in " + quantities.at (graph.ztag).label + "</div></a></div>\n";
-
+                if (graph.skip_zlog) continue;
                 content += format (
                       "<div class='thumb'><a href='{}_zlog.png'><img src='{}_zlog-thumb.png'/><div>"
                     , base
@@ -166,5 +209,9 @@ main ()
 <div class='thumb'><a href='lines_dt.png'><img src='lines_dt-thumb.png'/><div>In the Density-Temperature plane</div></a></div>
 </div>
 )";
-    o << content << "</body></html>";
+    o 
+        << content 
+        << "<p>Updated " + format ("{:%Y-%m-%d}", std::chrono::system_clock::now ()) + "</p>"
+        << "</body></html>"
+    ;
 }
