@@ -2,23 +2,6 @@
 #include "diagram.hpp"
 #include "../include/isto/iapws/r7.hpp"
     using namespace isto::iapws;
-
-    struct
-exclusion_r7_t
-    : exclusion_base_t
-{
-        void
-    init (double) override
-    {};
-        bool
-    operator () (double t, double p) const override
-    {
-        return t > 1074.15 && p > 50e6; 
-    };
-};
-    auto
-exclusion_r7 = exclusion_r7_t {};
-
     const auto
 topic_r7 = topic_t <double (double, double)>
 {
@@ -29,14 +12,14 @@ topic_r7 = topic_t <double (double, double)>
             , { 273.16, 2273.16 }
             , { 0.,     100e6   }
             , { false,  false   }
-            , exclusion_r7
+            , exclusion_tp_r7
           }
         , {
               "ylog"
             , { 273.16, 2273.16 }
             , { 1.    , 100e6   }
             , { false, true    }
-            , exclusion_r7
+            , exclusion_tp_r7
           }
       }
     , .graphs = {

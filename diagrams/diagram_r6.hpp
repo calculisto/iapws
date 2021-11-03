@@ -1,58 +1,6 @@
 #include "diagram.hpp"
 #include <optional>
 #include "../include/isto/iapws/r6.hpp"
-#include "../include/isto/iapws/r7.hpp"
-#include "../include/isto/iapws/r6_inverse.hpp"
-    using namespace isto::iapws;
-
-    auto
-d_sat_g_t (double t)
-    -> std::optional <double>
-{
-    if (t < 273.16 || t > 647.096) return {};
-        const auto
-    p = r7::saturation_pressure_t (t);
-        const auto
-    d7 = r7::r2::density_pt (p, t);
-        const auto
-    [ d, info ] = r6_inverse::density_pt (p, t, d7, p * 1e-7, info::convergence);
-    if (!info.converged) return {};
-    return d;
-}
-    auto
-d_sat_l_t (double t)
-    -> std::optional <double>
-{
-    if (t < 273.16 || t > 647.096) return {};
-        const auto
-    p = r7::saturation_pressure_t (t);
-        const auto
-    [ d, info ] = r6_inverse::density_pt (p, t, 1000., p * 1e-7, info::convergence);
-    if (!info.converged) return {};
-    return d;
-}
-    struct
-exclusion_r6_t
-    : exclusion_base_t
-{
-        std::optional <double>
-    d_sat_g;
-        std::optional <double>
-    d_sat_l;
-        void
-    init (double t) override
-    {
-        d_sat_g = d_sat_g_t (t);
-        d_sat_l = d_sat_l_t (t);
-    };
-        bool
-    operator () (double d, double t) const override
-    {
-        return t < 647.096 && d > *d_sat_g && d < d_sat_l;
-    };
-};
-    auto
-exclusion_r6 = exclusion_r6_t {};
     const auto
 topic_r6 = topic_t <double (double, double)>
 {
@@ -63,7 +11,7 @@ topic_r6 = topic_t <double (double, double)>
             , { 0.,     1000.   }
             , { 273.16, 2273.16 }
             , { false,  false   }
-            , exclusion_r6
+            , exclusion_dt
           }
       }
     

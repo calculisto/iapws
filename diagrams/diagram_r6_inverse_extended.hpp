@@ -1,8 +1,9 @@
 #pragma once
 #include "diagram_r6_inverse.hpp"
-
+/*
     auto
 exclusion_r6_inverse_extended = exclusion_r6_inverse_t {};
+*/
     const auto
 topic_r6_inverse_extended = topic_t <double (double, double)>
 {
@@ -13,14 +14,14 @@ topic_r6_inverse_extended = topic_t <double (double, double)>
             , { 173.16, 5073.16 }
             , { 0.,     100e9   }
             , { false,  false   }
-            , exclusion_r6_inverse_extended
+            , exclusion_tp_fluid
           }
         , {
               "ylog"
             , { 173.16, 5073.16 }
             , { 1.    , 100e9   }
             , { false,  true    }
-            , exclusion_r6_inverse_extended
+            , exclusion_tp_fluid
           }
       }
     

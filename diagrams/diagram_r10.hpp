@@ -3,33 +3,6 @@
 #include "../include/isto/iapws/r10.hpp"
 #include "../include/isto/iapws/r14.hpp"
     using namespace isto::iapws;
-
-    struct
-exclusion_r10_t
-    : exclusion_base_t
-{
-        double
-    pmih;
-        double
-    ps;
-        void
-    init (double t) override
-    {
-        pmih  = r14::ih::melting_pressure_t  (t);
-        ps    = r14::sublimation_pressure_t  (t);
-    };
-        bool
-    operator () (double t, double p) const override
-    {
-        return !(
-               (p <  611.657   && t <= 273.16 && p > ps)
-            || (p >= 611.657   && p <  208.566e6 && t < 273.15  && p < pmih)
-        );
-    };
-};
-    auto
-exclusion_r10 = exclusion_r10_t {};
-
     const auto
 topic_r10 = topic_t <double (double, double)>
 {
@@ -40,14 +13,14 @@ topic_r10 = topic_t <double (double, double)>
             , { 0.,    273.16 }
             , { 0.,    210e6  }
             , { false, false  }
-            , exclusion_r10
+            , exclusion_tp_ice
           }
         , {
               "ylog"
             , { 0.,     273.16 }
             , { 1.,     210e6  }
             , { false,  true   }
-            , exclusion_r10
+            , exclusion_tp_ice
           }
       }
     , .graphs = {
