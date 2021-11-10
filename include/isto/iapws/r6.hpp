@@ -458,10 +458,18 @@ Delta_d (T const& delta, U const& tau)
 }
     template <class T, class U>
     auto
-Delta_dd (T const& delta, U const& tau)
+Delta_dd (T /*const&*/ delta, U const& tau)
 {
+    // Here we get rid of the singularity shown below.
+    // Ideally we should use std::nextafter but it will not generalize easily
+    // (e.g. what if T has an uncertainty?).
+    if (delta == 1) delta += std::numeric_limits <double>::epsilon ();
+    // Here be the singularity (when delta = 1)!
+    //        |
+    //        v
     return
           1 / (delta - 1) * Delta_d (delta, tau) 
+    //    ~~~~~~~~~~~~~~~
         + pow (delta - 1, 2) * ( 4 * B * a * (a - 1) 
             * pow (pow (delta - 1, 2), a - 2) 
         + 2 * pow (A, 2) * pow (beta_2, -2) 
