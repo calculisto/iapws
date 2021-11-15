@@ -4,3 +4,15 @@
 *.html
 *.txt
 make_make
+diagram_lines
+diagram_r10
+diagram_r12
+diagram_r12_pt
+diagram_r6
+diagram_r6_inverse
+diagram_r6_inverse_extended
+diagram_r7
+diagram_r7_vs_r6_inverse
+make_html
+make_rules.mk
+make_vars.mk
