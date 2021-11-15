@@ -10,9 +10,8 @@ r14_08_2011
     namespace
 ih
 {
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow;
         auto const
@@ -24,9 +23,8 @@ melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
         + 0.333826860e4 * (1. - pow (theta, 0.103750e3))
     ) * (611.657 ISTO_IAPWS_U_P);
 }
-    template <class T>
     constexpr auto
-sublimation_pressure_t (ISTO_IAPWS_T1 const& temperature)
+sublimation_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow, std::exp;
         auto const
@@ -41,9 +39,8 @@ sublimation_pressure_t (ISTO_IAPWS_T1 const& temperature)
     namespace
 iii
 {
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow;
         auto const
@@ -56,9 +53,8 @@ melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
     namespace
 v
 {
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow;
         auto const
@@ -71,9 +67,8 @@ melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
     namespace
 vi
 {
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow;
         auto const
@@ -86,9 +81,8 @@ melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
     namespace
 vii
 {
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow, std::exp;
         auto const
@@ -101,16 +95,14 @@ melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
 }
 } // namespace vii
 /* Not possible.
-    template <class T>
     constexpr auto
-melting_pressure_t (ISTO_IAPWS_T1 const& temperature)
+melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
 
 }
 */
-    template <class T>
     constexpr auto
-sublimation_pressure_t (ISTO_IAPWS_T1 const& temperature)
+sublimation_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
     return ih::sublimation_pressure_t (temperature);
 }

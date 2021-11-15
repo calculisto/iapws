@@ -13,9 +13,8 @@ r12_08_2008
     namespace
 detail
 {
-        template <class T>
         constexpr auto
-    mu_0 (T const& t)
+    mu_0 (auto const& t)
     {
             using std::sqrt, std::pow;
         return 100. * sqrt (t) / (
@@ -25,9 +24,8 @@ detail
             - 0.241605  / t / t / t
         );
     }
-        template <class T, class U>
         constexpr auto
-    mu_1 (T t, U d)
+    mu_1 (auto t, auto d)
     {
         constexpr auto H00 =  5.20094e-1;
         constexpr auto H01 =  2.22531e-1;
@@ -69,9 +67,8 @@ detail
         ));
     }
     
-        template <class T, class U>
         constexpr auto
-    xi (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
+    xi (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
     {
             constexpr auto
         nu = 0.630;
@@ -107,9 +104,8 @@ detail
         return DX < 0. ? 0. : xi_0 * pow (DX / gamma_0, nu / gamma);
     }
     
-        template <class T, class U>
         constexpr auto
-    mu_2 (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
+    mu_2 (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
     {
         // This requires a reduced conpressibility.
         // https://doi.org/10.1063/1.470718
@@ -145,9 +141,8 @@ detail
         return exp (x_mu * Y);
     }
 } // namespace detail
-    template <class T, class U>
     constexpr auto
-viscosity_td (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
+viscosity_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
 {
         using namespace detail;
         auto const
@@ -156,22 +151,19 @@ viscosity_td (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
     d = density / (322. ISTO_IAPWS_U_D);
     return (mu_0 (t) * mu_1 (t, d) * mu_2 (temperature, density)) * (1e-6 ISTO_IAPWS_U_M);
 }
-    template <class T, class U>
     constexpr auto
-viscosity_dt (ISTO_IAPWS_D2 const& density, ISTO_IAPWS_T1 const& temperature)
+viscosity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
 {
     return viscosity_td (temperature, density);
 }
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    template <class T, class U>
     constexpr auto
-viscosity (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
+viscosity (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
 {
     return viscosity_td (temperature, density);
 }
-    template <class T, class U>
     constexpr auto
-viscosity (ISTO_IAPWS_D2 const& density, ISTO_IAPWS_T1 const& temperature)
+viscosity (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
 {
     return viscosity_td (temperature, density);
 }

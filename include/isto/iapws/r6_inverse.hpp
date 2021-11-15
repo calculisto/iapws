@@ -4,45 +4,20 @@
 #include <isto/root_finding/root_finding.hpp>
     using namespace isto::root_finding;
 
-/*
-    r6.hpp has
-
-      pressure                       (density, temperature)
-      massic_internal_energy         (density, temperature)
-      massic_entropy                 (density, temperature)
-      massic_enthalpy                (density, temperature)
-      massic_isochoric_heat_capacity (density, temperature)
-      massic_isobaric_heat_capacity  (density, temperature)
-      massic_gibbs_free_energy       (density, temperature)
-      speed_of_sound                 (density, temperature)
-
-    Here, we define
-
-      density (pressure, temperature)
-      density (temperature, pressure)
-
-    by inverting the above
- */
     namespace
 isto::iapws::r6_inverse
 {
     inline namespace
 r6_95_2016
 {
-    template <
-          class T
-        , class U
-        , class V
-        , class W
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_pt (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& initial_guess
-    , ISTO_IAPWS_P4 const& epsilon
-    , info_t <InfoTag>     info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_D auto const& initial_guess
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
         using namespace r6;
         auto
@@ -66,263 +41,136 @@ density_pt (
         , info
     );
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_pt (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& initial_guess
-    , info_t <InfoTag>     info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_D auto const& initial_guess
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, initial_guess, 1e-6 ISTO_IAPWS_U_P, info);
 }
-    template <
-          class T
-        , class U
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_pt (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, r7::density_pt (pressure, temperature), info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , class W
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_tp (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D3 const& initial_guess
-    , ISTO_IAPWS_P4 const& epsilon
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_D auto const& initial_guess
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, initial_guess, epsilon, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_tp (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D3 const& initial_guess
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_D auto const& initial_guess
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, initial_guess, info);
 }
-    template <
-          class T
-        , class U
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density_tp (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, info);
 }
-/*
-    template <class T, class U, class V = std::common_type_t <T, U>>
-    auto
-temperature_dp (
-      ISTO_IAPWS_D2 const& density
-    , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T3 const& epsilon = 1e-6 ISTO_IAPWS_U_T
-){
-        using namespace r6;
-        auto
-    info = info_iterations_t {};
-        auto
-    delta = density / critical_density;
-        auto&&
-    temperature = newton (
-          [=](auto temperature){ return r6::pressure_dt (density, temperature) - pressure; }
-        , [=](auto temperature)
-          {
-                using namespace detail;
-                auto
-            tau = critical_temperature / temperature;
-            return (1 + delta * phi_r_d (delta, tau) - delta * tau * phi_r_dt (delta, tau)) * massic_gas_constant * density;
-          }
-        , r7::temperature_dp (density, pressure)
-        , [=](auto x)
-          { 
-            return fabs (x) < epsilon; 
-          }
-        , {} // options
-        , info
-    );
-    return temperature;
-}
-    template <class T, class U, class V = std::common_type_t <T, U>>
-    auto
-temperature_pd (
-      ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D1 const& density
-    , ISTO_IAPWS_T3 const& epsilon = 1e-6 ISTO_IAPWS_U_T
-){
-    return temperature_dp (density, pressure, epsilon);
-}
-*/
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    template <
-          class T
-        , class U
-        , class V
-        , class W
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& initial_guess
-    , ISTO_IAPWS_P4 const& epsilon
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_D auto const& initial_guess
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, initial_guess, epsilon, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_D3 const& initial_guess
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_D auto const& initial_guess
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, initial_guess, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , ISTO_IAPWS_P3 const& epsilon
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, r7::density_pt (pressure, temperature), epsilon, info);
 }
-    template <
-          class T
-        , class U
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T2 const& temperature
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+    , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , class W
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D3 const& initial_guess
-    , ISTO_IAPWS_P4 const& epsilon
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_D auto const& initial_guess
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
     return density_tp (temperature, pressure, initial_guess, epsilon, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D3 const& initial_guess
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_D auto const& initial_guess
+    , info_t <InfoTag> info = info::none
 ){
     return density_tp (temperature, pressure, initial_guess, info);
 }
-    template <
-          class T
-        , class U
-        , class V
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_P3 const& epsilon
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_P auto const& epsilon
+    , info_t <InfoTag> info = info::none
 ){
     return density_tp (temperature, pressure, r7::density_tp (temperature, pressure), epsilon, info);
 }
-    template <
-          class T
-        , class U
-        , info_tag_t InfoTag = info::tag::none
-    >
+    template <info_tag_t InfoTag = info::tag::none>
     auto
 density (
-      ISTO_IAPWS_T1 const& temperature
-    , ISTO_IAPWS_P2 const& pressure
-    , info_t <InfoTag>      info = info::none
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+    , info_t <InfoTag> info = info::none
 ){
     return density_tp (temperature, pressure, info);
 }
-/*
-    template <class T, class U, class V = std::common_type_t <T, U>>
-    auto
-temperature (
-      ISTO_IAPWS_D2 const& density
-    , ISTO_IAPWS_P1 const& pressure
-    , ISTO_IAPWS_T3 const& epsilon = 1e-6 ISTO_IAPWS_U_T
-){
-    return temperature_dp (density, pressure, epsilon);
-}
-    template <class T, class U, class V = std::common_type_t <T, U>>
-    auto
-temperature (
-      ISTO_IAPWS_P2 const& pressure
-    , ISTO_IAPWS_D1 const& density
-    , ISTO_IAPWS_T3 const& epsilon = 1e-6 ISTO_IAPWS_U_T
-){
-    return temperature_pd (pressure, density, epsilon);
-}
-*/
 #endif
 } // inline namespace r6_95_2016
 } // namespace isto::iapws::r6_inverse

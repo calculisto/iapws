@@ -1,5 +1,7 @@
 #pragma once
 #include "detail/common.hpp"
+#include <isto/template_pow/template_pow.hpp>
+    using isto::template_pow::pow;
 
     namespace 
 isto::iapws::r6
@@ -19,7 +21,7 @@ n_0_1 = -8.3204464837497;
 n_0_2 =  6.6832105275932;
     constexpr double
 n_0_3 =  3.00632;          
-    constexpr array_t <double, 5>
+    constexpr array_t
 n_0 {
       0.012436         
     , 0.97315          
@@ -27,7 +29,7 @@ n_0 {
     , 0.96956          
     , 0.24873          
 };
-    constexpr array_t <double, 5>
+    constexpr array_t
 gamma_0 {
       1.28728967  
     , 3.53734222
@@ -36,7 +38,7 @@ gamma_0 {
     , 27.5075105
 };
     // Table 6.2.
-    constexpr array_t <double, 44>
+    constexpr array_t
 c_2
 {
       1.0     // 8   
@@ -84,7 +86,7 @@ c_2
     , 6.0     // 50  
     , 6.0     // 51  
 };
-    constexpr array_t <double, 7>
+    constexpr array_t
 d_1
 {
       1.0    // 1   
@@ -95,7 +97,7 @@ d_1
     , 3.0    // 6   
     , 4.0    // 7   
 };
-    constexpr array_t <double, 44>
+    constexpr array_t
 d_2
 {
        1.0   // 8   
@@ -143,14 +145,14 @@ d_2
     ,  6.0   // 50  
     ,  6.0   // 51  
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 d_3
 {
       3.0    // 52  
     , 3.0    // 53  
     , 3.0    // 54  
 };
-    constexpr array_t <double, 7>
+    constexpr array_t
 t_1
 {
       -0.5      // 1   
@@ -161,7 +163,7 @@ t_1
     ,  0.375    // 6   
     ,  1.0      // 7   
 };
-    constexpr array_t <double, 44>
+    constexpr array_t
 t_2
 {
        4.0      // 8
@@ -209,14 +211,14 @@ t_2
     , 46.0      // 50
     , 50.0      // 51
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 t_3
 {
       0.0        // 52  
     , 1.0        // 53  
     , 4.0        // 54  
 };
-    constexpr array_t <double, 7>
+    constexpr array_t
 n_1
 {
        0.12533547935523e-1  // 1   
@@ -227,7 +229,7 @@ n_1
     , -0.78199751687981e-2  // 6   
     ,  0.88089493102134e-2  // 7   
 };
-    constexpr array_t <double, 44>
+    constexpr array_t
 n_2
 {
       -0.66856572307965     // 8   
@@ -275,42 +277,42 @@ n_2
     ,  0.31777497330738     // 50  
     , -0.11841182425981     // 51  
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 n_3
 {
       -0.31306260323435e2   // 52  
     ,  0.31546140237781e2   // 53  
     , -0.25213154341695e4   // 54  
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 n_4
 {
       -0.14874640856724     // 55  
     ,  0.31806110878444     // 56  
 };
 
-    constexpr array_t <double, 3>
+    constexpr array_t
 alpha
 {
       20.0
     , 20.0
     , 20.0
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 beta_1
 {
       150.0
     , 150.0
     , 250.0
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 gamma
 {
       1.21
     , 1.21
     , 1.25
 };
-    constexpr array_t <double, 3>
+    constexpr array_t
 epsilon
 {
       1.0
@@ -318,43 +320,43 @@ epsilon
     , 1.0
 };
 
-    constexpr array_t <double, 2>
+    constexpr array_t
 beta_2
 {
       0.3
     , 0.3
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 a
 {
       3.5
     , 3.5
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 b
 {
       0.85
     , 0.95
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 B
 {
       0.2
     , 0.2
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 C
 {
       28.0
     , 32.0
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 D
 {
       700.0
     , 800.0
 };
-    constexpr array_t <double, 2>
+    constexpr array_t
 A
 {
       0.32
@@ -362,9 +364,8 @@ A
 };
 
 
-    template <class T, class U>
     auto
-phi_0 (T const& delta, U const& tau)
+phi_0 (auto const& delta, auto const& tau)
 {
         using std::log;
     return 
@@ -372,30 +373,26 @@ phi_0 (T const& delta, U const& tau)
         + sum (n_0 * log (1. - exp (-gamma_0 * tau)))
     ;
 }
-    template <class T, class U>
     auto
-phi_0_d (T const& delta, U const& /*tau*/)
+phi_0_d (auto const& delta, auto const& /*tau*/)
 {
     return 1. / delta;
 }
-    template <class T, class U>
     auto
-phi_0_dd (T const& delta, U const& /*tau*/)
+phi_0_dd (auto const& delta, auto const& /*tau*/)
 {
     return -1. / delta / delta;
 }
-    template <class T, class U>
     auto
-phi_0_t (T const& /*delta*/, U const& tau)
+phi_0_t (auto const& /*delta*/, auto const& tau)
 {
     return 
           n_0_2 + n_0_3 / tau
         + sum (n_0 * gamma_0 * (pow (1. - exp (-gamma_0 * tau), -1.) - 1.))
     ;
 }
-    template <class T, class U>
     auto
-phi_0_tt (T const& /*delta*/, U const& tau)
+phi_0_tt (auto const& /*delta*/, auto const& tau)
 {
     return 
         - n_0_3 / tau / tau
@@ -403,36 +400,26 @@ phi_0_tt (T const& /*delta*/, U const& tau)
             * pow (1. - exp (-gamma_0 * tau), -2.))
     ;
 }
-    template <class T, class U>
     auto
-phi_0_dt (T const& /*delta*/, U const& /*tau*/)
-{
-    return static_cast <T> (0);
-}
-    template <class T, class U>
-    auto
-Theta (T const& delta, U const& tau)
+Theta (auto const& delta, auto const& tau)
 {
     return (1. - tau) + A * pow (pow (delta - 1., 2.), 1. / (2. * beta_2));
 }
-    template <class T, class U>
     auto
-Delta (T const& delta, U const& tau)
+Delta (auto const& delta, auto const& tau)
 {
     return 
           pow (Theta (delta, tau), 2.)
         + B * pow (pow (delta - 1., 2.), a);
     ;
 }
-    template <class T, class U>
     auto
-Psi (T const& delta, U const& tau)
+Psi (auto const& delta, auto const& tau)
 {
     return exp (-C * pow (delta - 1, 2.) - D * pow (tau - 1, 2.));
 }
-    template <class T, class U>
-    T
-phi_r (T const& delta, U const& tau)
+    auto
+phi_r (auto const& delta, auto const& tau)
 {
     return
           sum (n_1 * pow (delta, d_1) * pow (tau, t_1))
@@ -445,9 +432,8 @@ phi_r (T const& delta, U const& tau)
     ;
 }
 
-    template <class T, class U>
     auto
-Delta_d (T const& delta, U const& tau)
+Delta_d (auto const& delta, auto const& tau)
 {
     return (delta - 1.) * (
           A * Theta (delta, tau) * 2 / beta_2 
@@ -456,13 +442,12 @@ Delta_d (T const& delta, U const& tau)
     );
 
 }
-    template <class T, class U>
     auto
-Delta_dd (T /*const&*/ delta, U const& tau)
+Delta_dd (auto /*const&*/ delta, auto const& tau)
 {
     // Here we get rid of the singularity shown below.
     // Ideally we should use std::nextafter but it will not generalize easily
-    // (e.g. what if T has an uncertainty?).
+    // (e.g. what if auto has an uncertainty?).
     if (delta == 1) delta += std::numeric_limits <double>::epsilon ();
     // Here be the singularity (when delta = 1)!
     //        |
@@ -478,15 +463,13 @@ Delta_dd (T /*const&*/ delta, U const& tau)
             * pow (pow (delta - 1, 2), 0.5 / beta_2 - 2)
     );
 }
-    template <class T, class U>
     auto
-Delta_b_d (T const& delta, U const& tau)
+Delta_b_d (auto const& delta, auto const& tau)
 {
     return b * pow (Delta (delta, tau), b - 1.) * Delta_d (delta, tau);
 }
-    template <class T, class U>
     auto
-Delta_b_dd (T const& delta, U const& tau)
+Delta_b_dd (auto const& delta, auto const& tau)
 {
     return b * (
           pow (Delta (delta, tau), b -1) * Delta_dd (delta, tau) 
@@ -494,21 +477,18 @@ Delta_b_dd (T const& delta, U const& tau)
             * pow (Delta_d (delta, tau), 2)
     );
 }
-    template <class T, class U>
     auto
-Psi_d (T const& delta, U const& tau)
+Psi_d (auto const& delta, auto const& tau)
 {
     return -2 * C * (delta - 1) * Psi (delta, tau);
 }
-    template <class T, class U>
     auto
-Psi_dd (T const& delta, U const& tau)
+Psi_dd (auto const& delta, auto const& tau)
 {
     return 2 * C * Psi (delta, tau) * (2 * C * pow (delta - 1, 2) - 1);
 }
-    template <class T, class U>
-    T
-phi_r_d (T const& delta, U const& tau)
+    auto
+phi_r_d (auto const& delta, auto const& tau)
 {
     return
           sum (n_1 * d_1 * pow (delta, d_1 - 1.) * pow (tau, t_1))
@@ -526,9 +506,8 @@ phi_r_d (T const& delta, U const& tau)
           ))
     ;
 }
-    template <class T, class U>
-    T
-phi_r_dd (T const& delta, U const& tau)
+    auto
+phi_r_dd (auto const& delta, auto const& tau)
 {
     return
           sum(n_1 * d_1 * (d_1 - 1) * pow (delta, d_1 - 2) * pow (tau, t_1))
@@ -567,15 +546,13 @@ phi_r_dd (T const& delta, U const& tau)
 }
 
 
-    template <class T, class U>
     auto
-Delta_b_t (T const& delta, U const& tau)
+Delta_b_t (auto const& delta, auto const& tau)
 {
     return -2. * Theta (delta, tau) * b * pow (Delta (delta, tau), b - 1.);
 }
-    template <class T, class U>
     auto
-Delta_b_tt (T const& delta, U const& tau)
+Delta_b_tt (auto const& delta, auto const& tau)
 {
     return 
           2. * b * pow (Delta (delta, tau), b - 1.)
@@ -583,22 +560,19 @@ Delta_b_tt (T const& delta, U const& tau)
             * pow (Delta (delta, tau), b - 2.)
     ;
 }
-    template <class T, class U>
     auto
-Psi_t (T const& delta, U const& tau)
+Psi_t (auto const& delta, auto const& tau)
 {
     return -2 * D * (tau - 1) * Psi (delta, tau);
 }
-    template <class T, class U>
     auto
-Psi_tt (T const& delta, U const& tau)
+Psi_tt (auto const& delta, auto const& tau)
 {
     return 2 * D * Psi (delta, tau) * (2 * D * pow (tau - 1, 2) - 1);
 }
 
-    template <class T, class U>
-    T
-phi_r_t (T const& delta, U const& tau)
+    auto
+phi_r_t (auto const& delta, auto const& tau)
 {
     return
           sum (n_1 * t_1 * pow (delta, d_1) * pow (tau, t_1 - 1))
@@ -616,9 +590,8 @@ phi_r_t (T const& delta, U const& tau)
           )
     ;
 }
-    template <class T, class U>
-    T
-phi_r_tt (T const& delta, U const& tau)
+    auto
+phi_r_tt (auto const& delta, auto const& tau)
 {
     return
           sum (n_1 * t_1 * (t_1 - 1.) * pow (delta, d_1) * pow (tau, t_1 - 2))
@@ -639,9 +612,8 @@ phi_r_tt (T const& delta, U const& tau)
     ;
 }
 
-    template <class T, class U>
     auto
-Delta_b_dt (T const& delta, U const& tau)
+Delta_b_dt (auto const& delta, auto const& tau)
 {
     return 
           -A * b * 2 / beta_2 * pow (Delta (delta, tau), b - 1) * (delta - 1.) 
@@ -650,16 +622,14 @@ Delta_b_dt (T const& delta, U const& tau)
             * Delta_d (delta, tau)
     ;
 }
-    template <class T, class U>
     auto
-Psi_dt (T const& delta, U const& tau)
+Psi_dt (auto const& delta, auto const& tau)
 {
     return 4 * C * D * (delta - 1) * (tau - 1) * Psi (delta, tau);
 }
 
-    template <class T, class U>
-    T
-phi_r_dt (T const& delta, U const& tau)
+    auto
+phi_r_dt (auto const& delta, auto const& tau)
 {
     return
           sum (n_1 * d_1 * t_1 * pow (delta, d_1 - 1) * pow (tau, t_1 - 1))
@@ -684,14 +654,6 @@ phi_r_dt (T const& delta, U const& tau)
     ;
 }
 } // }}} namespace detail
-
-// TODO: put this somewhere else.
-    template <auto E>
-    auto
-pow (double x)
-{
-    return std::pow (x, E);
-}
     constexpr auto
 massic_gas_constant = 0.46151805e3 ISTO_IAPWS_U_GC;
 
@@ -710,22 +672,20 @@ triple_point_temperature = 273.16 ISTO_IAPWS_U_T;
     constexpr auto
 triple_point_pressure = 611.657 ISTO_IAPWS_U_P;
 
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)                    \
-    template <class T, class U>                                            \
-    auto                                                                   \
-NAME##_dt (ISTO_IAPWS_D1 const& density, ISTO_IAPWS_T2 const& temperature) \
-{                                                                          \
-        auto                                                               \
-    delta = density / critical_density;                                    \
-        auto                                                               \
-    tau = critical_temperature / temperature;                              \
-    return FORMULA;                                                        \
-}                                                                          \
-    template <class T, class U>                                            \
-    auto                                                                   \
-NAME##_td (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density) \
-{                                                                          \
-    return NAME##_dt (density, temperature);                               \
+#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)                            \
+    auto                                                                           \
+NAME##_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
+{                                                                                  \
+        auto                                                                       \
+    delta = density / critical_density;                                            \
+        auto                                                                       \
+    tau = critical_temperature / temperature;                                      \
+    return FORMULA;                                                                \
+}                                                                                  \
+    auto                                                                           \
+NAME##_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
+{                                                                                  \
+    return NAME##_dt (density, temperature);                                       \
 }
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure, (1. + delta * detail::phi_r_d (delta, tau)) * density * massic_gas_constant * temperature)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy, (tau * (detail::phi_0_t (delta, tau) + detail::phi_r_t (delta, tau))) * massic_gas_constant * temperature)
@@ -744,18 +704,16 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                        \
-    template <class T, class U>                                       \
-    auto                                                              \
-NAME (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density) \
-{                                                                     \
-    return NAME##_dt (density, temperature);                          \
-}                                                                     \
-    template <class T, class U>                                       \
-    auto                                                              \
-NAME (ISTO_IAPWS_D2 const& density, ISTO_IAPWS_T1 const& temperature) \
-{                                                                     \
-    return NAME##_td (temperature, density);                          \
+#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                                \
+    auto                                                                      \
+NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
+{                                                                             \
+    return NAME##_dt (density, temperature);                                  \
+}                                                                             \
+    auto                                                                      \
+NAME (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
+{                                                                             \
+    return NAME##_td (temperature, density);                                  \
 }
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy)
