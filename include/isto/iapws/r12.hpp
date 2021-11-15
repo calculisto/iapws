@@ -13,17 +13,6 @@ r12_08_2008
     namespace
 detail
 {
-        template <class T, class U>
-        constexpr auto
-    near_critical_point (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
-    {
-        return 
-               temperature > (645.91 ISTO_IAPWS_U_T)
-            && temperature < (650.77 ISTO_IAPWS_U_T)
-            && density     > (245.8  ISTO_IAPWS_U_D)
-            && density     < (405.3  ISTO_IAPWS_U_D)
-        ;
-    }
         template <class T>
         constexpr auto
     mu_0 (T const& t)
@@ -89,7 +78,7 @@ detail
             constexpr auto
         gamma = 1.239;
             constexpr auto
-        xi_0 = 0.13/*e-9*/;
+        xi_0 = 0.13e-9;
             constexpr auto
         gamma_0 = 0.06;
             constexpr auto
@@ -104,19 +93,17 @@ detail
             auto const
         p = r6::pressure_td (temperature, density);
             auto const
-        p_b = p / (22.064 ISTO_IAPWS_U_P);
+        p_b = p / (22.064e6 ISTO_IAPWS_U_P);
             auto const
         p_R = r6::pressure_td (T_r, density);
             auto const
-        p_b_R = p_R / (22.064 ISTO_IAPWS_U_P);
+        p_b_R = p_R / (22.064e6 ISTO_IAPWS_U_P);
             auto const
-        A = rho_b / p_b * density / r7::isothermal_stress_coefficient_pt (p_b, temperature);//td (temperature, density);
+        A = rho_b / p_b * density / r6::isothermal_stress_coefficient_dt (density, temperature);
             auto const
-        B = rho_b / p_b_R * density / r7::isothermal_stress_coefficient_pt (p_b, temperature);//td (T_r, density);
-fmt::print (" *** {}  {}  {}  {}\n", p_b, p_b_R, A, B);
+        B = rho_b / p_b_R * density / r6::isothermal_stress_coefficient_dt (density, T_r);
             auto const
         DX = rho_b * (A - T_b_r / T_b * B);
-fmt::print (" *** {}\n", DX);
         return DX < 0. ? 0. : xi_0 * pow (DX / gamma_0, nu / gamma);
     }
     
@@ -141,7 +128,7 @@ fmt::print (" *** {}\n", DX);
             auto const
         x = xi (temperature, density);
             auto const
-        psi_d = acos (sqrt (1. + q_d * q_d * x * x));
+        psi_d = acos (pow (1. + q_d * q_d * x * x, -0.5));
             auto const
         w = sqrt (fabs ((q_c * x - 1.) / (q_c * x + 1.))) * tan (psi_d / 2.);
             auto const
@@ -167,11 +154,7 @@ viscosity_td (ISTO_IAPWS_T1 const& temperature, ISTO_IAPWS_D2 const& density)
     t = temperature / (647.096 ISTO_IAPWS_U_T);
         auto const
     d = density / (322. ISTO_IAPWS_U_D);
-        /*
-        auto const
-    mu2 = near_critical_point (temperature, density) ? mu_2 (temperature, density) : 1.;
-    */
-    return (mu_0 (t) * mu_1 (t, d) /* * mu2 */) * (1e-6 ISTO_IAPWS_U_M);
+    return (mu_0 (t) * mu_1 (t, d) * mu_2 (temperature, density)) * (1e-6 ISTO_IAPWS_U_M);
 }
     template <class T, class U>
     constexpr auto
