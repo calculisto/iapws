@@ -11,7 +11,7 @@ isto::iapws::r6_inverse
 r6_95_2016
 {
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_pt (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -42,7 +42,7 @@ density_pt (
     );
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_pt (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -52,7 +52,7 @@ density_pt (
     return density_pt (pressure, temperature, initial_guess, 1e-6 ISTO_IAPWS_U_P, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_pt (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -61,7 +61,7 @@ density_pt (
     return density_pt (pressure, temperature, r7::density_pt (pressure, temperature), info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_tp (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -72,7 +72,7 @@ density_tp (
     return density_pt (pressure, temperature, initial_guess, epsilon, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_tp (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -82,7 +82,7 @@ density_tp (
     return density_pt (pressure, temperature, initial_guess, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density_tp (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -92,7 +92,7 @@ density_tp (
 }
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -103,7 +103,7 @@ density (
     return density_pt (pressure, temperature, initial_guess, epsilon, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -113,7 +113,7 @@ density (
     return density_pt (pressure, temperature, initial_guess, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -123,7 +123,7 @@ density (
     return density_pt (pressure, temperature, r7::density_pt (pressure, temperature), epsilon, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_P auto const& pressure
     , ISTO_IAPWS_T auto const& temperature
@@ -132,7 +132,7 @@ density (
     return density_pt (pressure, temperature, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -143,7 +143,7 @@ density (
     return density_tp (temperature, pressure, initial_guess, epsilon, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -153,7 +153,7 @@ density (
     return density_tp (temperature, pressure, initial_guess, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure
@@ -163,7 +163,7 @@ density (
     return density_tp (temperature, pressure, r7::density_tp (temperature, pressure), epsilon, info);
 }
     template <info_tag_t InfoTag = info::tag::none>
-    auto
+    constexpr auto
 density (
       ISTO_IAPWS_T auto const& temperature
     , ISTO_IAPWS_P auto const& pressure

@@ -364,7 +364,7 @@ A
 };
 
 
-    auto
+    constexpr auto
 phi_0 (auto const& delta, auto const& tau)
 {
         using std::log;
@@ -373,17 +373,17 @@ phi_0 (auto const& delta, auto const& tau)
         + sum (n_0 * log (1. - exp (-gamma_0 * tau)))
     ;
 }
-    auto
+    constexpr auto
 phi_0_d (auto const& delta, auto const& /*tau*/)
 {
     return 1. / delta;
 }
-    auto
+    constexpr auto
 phi_0_dd (auto const& delta, auto const& /*tau*/)
 {
     return -1. / delta / delta;
 }
-    auto
+    constexpr auto
 phi_0_t (auto const& /*delta*/, auto const& tau)
 {
     return 
@@ -391,7 +391,7 @@ phi_0_t (auto const& /*delta*/, auto const& tau)
         + sum (n_0 * gamma_0 * (pow (1. - exp (-gamma_0 * tau), -1.) - 1.))
     ;
 }
-    auto
+    constexpr auto
 phi_0_tt (auto const& /*delta*/, auto const& tau)
 {
     return 
@@ -400,12 +400,12 @@ phi_0_tt (auto const& /*delta*/, auto const& tau)
             * pow (1. - exp (-gamma_0 * tau), -2.))
     ;
 }
-    auto
+    constexpr auto
 Theta (auto const& delta, auto const& tau)
 {
     return (1. - tau) + A * pow (pow (delta - 1., 2.), 1. / (2. * beta_2));
 }
-    auto
+    constexpr auto
 Delta (auto const& delta, auto const& tau)
 {
     return 
@@ -413,12 +413,12 @@ Delta (auto const& delta, auto const& tau)
         + B * pow (pow (delta - 1., 2.), a);
     ;
 }
-    auto
+    constexpr auto
 Psi (auto const& delta, auto const& tau)
 {
     return exp (-C * pow (delta - 1, 2.) - D * pow (tau - 1, 2.));
 }
-    auto
+    constexpr auto
 phi_r (auto const& delta, auto const& tau)
 {
     return
@@ -432,7 +432,7 @@ phi_r (auto const& delta, auto const& tau)
     ;
 }
 
-    auto
+    constexpr auto
 Delta_d (auto const& delta, auto const& tau)
 {
     return (delta - 1.) * (
@@ -442,7 +442,7 @@ Delta_d (auto const& delta, auto const& tau)
     );
 
 }
-    auto
+    constexpr auto
 Delta_dd (auto /*const&*/ delta, auto const& tau)
 {
     // Here we get rid of the singularity shown below.
@@ -463,12 +463,12 @@ Delta_dd (auto /*const&*/ delta, auto const& tau)
             * pow (pow (delta - 1, 2), 0.5 / beta_2 - 2)
     );
 }
-    auto
+    constexpr auto
 Delta_b_d (auto const& delta, auto const& tau)
 {
     return b * pow (Delta (delta, tau), b - 1.) * Delta_d (delta, tau);
 }
-    auto
+    constexpr auto
 Delta_b_dd (auto const& delta, auto const& tau)
 {
     return b * (
@@ -477,17 +477,17 @@ Delta_b_dd (auto const& delta, auto const& tau)
             * pow (Delta_d (delta, tau), 2)
     );
 }
-    auto
+    constexpr auto
 Psi_d (auto const& delta, auto const& tau)
 {
     return -2 * C * (delta - 1) * Psi (delta, tau);
 }
-    auto
+    constexpr auto
 Psi_dd (auto const& delta, auto const& tau)
 {
     return 2 * C * Psi (delta, tau) * (2 * C * pow (delta - 1, 2) - 1);
 }
-    auto
+    constexpr auto
 phi_r_d (auto const& delta, auto const& tau)
 {
     return
@@ -506,7 +506,7 @@ phi_r_d (auto const& delta, auto const& tau)
           ))
     ;
 }
-    auto
+    constexpr auto
 phi_r_dd (auto const& delta, auto const& tau)
 {
     return
@@ -546,12 +546,12 @@ phi_r_dd (auto const& delta, auto const& tau)
 }
 
 
-    auto
+    constexpr auto
 Delta_b_t (auto const& delta, auto const& tau)
 {
     return -2. * Theta (delta, tau) * b * pow (Delta (delta, tau), b - 1.);
 }
-    auto
+    constexpr auto
 Delta_b_tt (auto const& delta, auto const& tau)
 {
     return 
@@ -560,18 +560,18 @@ Delta_b_tt (auto const& delta, auto const& tau)
             * pow (Delta (delta, tau), b - 2.)
     ;
 }
-    auto
+    constexpr auto
 Psi_t (auto const& delta, auto const& tau)
 {
     return -2 * D * (tau - 1) * Psi (delta, tau);
 }
-    auto
+    constexpr auto
 Psi_tt (auto const& delta, auto const& tau)
 {
     return 2 * D * Psi (delta, tau) * (2 * D * pow (tau - 1, 2) - 1);
 }
 
-    auto
+    constexpr auto
 phi_r_t (auto const& delta, auto const& tau)
 {
     return
@@ -590,7 +590,7 @@ phi_r_t (auto const& delta, auto const& tau)
           )
     ;
 }
-    auto
+    constexpr auto
 phi_r_tt (auto const& delta, auto const& tau)
 {
     return
@@ -612,7 +612,7 @@ phi_r_tt (auto const& delta, auto const& tau)
     ;
 }
 
-    auto
+    constexpr auto
 Delta_b_dt (auto const& delta, auto const& tau)
 {
     return 
@@ -622,13 +622,13 @@ Delta_b_dt (auto const& delta, auto const& tau)
             * Delta_d (delta, tau)
     ;
 }
-    auto
+    constexpr auto
 Psi_dt (auto const& delta, auto const& tau)
 {
     return 4 * C * D * (delta - 1) * (tau - 1) * Psi (delta, tau);
 }
 
-    auto
+    constexpr auto
 phi_r_dt (auto const& delta, auto const& tau)
 {
     return
@@ -673,7 +673,7 @@ triple_point_temperature = 273.16 ISTO_IAPWS_U_T;
 triple_point_pressure = 611.657 ISTO_IAPWS_U_P;
 
 #define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)                            \
-    auto                                                                           \
+    constexpr auto                                                                 \
 NAME##_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
 {                                                                                  \
         auto                                                                       \
@@ -682,7 +682,7 @@ NAME##_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperatur
     tau = critical_temperature / temperature;                                      \
     return FORMULA;                                                                \
 }                                                                                  \
-    auto                                                                           \
+    constexpr auto                                                                 \
 NAME##_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
 {                                                                                  \
     return NAME##_dt (density, temperature);                                       \
@@ -705,12 +705,12 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 
 #ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
 #define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                                \
-    auto                                                                      \
+    constexpr auto                                                            \
 NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
 {                                                                             \
     return NAME##_dt (density, temperature);                                  \
 }                                                                             \
-    auto                                                                      \
+    constexpr auto                                                            \
 NAME (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
 {                                                                             \
     return NAME##_td (temperature, density);                                  \
