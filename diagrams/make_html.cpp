@@ -102,6 +102,10 @@ main ()
         The plots were rendered using <a href="http://www.gnuplot.info/">Gnuplot</a>.
         </p>
         <p>
+        Contact:
+        <span style="unicode-bidi:bidi-override; direction: rtl;">
+        rf.srnc@gnort-el.leunamme
+        </span></span>
         </p>
 )";
         auto
