@@ -29,8 +29,10 @@ TEST_CASE("r6_inverse.hpp (relaxed)")
         auto
     [ r, i ] = density_tp (300.0,  0.992418352e-1 * 1e6, info::convergence);
     CHECK(i.convergence.size () > 1);
+    /*
     for (auto&& [ v, f, df ]: i.convergence)
     {
         MESSAGE (v, ", ", f, ", ", df);
     }
+    */
 } // TEST_CASE("r6_inverse.hpp (relaxed)")
