@@ -4,8 +4,6 @@ DOCTEST_HEADERS=../../external/onqtam/doctest
 DEPENDENCIES_HEADERS=                         \
 	 ../../external/isto/array/include        \
 	 ../../external/isto/units/include        \
-	 ../../external/isto/template_pow/include \
-	 ../../external/isto/hash_combine/include \
 	 ../../external/isto/root_finding/include \
 
 PROJECT=iapws

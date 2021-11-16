@@ -1,6 +1,6 @@
 #pragma once
 #include "detail/common.hpp"
-#include <isto/template_pow/template_pow.hpp>
+#include "detail/template_pow.hpp"
     using isto::template_pow::pow;
 
 // TODO long double coeffs ?

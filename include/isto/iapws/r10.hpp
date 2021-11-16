@@ -1,7 +1,7 @@
 #pragma once
 #include "detail/common.hpp"
 #include <complex>
-#include <isto/template_pow/template_pow.hpp>
+#include "detail/template_pow.hpp"
 
     namespace 
 isto::iapws::r10
