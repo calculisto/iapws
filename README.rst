@@ -16,7 +16,7 @@ Implemented formulations are:
    relation of R6 into density (pressure, temperature). It allows to express the
    properties as functions of the  pressure and temperature.
    Implemented in the header ``r6_inverse.hpp``, depends on the 
-   `isto::units <https://github.com/le-migou/root_finding>`_ library.
+   `isto::root_finding <https://github.com/le-migou/root_finding>`_ library.
 
 #. R7-97(2012) (a.k.a. IF-97): `Revised Release on the IAPWS Industrial Formulation 1997 for the Thermodynamic Properties of Water and Steam <http://www.iapws.org/relguide/IF97-Rev.html>`_.
    An approximation of R6 that provides direct calculations of thermodynamic 
@@ -40,6 +40,10 @@ Implemented formulations are:
    and VII as functions of temperature.
    Implemented in the header ``r14.hpp``.
 
+The full list of functions is summarized in `Functions summary`_.
+
+Some phase diagrams built with this library are showcased in this page 
+http://calcul-isto.cnrs-orleans.fr/misc/diagrams/
 
 Dependencies
 ------------
@@ -82,7 +86,7 @@ have a physical dimension, as provided by the ``isto::units`` library. A typical
 signature for a function template is::
 
         constexpr auto
-    pressure (Density_t auto const& density, Temperature auto const& temperature)
+    pressure (Density auto const& density, Temperature auto const& temperature)
 
 where ``Density`` and ``Temperature`` are concepts defined in the namespace 
 ``isto::units`` that constrain the parameters into having the correct physical 
@@ -101,10 +105,85 @@ a temperature (in that order) as parameters. (But the compiler will not be able
 to enforce it.)
 
 
+Functions summary
+-----------------
+
+The table below summarizes the functions exposed by the library.
+
+========================================== ================= ===============
+Function                                   Argument          Argument   
+========================================== ================= ===============
+r6::pressure                               density           temperature
+r6::massic_internal_energy                 density           temperature
+r6::massic_entropy                         density           temperature
+r6::massic_enthalpy                        density           temperature
+r6::massic_isochoric_heat_capacity         density           temperature
+r6::massic_isobaric_heat_capacity          density           temperature
+r6::massic_gibbs_free_energy               density           temperature
+r6::speed_of_sound                         density           temperature
+r6::isothermal_stress_coefficient          density           temperature
+r6::relative_pressure_coefficient          density           temperature
+r6_inverse::density                        pressure          temperature
+r7::massic_volume                          pressure          temperature
+r7::density                                pressure          temperature
+r7::massic_enthalpy                        pressure          temperature
+r7::massic_internal_energy                 pressure          temperature
+r7::massic_entropy                         pressure          temperature
+r7::massic_isobaric_heat_capacity          pressure          temperature
+r7::massic_isochoric_heat_capacity         pressure          temperature
+r7::speed_of_sound                         pressure          temperature
+r7::isobaric_cubic_expansion_coefficient   pressure          temperature
+r7::isothermal_compressibility             pressure          temperature
+r7::relative_pressure_coefficient          pressure          temperature
+r7::isothermal_stress_coefficient          pressure          temperature
+r7::pressure                               massic_enthalpy   massic_entropy
+r7::temperature                            massic_enthalpy   massic_entropy
+r7::massic_volume                          massic_enthalpy   massic_entropy
+r7::density                                massic_enthalpy   massic_entropy
+r7::massic_internal_energy                 massic_enthalpy   massic_entropy
+r7::massic_isobaric_heat_capacity          massic_enthalpy   massic_entropy
+r7::speed_of_sound                         massic_enthalpy   massic_entropy
+r7::temperature                            pressure          massic_enthalpy
+r7::density                                pressure          massic_enthalpy
+r7::massic_internal_energy                 pressure          massic_enthalpy
+r7::massic_entropy                         pressure          massic_enthalpy
+r7::massic_isobaric_heat_capacity          pressure          massic_enthalpy
+r7::speed_of_sound                         pressure          massic_enthalpy
+r7::massic_volume                          pressure          massic_enthalpy
+r7::temperature                            pressure          massic_entropy
+r7::density                                pressure          massic_entropy
+r7::massic_internal_energy                 pressure          massic_entropy
+r7::massic_enthalpy                        pressure          massic_entropy
+r7::massic_isobaric_heat_capacity          pressure          massic_entropy
+r7::speed_of_sound                         pressure          massic_entropy
+r7::massic_volume                          pressure          massic_entropy
+r10::massic_volume                         pressure          temperature
+r10::density                               pressure          temperature
+r10::massic_entropy                        pressure          temperature
+r10::massic_isobaric_heat_capacity         pressure          temperature
+r10::massic_enthalpy                       pressure          temperature
+r10::massic_internal_energy                pressure          temperature
+r10::massic_helmholtz_energy               pressure          temperature
+r10::cubic_expansion_coefficient           pressure          temperature
+r10::pressure_coefficient                  pressure          temperature
+r10::isothermal_compressibility            pressure          temperature
+r10::isentropic_compressibility            pressure          temperature
+r12::viscosity                             temperature       density
+r14::ih::melting_pressure                  temperature
+r14::ih::sublimation_pressure              temperature
+r14::iii::melting_pressure                 temperature
+r14::v::melting_pressure                   temperature
+r14::vi::melting_pressure                  temperature
+r14::vii::melting_pressure                 temperature
+========================================== ================= ===============
+
+
 Tests
 -----
 
-The tests require the `onqtam/doctest library`_.
+The tests require the `onqtam/doctest <https://github.com/onqtam/doctest>`_ 
+testing framework.
+
 Edit the ``config.mk`` file to make the ``DOCTEST_HEADERS`` variable point to 
 the directory containing ``doctest/doctest.h``. 
 
@@ -133,3 +212,20 @@ platform at the Institut des Sciences de la Terre d'Orléans
 (https://www.univ-orleans.fr/), the french National Center For Scientific
 Research (https://www.cnrs.fr/) and the french Geological Survey
 (https://www.brgm.eu/).
+
++-------------+-----------+-------------+-------------+
+| |logo_isto| | |logo_uo| | |logo_cnrs| | |logo_brgm| |
++-------------+-----------+-------------+-------------+
+
+.. |logo_isto| image:: https://calcul-isto.cnrs-orleans.fr/logos/isto-156.png
+   :width: 156px
+   :target: https://www.isto-orleans.fr/
+.. |logo_uo| image:: https://calcul-isto.cnrs-orleans.fr/logos/uo-180.png
+   :width: 180px
+   :target: https://www.univ-orleans.fr/
+.. |logo_cnrs| image:: https://calcul-isto.cnrs-orleans.fr/logos/cnrs-128.png
+   :width: 128px
+   :target: https://www.cnrs.fr/
+.. |logo_brgm| image:: https://calcul-isto.cnrs-orleans.fr/logos/brgm-256.png
+   :width: 256px
+   :target: https://www.brgm.fr/
