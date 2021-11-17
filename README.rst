@@ -220,12 +220,16 @@ Research (https://www.cnrs.fr/) and the french Geological Survey
 .. |logo_isto| image:: https://calcul-isto.cnrs-orleans.fr/logos/isto-156.png
    :width: 156px
    :target: https://www.isto-orleans.fr/
+   :align: middle
 .. |logo_uo| image:: https://calcul-isto.cnrs-orleans.fr/logos/uo-180.png
    :width: 180px
    :target: https://www.univ-orleans.fr/
+   :align: middle
 .. |logo_cnrs| image:: https://calcul-isto.cnrs-orleans.fr/logos/cnrs-128.png
    :width: 128px
    :target: https://www.cnrs.fr/
+   :align: middle
 .. |logo_brgm| image:: https://calcul-isto.cnrs-orleans.fr/logos/brgm-256.png
    :width: 256px
    :target: https://www.brgm.fr/
+   :align: middle
