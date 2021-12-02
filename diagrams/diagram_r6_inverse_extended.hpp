@@ -45,4 +45,5 @@ topic_r6_inverse_extended = topic_t <double (double, double)>
 <p>The phase boundary for P &gt; 20 GPa is totally arbitrary, as no model is available in this range (AFAIK).</p>
 <p>Range: 173.15 K &le; T &le; 5073.15 K and 0 MPa &le; P &le; 100 GPa </p>
       )"
+    , .substance = "Water"
 };

@@ -43,7 +43,7 @@ Implemented formulations are:
 The full list of functions is summarized in `Functions summary`_.
 
 Some phase diagrams built with this library are showcased in this page 
-http://calcul-isto.cnrs-orleans.fr/misc/diagrams/
+https://calcul-isto.cnrs-orleans.fr/misc/diagrams/
 
 Dependencies
 ------------

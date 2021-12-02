@@ -71,6 +71,7 @@ topic_r7_vs_r6_inverse = topic_t <double (double, double, double)>
 <p>Comparison between the values obtained via R7 and R6 inverse.</p>
 <p>Range: (173.15 K &le; T &lt; 1273.15 K and 0 MPa &le; P &le; 100 MPa) and (1073.15 K &le; T &le; 2273.15 K and 0 MPa &le; P &le; 50 MPa)</p>
     )"
+    , .substance = "Water"
 };
 
 

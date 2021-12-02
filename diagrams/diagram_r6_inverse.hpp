@@ -43,5 +43,6 @@ topic_r6_inverse = topic_t <double (double, double)>
 of (pressure, temperature) by inverting the P(&rho;, T) relation of R6.</p>
 <p>Range: 173.15 K &le; T &le; 1273.15 K and 0 MPa &le; P &le; 1000 MPa </p>
     )"
+    , .substance = "Water"
 };
 

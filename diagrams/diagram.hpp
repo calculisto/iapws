@@ -264,6 +264,8 @@ topic_t
     title;
         std::string
     description;
+        std::string
+    substance;
 };
     
     template <class F>
@@ -549,7 +551,7 @@ set title "{}"
                 , range.x.second * quantities.at (graph.xtag).scale
                 , range.y.first  * quantities.at (graph.ytag).scale
                 , range.y.second * quantities.at (graph.ytag).scale
-                , quantities.at (graph.ztag).label + " (" + quantities.at (graph.xtag).label + ", " + quantities.at (graph.ytag).label + ')'
+                , topic.substance + " " + quantities.at (graph.ztag).label + " (" + quantities.at (graph.xtag).label + ", " + quantities.at (graph.ytag).label + ')'
             );
             if (range.logscale.first) o << "set logscale x\n";
             if (range.logscale.second) o << "set logscale y\n";
@@ -583,7 +585,7 @@ set logscale cb
                 , range.x.second * quantities.at (graph.xtag).scale
                 , range.y.first  * quantities.at (graph.ytag).scale
                 , range.y.second * quantities.at (graph.ytag).scale
-                , quantities.at (graph.ztag).label + " (" + quantities.at (graph.xtag).label + ", " + quantities.at (graph.ytag).label + ')'
+                , topic.substance + " " + quantities.at (graph.ztag).label + " (" + quantities.at (graph.xtag).label + ", " + quantities.at (graph.ytag).label + ')'
             );
             if (range.logscale.first) o << "set logscale x\n";
             if (range.logscale.second) o << "set logscale y\n";
