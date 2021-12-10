@@ -40,6 +40,77 @@ SUBCASE("base functions")
     CHECK(phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 }.epsilon (1e-8));
 
 } // SUBCASE("base functions")
+/*
+SUBCASE("phi_r_ddd")
+{
+        auto const
+    d0 = 1.;
+        auto const
+    d1 = 1.2;
+        auto const
+    n = 1001;
+        auto const
+    dd = (d1 - d0) / (n - 1);
+        auto const
+    t = 1.2;
+        auto
+    a_psi = array_t { 0., 0. };
+        auto
+    a_Delta = array_t { 0., 0. };
+        auto
+    a_Delta_b = array_t { 0., 0. };
+        auto
+    a_s1 = 0.;
+        auto
+    a_s2 = 0.;
+        auto
+    a_s3 = 0.;
+        auto
+    a_s4 = 0.;
+        auto
+    a_phi_r_ddd = 0.;
+    for (auto i = 0; i < n; ++i)
+    {
+            auto const
+        d = d0 + i * dd;
+        a_psi       += Psi_ddd   (d, t) * dd;
+        a_Delta     += Delta_ddd (d, t) * dd;
+        a_Delta_b   += Delta_b_ddd (d, t) * dd;
+        a_s1        += s1_ddd (d, t) * dd;
+        a_s2        += s2_ddd (d, t) * dd;
+        a_s3        += s3_ddd (d, t) * dd;
+        a_s4        += s4_ddd (d, t) * dd;
+        a_phi_r_ddd += phi_r_ddd (d, t) * dd;
+    }
+        auto const
+    b_psi = Psi_dd (d1, t) - Psi_dd (d0, t);
+    MESSAGE("psi[0]: ", a_psi[0], " ", b_psi[0]);
+    MESSAGE("psi[1]: ", a_psi[1], " ", b_psi[1]);
+        auto const
+    b_Delta = Delta_dd (d1, t) - Delta_dd (d0, t);
+    MESSAGE("Delta[0]: ", a_Delta[0], " ", b_Delta[0]);
+    MESSAGE("Delta[1]: ", a_Delta[1], " ", b_Delta[1]);
+        auto const
+    b_Delta_b = Delta_b_dd (d1, t) - Delta_b_dd (d0, t);
+    MESSAGE("Delta_b[0]: ", a_Delta_b[0], " ", b_Delta_b[0]);
+    MESSAGE("Delta_b[1]: ", a_Delta_b[1], " ", b_Delta_b[1]);
+        auto const
+    b_s1 = s1_dd (d1, t) - s1_dd (d0, t);
+    MESSAGE("s1: ", a_s1, " ", b_s1);
+        auto const
+    b_s2 = s2_dd (d1, t) - s2_dd (d0, t);
+    MESSAGE("s2: ", a_s2, " ", b_s2);
+        auto const
+    b_s3 = s3_dd (d1, t) - s3_dd (d0, t);
+    MESSAGE("s3: ", a_s3, " ", b_s3);
+        auto const
+    b_s4 = s4_dd (d1, t) - s4_dd (d0, t);
+    MESSAGE("s4: ", a_s4, " ", b_s4);
+        auto const
+    b_phi_r_ddd = phi_r_dd (d1, t) - phi_r_dd (d0, t);
+    MESSAGE("phi: ", a_phi_r_ddd, " ", b_phi_r_ddd);
+} // SUBCASE("phi_r_ddd")
+*/
 SUBCASE("main API")
 {
     for(const auto& e: table_7)

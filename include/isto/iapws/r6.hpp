@@ -445,6 +445,9 @@ Delta_d (auto const& delta, auto const& tau)
     constexpr auto
 Delta_dd (auto /*const&*/ delta, auto const& tau)
 {
+    // TODO: there's probably a way to rewrite this math
+    // without a singularity.
+
     // Here we get rid of the singularity shown below.
     // Ideally we should use std::nextafter but it will not generalize easily
     // (e.g. what if auto has an uncertainty?).
@@ -463,6 +466,20 @@ Delta_dd (auto /*const&*/ delta, auto const& tau)
             * pow (pow (delta - 1, 2), 0.5 / beta_2 - 2)
     );
 }
+/* This wil NaN for delta < 1 (i.e. density below the critical density). */
+    constexpr auto
+Delta_ddd (auto const& delta, auto const& tau)
+{
+    return 
+          2 * Theta (delta, tau) * A / beta_2 * (1 / beta_2 - 1) 
+            * (1 / beta_2 - 2) * pow (delta - 1, 1 / beta_2 - 3)
+    //                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        + 6 * pow (A, 2) / pow (beta_2, 2) * (1 / beta_2 - 1) * pow (delta - 1, 2 / beta_2 - 3)
+    //                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        + 2 * B * a * (2 * a - 1) * (2 * a - 2) * pow (delta - 1, 2 * a - 3)
+    //                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ;
+}
     constexpr auto
 Delta_b_d (auto const& delta, auto const& tau)
 {
@@ -478,6 +495,15 @@ Delta_b_dd (auto const& delta, auto const& tau)
     );
 }
     constexpr auto
+Delta_b_ddd (auto const& delta, auto const& tau)
+{
+    return b * pow (Delta (delta, tau), b - 3) * (
+          pow (Delta (delta, tau), 2) * Delta_ddd (delta, tau) 
+        + 3 * (b - 1) * Delta (delta, tau) * Delta_d (delta, tau) * Delta_dd (delta, tau)
+        + (b - 1) * (b - 2) * pow (Delta_d (delta, tau), 3)
+    );
+}
+    constexpr auto
 Psi_d (auto const& delta, auto const& tau)
 {
     return -2 * C * (delta - 1) * Psi (delta, tau);
@@ -486,6 +512,12 @@ Psi_d (auto const& delta, auto const& tau)
 Psi_dd (auto const& delta, auto const& tau)
 {
     return 2 * C * Psi (delta, tau) * (2 * C * pow (delta - 1, 2) - 1);
+}
+    constexpr auto
+Psi_ddd (auto const& delta, auto const& tau)
+{
+    return 4 * (delta - 1) * (3 - 2 * pow (delta - 1, 2) * C) * 
+        C * C * Psi (delta, tau);
 }
     constexpr auto
 phi_r_d (auto const& delta, auto const& tau)
@@ -510,8 +542,8 @@ phi_r_d (auto const& delta, auto const& tau)
 phi_r_dd (auto const& delta, auto const& tau)
 {
     return
-          sum(n_1 * d_1 * (d_1 - 1) * pow (delta, d_1 - 2) * pow (tau, t_1))
-        + sum(
+          sum (n_1 * d_1 * (d_1 - 1) * pow (delta, d_1 - 2) * pow (tau, t_1))
+        + sum (
               n_2 * exp (-pow (delta, c_2)) * (
               pow (delta, d_2 - 2) * pow (tau, t_2) * (
                   (d_2 - c_2 * pow (delta, c_2)) 
@@ -519,7 +551,7 @@ phi_r_dd (auto const& delta, auto const& tau)
                 - pow (c_2, 2) * pow (delta, c_2)
               ))
           )
-        + sum(
+        + sum (
               n_3 * pow (tau, t_3) 
             * exp(
                   -alpha * pow (delta - epsilon, 2) 
@@ -532,7 +564,7 @@ phi_r_dd (auto const& delta, auto const& tau)
                 + d_3 * (d_3 - 1) * pow (delta, d_3 - 2)
               )
           )
-        + sum(
+        + sum (
               n_4 * (pow (Delta(delta, tau), b) * (
                   2 * Psi_d (delta, tau) 
                 + delta * Psi_dd (delta, tau)
@@ -541,11 +573,174 @@ phi_r_dd (auto const& delta, auto const& tau)
                   Psi (delta, tau) 
                 + delta * Psi_d (delta, tau)
               ) 
-            + Delta_b_dd (delta, tau) * delta * Psi (delta, tau)));
+            + Delta_b_dd (delta, tau) * delta * Psi (delta, tau))
+          )
     ;
 }
-
-
+/* This was for debugging, I don't feel confortable deleting it yet.
+    constexpr auto
+s1_dd (auto const& delta, auto const& tau)
+{
+    return
+          sum (n_1 * d_1 * (d_1 - 1) * pow (delta, d_1 - 2) * pow (tau, t_1))
+    ;
+}
+    constexpr auto
+s2_dd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_2 * exp (-pow (delta, c_2)) * (
+              pow (delta, d_2 - 2) * pow (tau, t_2) * (
+                  (d_2 - c_2 * pow (delta, c_2)) 
+                * (d_2 - 1 - c_2 * pow (delta, c_2))
+                - pow (c_2, 2) * pow (delta, c_2)
+              ))
+          )
+    ;
+}
+    constexpr auto
+s3_dd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_3 * pow (tau, t_3) 
+            * exp(
+                  -alpha * pow (delta - epsilon, 2) 
+                - beta_1 * pow (tau - gamma, 2)
+              ) * (
+                  -2 * alpha * pow (delta, d_3) 
+                + 4 * pow (alpha, 2) * pow (delta, d_3) 
+                    * pow (delta - epsilon, 2) 
+                - 4 * d_3 * alpha * pow (delta, d_3 - 1) * (delta - epsilon) 
+                + d_3 * (d_3 - 1) * pow (delta, d_3 - 2)
+              )
+          )
+    ;
+}
+    constexpr auto
+s4_dd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_4 * (pow (Delta(delta, tau), b) * (
+                  2 * Psi_d (delta, tau) 
+                + delta * Psi_dd (delta, tau)
+              ) 
+            + 2 * Delta_b_d (delta, tau) * (
+                  Psi (delta, tau) 
+                + delta * Psi_d (delta, tau)
+              ) 
+            + Delta_b_dd (delta, tau) * delta * Psi (delta, tau))
+          )
+    ;
+}
+*/
+/* This wil NaN for delta < 1 (i.e. density below the critical density). */
+    constexpr auto
+phi_r_ddd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_1 * d_1 * (d_1 - 1) * (d_1 - 2) 
+            * pow (delta, d_1 - 3) * pow (tau, t_1)
+          )
+        + sum (
+              n_2 * exp (-pow (delta, c_2)) 
+            * pow (tau, t_2) * pow (delta, d_2 - 3) 
+            * (
+                  d_2 * (d_2 * d_2 - 3 * d_2 + 2)
+                + (3 * d_2 * (2 - d_2 - c_2) 
+                    - c_2 * c_2 + 3 * c_2 - 2
+                  ) * c_2 * pow (delta, c_2)
+                + 3 * (d_2 + c_2 - 1) * c_2 * c_2 * pow (delta, 2 * c_2)
+                - pow (c_2, 3) * pow (delta, 3 * c_2)
+              )
+          )
+        + sum (
+              n_3 * pow (tau, t_3)
+            * exp(
+                  -alpha * pow (delta - epsilon, 2) 
+                - beta_1 * pow (tau - gamma, 2)
+              ) * (
+                  - 8 * pow (alpha, 3) * pow (delta, d_3) * pow (delta - epsilon, 3)
+                  + 12 * pow (alpha, 2) * d_3 * pow (delta, d_3 - 1) * pow (delta - epsilon, 2)
+                  + 12 * pow (alpha, 2) * pow (delta, d_3) * (delta - epsilon)
+                  - 6 * alpha * d_3 * (d_3 - 1) * pow (delta, d_3 - 2) * (delta - epsilon)
+                  - 6 * alpha * d_3 * pow (delta, d_3 - 1)
+                  + d_3 * (d_3 - 1) * (d_3 - 2) * pow (delta, d_3 - 3)
+              )
+          )
+        + sum (n_4 * (
+              pow (Delta (delta, tau), b) * (3 * Psi_dd (delta, tau) + delta * Psi_ddd (delta, tau))
+            + 3 * Delta_b_d (delta, tau) * (2 * Psi_d (delta, tau) + delta * Psi_dd (delta, tau))
+            + 3 * Delta_b_dd (delta, tau) * (Psi (delta, tau) + delta * Psi_d (delta, tau))
+            +     Delta_b_ddd (delta, tau) * delta * Psi (delta, tau)
+          ))
+    ;
+}
+/*
+    constexpr auto
+s1_ddd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_1 * d_1 * (d_1 - 1) * (d_1 - 2) 
+            * pow (delta, d_1 - 3) * pow (tau, t_1)
+          )
+    ;
+}
+    constexpr auto
+s2_ddd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_2 * exp (-pow (delta, c_2)) 
+            * pow (tau, t_2) * pow (delta, d_2 - 3) 
+            * (
+                  d_2 * (d_2 * d_2 - 3 * d_2 + 2)
+                + (3 * d_2 * (2 - d_2 - c_2) 
+                    - c_2 * c_2 + 3 * c_2 - 2
+                  ) * c_2 * pow (delta, c_2)
+                + 3 * (d_2 + c_2 - 1) * c_2 * c_2 * pow (delta, 2 * c_2)
+                - pow (c_2, 3) * pow (delta, 3 * c_2)
+              )
+          )
+    ;
+}
+    constexpr auto
+s3_ddd (auto const& delta, auto const& tau)
+{
+    return
+          sum (
+              n_3 * pow (tau, t_3)
+            * exp(
+                  -alpha * pow (delta - epsilon, 2) 
+                - beta_1 * pow (tau - gamma, 2)
+              ) * (
+                  - 8 * pow (alpha, 3) * pow (delta, d_3) * pow (delta - epsilon, 3)
+                  + 12 * pow (alpha, 2) * d_3 * pow (delta, d_3 - 1) * pow (delta - epsilon, 2)
+                  + 12 * pow (alpha, 2) * pow (delta, d_3) * (delta - epsilon)
+                  - 6 * alpha * d_3 * (d_3 - 1) * pow (delta, d_3 - 2) * (delta - epsilon)
+                  - 6 * alpha * d_3 * pow (delta, d_3 - 1)
+                  + d_3 * (d_3 - 1) * (d_3 - 2) * pow (delta, d_3 - 3)
+              )
+          )
+    ;
+}
+    constexpr auto
+s4_ddd (auto const& delta, auto const& tau)
+{
+    return
+          sum (n_4 * (
+              pow (Delta (delta, tau), b) * (3 * Psi_dd (delta, tau) + delta * Psi_ddd (delta, tau))
+            + 3 * Delta_b_d (delta, tau) * (2 * Psi_d (delta, tau) + delta * Psi_dd (delta, tau))
+            + 3 * Delta_b_dd (delta, tau) * (Psi (delta, tau) + delta * Psi_d (delta, tau))
+            +     Delta_b_ddd (delta, tau) * delta * Psi (delta, tau)
+          ))
+    ;
+}
+*/
     constexpr auto
 Delta_b_t (auto const& delta, auto const& tau)
 {
