@@ -57,11 +57,7 @@ plot_dt_6_7 (
     , double t0
     , double t1
     , int n
-    , std::optional <double> low = {}
-    , std::optional <double> high = {}
 ){
-    if (!low)  low  = std::numeric_limits <double>::lowest ();
-    if (!high) high = std::numeric_limits <double>::max ();
         const auto
     dt = (t1 - t0) / (n - 1);
         auto
@@ -77,7 +73,6 @@ plot_dt_6_7 (
             const auto
         [ d, info ] = r6_inverse::density_pt (p, t, d7, p * 1e-7, info::convergence);
         if (!info.converged) continue;
-        if (d < low || d > high) continue;
         map.insert ({ d, { t, p } });
     }
         auto
@@ -92,14 +87,14 @@ plot_dt_6_7 (
     auto
 lines_dt (int n)
 {
-    plot_dt_6_7 ("saturation_gaz_dt.dat", r7::saturation_pressure_t    <double>, 273.16, 647.096, n);
-    plot_dt_6   ("saturation_liq_dt.dat", r7::saturation_pressure_t    <double>, 273.16, 647.096, n, 1000.);
-    plot_dt_6   ("sublimation_dt.dat",    r14::sublimation_pressure_t  <double>, 200., 273.16, n, 1., {}, 1.);
+    plot_dt_6_7 ("saturation_gaz_dt.dat", r7::saturation_pressure_t    <double>, 273.15,  647.096, n);
+    plot_dt_6   ("saturation_liq_dt.dat", r7::saturation_pressure_t    <double>, 273.15,  647.096, n, 1000.);
+    plot_dt_6   ("sublimation_dt.dat",    r14::sublimation_pressure_t  <double>, 50.,     273.16,  n, 1., {}, 1.);
     plot_dt_6   ("melting_ih_dt.dat",     r14::ih::melting_pressure_t  <double>, 251.165, 273.16,  n, 1000., 1e3);
     plot_dt_6   ("melting_iii_dt.dat",    r14::iii::melting_pressure_t <double>, 251.165, 256.164, n, 1000., 0.);
     plot_dt_6   ("melting_v_dt.dat",      r14::v::melting_pressure_t   <double>, 256.164, 273.31,  n, 1000., 0., 2e3);
-    plot_dt_6   ("melting_vi_dt.dat",     r14::vi::melting_pressure_t  <double>, 273.31, 355., n, 1000.);
-    plot_dt_6   ("melting_vii_dt.dat",    r14::vii::melting_pressure_t <double>, 355.,   715., n, 1000.);
+    plot_dt_6   ("melting_vi_dt.dat",     r14::vi::melting_pressure_t  <double>, 273.31,  355.,    n, 1000.);
+    plot_dt_6   ("melting_vii_dt.dat",    r14::vii::melting_pressure_t <double>, 355.,    715.,    n, 1000.);
 }
     template <class F>
     auto
@@ -119,8 +114,8 @@ plot_pt (std::string const& name, F&& f, double t0, double t1, int n = 100)
     auto
 lines_tp (int n)
 {
-    plot_pt ("saturation_tp.dat",  r7::saturation_pressure_t    <double>, 273.16,  647.096, n);
-    plot_pt ("sublimation_tp.dat", r14::sublimation_pressure_t  <double>, 200.,    273.16,  n);
+    plot_pt ("saturation_tp.dat",  r7::saturation_pressure_t    <double>, 273.15,  647.096, n);
+    plot_pt ("sublimation_tp.dat", r14::sublimation_pressure_t  <double>, 50.,     273.16,  n);
     plot_pt ("melting_ih_tp.dat",  r14::ih::melting_pressure_t  <double>, 251.165, 273.16,  n);
     plot_pt ("melting_iii_tp.dat", r14::iii::melting_pressure_t <double>, 251.165, 256.164, n);
     plot_pt ("melting_v_tp.dat",   r14::v::melting_pressure_t   <double>, 256.164, 273.31,  n);

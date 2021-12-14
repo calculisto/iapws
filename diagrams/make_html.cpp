@@ -111,7 +111,7 @@ main ()
         auto
     content = std::string {};
         auto
-    toc = std::string { "<p>Contents:</p><ul>\n<li><a href='#lines'>Phases boundaries</a></li>\n" };
+    toc = std::string { "<p>Contents:</p><ul>\n<li><a href='#lines'>Phases boundaries</a></li>\n<li><a href='#spinodal'>Spinodal lines</a></li>\n" };
     for (auto&& topic: topics)
     {
         content += "<h2 id='" + topic.name + "'>" + topic.title + "</h2>\n<p>" + topic.description + "</p>\n";
@@ -191,9 +191,30 @@ main ()
     o << toc;
     o << R"(
 <h2 id='lines'>Phases boundaries</h2>
+<p>Phases boundaries calculated using
+<ul>
+<li>Wagner, W., Cooper, J. R., Dittmann, A., Kijima, J., Kretzschmar, H., Kruse, A., Mareš, R., Oguchi, K., Sato, H., Stöcker, I., Sǐfner, O., Takaishi, Y., Tanishita, I., Trübenbach, J., and Willkommen, T. (January 1, 2000). "The IAPWS Industrial Formulation 1997 for the Thermodynamic Properties of Water and Steam ." ASME. J. Eng. Gas Turbines Power. January 2000; 122(1): 150–184. <a href="https://doi.org/10.1115/1.483186">https://doi.org/10.1115/1.483186</a></li>
+<li>Wolfgang Wagner, Thomas Riethmann, Rainer Feistel, Allan H. Harvey, "New Equations for the Sublimation Pressure and Melting Pressure of H2O Ice Ih", Journal of Physical and Chemical Reference Data 40, 043103 (2011) <a href="https://doi.org/10.1063">https://doi.org/10.1063</a></li>
+</ul>
+</p>
 <div class='thumb-container'>
 <div class='thumb'><a href='lines_tp.png'><img src='lines_tp-thumb.png'/><div>In the Temperature-Pressure plane</div></a></div>
 <div class='thumb'><a href='lines_dt.png'><img src='lines_dt-thumb.png'/><div>In the Density-Temperature plane</div></a></div>
+</div>
+<h2 id='spinodal'>Spinodal lines</h2>
+<p>
+Here we use IAPWS 95 (a.k.a. R6) to find the spinodal lines, i.e. locus of points where the compressibility is zero. 
+"Spinodal line (liq&#41;" uses R6 on the liquid side (densities &gt; critical density).
+"Spinodal line (gas), candidate 1" and "Spinodal line (gas), candidate 1" use R6 on the vapor side (densities &lt; critical density).
+It so happens that there are two solutions on this side, although the second one has probably no thermophysical sense. 
+"Spinodal line (gas), R6 gas" uses the gas equation of state found in the paper of W. Wagner and A. Pruß (eq.&nbsp;3.2)
+(but not on the official IAPWS guideline). Unfortunately, its validity range does not extend beyond a density of 55&nbsp;kg/m<spu>3</sup>
+
+
+</p>
+<div class='thumb-container'>
+<div class='thumb'><a href='spinodal_tp.png'><img src='spinodal_tp-thumb.png'/><div>In the Temperature-Pressure plane</div></a></div>
+<div class='thumb'><a href='spinodal_dt.png'><img src='spinodal_dt-thumb.png'/><div>In the Density-Temperature plane</div></a></div>
 </div>
 )";
     o 

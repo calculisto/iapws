@@ -1,5 +1,7 @@
 #pragma once
 #include "diagram_r6.hpp"
+#include "diagram_r6_gas.hpp"
+#include "diagram_r6_vs_r6_gas.hpp"
 #include "diagram_r6_inverse.hpp"
 #include "diagram_r6_inverse_extended.hpp"
 #include "diagram_r7.hpp"
@@ -12,6 +14,8 @@
 topics = std::vector
 {
       topic_r6
+    , topic_r6_gas
+    , topic_r6_vs_r6_gas
     , topic_r6_inverse
     , topic_r6_inverse_extended
     , topic_r7

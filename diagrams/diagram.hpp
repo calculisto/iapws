@@ -113,7 +113,7 @@ public:
         bool
     operator () (double d, double t) const override
     {
-        return t < 647.096 && d > d_sat_g && d < d_sat_l;
+        return (t <= 273.16) || (t < 647.096 && d > d_sat_g && d < d_sat_l);
     };
 };
     auto

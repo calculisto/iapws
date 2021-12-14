@@ -54,7 +54,7 @@ topic_r7_vs_r6_inverse = topic_t <double (double, double, double)>
       }
     
     , .graphs = {
-          { "delta_density",                              "temperature", "pressure", delta { ident1,                                                          r7::density_tp                              <double, double> }}
+          { "delta_density",                              "temperature", "pressure", delta { ident1,                                                        r7::density_tp                              <double, double> }}
         , { "delta_massic_enthalpy",                      "temperature", "pressure", delta { r6::massic_enthalpy_dt                      <double, double>, r7::massic_enthalpy_tp                      <double, double> }}
         , { "delta_massic_internal_energy",               "temperature", "pressure", delta { r6::massic_internal_energy_dt               <double, double>, r7::massic_internal_energy_tp               <double, double> }}
         , { "delta_massic_entropy",                       "temperature", "pressure", delta { r6::massic_entropy_dt                       <double, double>, r7::massic_entropy_tp                       <double, double> }}
