@@ -2689,7 +2689,7 @@ n = array_t //{{{
     ,  0.65017534844798e3
 }; //}}}
 } // namespace detail
-    constexpr auto
+    auto
 saturation_pressure_t (ISTO_IAPWS_T auto const& temperature)
 {
         using std::pow;
@@ -9513,7 +9513,7 @@ region (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massi
     namespace
 detail
 {
-        constexpr auto
+        const auto
     p_s_623_15 = saturation_pressure_t (623.15 ISTO_IAPWS_U_T);
 } // namespace detail
     constexpr int
