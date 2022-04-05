@@ -80,6 +80,13 @@ density_pt (
 ){
     return density_pt (pressure, temperature, detail::initial_density (pressure, temperature), info);
 }
+    constexpr auto
+density_pt (
+      ISTO_IAPWS_P auto const& pressure
+    , ISTO_IAPWS_T auto const& temperature
+){
+    return density_pt (pressure, temperature, detail::initial_density (pressure, temperature), info::none);
+}
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto
 density_tp (
@@ -109,6 +116,13 @@ density_tp (
     , info_t <InfoTag> info = info::none
 ){
     return density_pt (pressure, temperature, info);
+}
+    constexpr auto
+density_tp (
+      ISTO_IAPWS_T auto const& temperature
+    , ISTO_IAPWS_P auto const& pressure
+){
+    return density_pt (pressure, temperature, info::none);
 }
 
 #define ISTO_IAPWS_R6_INVERSE_GEN(NAME)                                               \
@@ -165,6 +179,20 @@ NAME##_pt (                                                                     
         , info                                                                        \
     );                                                                                \
 }                                                                                     \
+                                                                                      \
+    constexpr auto                                                                    \
+NAME##_pt (                                                                           \
+      ISTO_IAPWS_P auto const& pressure                                               \
+    , ISTO_IAPWS_T auto const& temperature                                            \
+){                                                                                    \
+    return NAME##_pt (                                                                \
+          pressure                                                                    \
+        , temperature                                                                 \
+        , detail::initial_density (pressure, temperature)                             \
+        , 1e-6 ISTO_IAPWS_U_P                                                         \
+        , info::none                                                                  \
+    );                                                                                \
+}                                                                                     \
     template <info_tag_t InfoTag = info::tag::none>                                   \
     constexpr auto                                                                    \
 NAME##_tp (                                                                           \
@@ -210,6 +238,18 @@ NAME##_tp (                                                                     
           pressure                                                                    \
         , temperature                                                                 \
         , info                                                                        \
+    );                                                                                \
+}                                                                                     \
+                                                                                      \
+    constexpr auto                                                                    \
+NAME##_tp (                                                                           \
+      ISTO_IAPWS_T auto const& temperature                                            \
+    , ISTO_IAPWS_P auto const& pressure                                               \
+){                                                                                    \
+    return NAME##_pt (                                                                \
+          pressure                                                                    \
+        , temperature                                                                 \
+        , info::none                                                                  \
     );                                                                                \
 }
 
