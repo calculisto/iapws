@@ -23,18 +23,46 @@ TEST_CASE("r6_inverse.hpp (constrained)")
         // with both
         CHECK_U (density (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), density_t { e.D }, 1e3 * 1e-6);
         CHECK_U (density (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), density_t { e.D }, 1e3 * 1e-6);
+    }
+    {
+            const auto
+        [ r, i ] = density_tp (temperature_t { 300.0 },  pressure_t { 0.992418352e-1 * 1e6 }, info::convergence);
+        CHECK(i.convergence.size () > 1);
         /*
-        CHECK_U (temperature (density_t { e.D }, pressure_t { e.P }), temperature_t { e.D }, 1e-8);
-        CHECK_U (temperature (pressure_t { e.P }, density_t { e.D }), temperature_t { e.D }, 1e-8);
+        for (auto&& [ v, f, df ]: i.convergence)
+        {
+            MESSAGE (v, ", ", f, ", ", df);
+        }
         */
     }
-        auto
-    [ r, i ] = density_tp (temperature_t { 300.0 },  pressure_t { 0.992418352e-1 * 1e6 }, info::convergence);
-    CHECK(i.convergence.size () > 1);
-    /*
-    for (auto&& [ v, f, df ]: i.convergence)
+    for(const auto& e: table_7)
     {
-        MESSAGE (v, ", ", f, ", ", df);
+        CHECK_U (massic_isochoric_heat_capacity (pressure_t { e.P }, temperature_t { e.T }), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (temperature_t { e.T }, pressure_t { e.P }), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T })), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T })), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+        CHECK_U (massic_isochoric_heat_capacity (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, massic_heat_capacity_t { e.Cv }, 1e3 * 1e-6);
+
+        CHECK_U (speed_of_sound (pressure_t { e.P }, temperature_t { e.T }), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (temperature_t { e.T }, pressure_t { e.P }), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T })), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T })), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, velocity_t { e.W }, 1e3 * 1e-6);
+        CHECK_U (speed_of_sound (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, velocity_t { e.W }, 1e3 * 1e-6);
+
+        CHECK_U (massic_entropy (pressure_t { e.P }, temperature_t { e.T }), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (temperature_t { e.T }, pressure_t { e.P }), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T })), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T })), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }), massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (pressure_t { e.P }, temperature_t { e.T }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, massic_entropy_t { e.S }, 1e3 * 1e-6);
+        CHECK_U (massic_entropy (temperature_t { e.T }, pressure_t { e.P }, r7::density (pressure_t { e.P }, temperature_t { e.T }), pressure_t { 1e-6 }, info::iterations).first, massic_entropy_t { e.S }, 1e3 * 1e-6);
+
     }
-    */
 } // TEST_CASE("r6_inverse.hpp (constrained)")
