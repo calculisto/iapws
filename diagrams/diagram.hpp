@@ -84,7 +84,7 @@ exclusion_dt_t
             const auto
         d7 = r7::r2::density_pt (p, t);
             const auto
-        [ d, info ] = r6_inverse::density_pt (p, t, d7, p * 1e-7, info::convergence);
+        [ d, info ] = r6_inverse::density_pt (p, t, d7, info::convergence);
         if (!info.converged) return 0.;
         return d;
     }
@@ -95,7 +95,7 @@ exclusion_dt_t
             const auto
         p = r7::saturation_pressure_t (t);
             const auto
-        [ d, info ] = r6_inverse::density_pt (p, t, 1000., p * 1e-7, info::convergence);
+        [ d, info ] = r6_inverse::density_pt (p, t, 1000., info::convergence);
         if (!info.converged) return 0.;
         return d;
     }
@@ -420,7 +420,7 @@ make_data_r6_inverse (topic_t <F> const& topic)
                     : r7::density_pt (p, t)
                 ;
                     const auto
-                [ d, i ] = r6_inverse::density_pt (p, t, di, p * 1e-7, info::convergence);
+                [ d, i ] = r6_inverse::density_pt (p, t, di, info::convergence);
                 if (!i.converged)
                 {
                     e << t << " " << p << "\n";
@@ -494,7 +494,7 @@ make_data_r7_vs_r6_inverse (topic_t <F> const& topic)
                     const auto
                 d7 = r7::density_pt (p, t);
                     const auto
-                [ d6, i ] = r6_inverse::density_pt (p, t, d7, p * 1e-7, info::convergence);
+                [ d6, i ] = r6_inverse::density_pt (p, t, d7, info::convergence);
                 if (!i.converged)
                 {
                     e << t << " " << p << "\n";

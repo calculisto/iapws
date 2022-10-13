@@ -21,7 +21,6 @@ saturation_density_gaz_t (double temperature)
           pressure
         , temperature
         , density_r7
-        , pressure * 1e-7
     );
     return density;
 }
@@ -176,12 +175,7 @@ main ()
                   [=](auto delta){ return f (delta, tau); }
                 , [=](auto delta){ return df (delta, tau); }
                 , d_init
-                , [=](auto x)
-                  { 
-                        using std::abs;
-                    return abs (x) < 1e-10; 
-                  }
-                , {} // options
+                , { .converged = [](auto c, auto p, auto f){ return fabs (f) < 1e-8 || fabs ((c - p) / c) < 1e-8; }} // options
                 , info::convergence
             );
             if (!info.converged)
@@ -233,11 +227,6 @@ main ()
                       [=](auto delta){ return g (delta, tau); }
                     , [=](auto delta){ return dg (delta, tau); }
                     , sd
-                    , [=](auto x)
-                      { 
-                            using std::abs;
-                        return abs (x) < 1e-10; 
-                      }
                     , {} // options
                     , info::convergence
                 );
@@ -287,17 +276,7 @@ main ()
                           [=](auto delta){ return f (delta, tau); }
                         , d0
                         , d1
-                        , [=](auto a, auto b, auto fa, auto fb)
-                          { 
-                                    constexpr double
-                                tol = 1e-10;
-                                return 
-                                       fa == 0.0
-                                    || fb == 0.0
-                                    || fabs (b - a) < tol
-                                ;
-                          }
-                        , {} // options
+                        , { .converged = [](auto a, auto b, auto fa, auto fb){ return fa == 0 || fb == 0 || fabs (a - b) < 1e-8; }} // options
                         , info::convergence
                     );
                     if (!info.converged)

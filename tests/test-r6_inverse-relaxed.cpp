@@ -12,18 +12,15 @@ TEST_CASE("r6_inverse.hpp (relaxed)")
         using namespace isto::iapws;
     for(const auto& e: table_7)
     {
-        // the convergence espilon is 1e-6.
+        INFO ("P= ", e.P, ", T= ", e.T);
         CHECK (density_pt (e.P, e.T) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         CHECK (density_tp (e.T, e.P) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         // With initial guess
         CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        // And convergence criterion
-        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.D }.scale (1e3).epsilon (1e-6));
         // And info
-        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
     }
     {
             const auto
@@ -38,32 +35,33 @@ TEST_CASE("r6_inverse.hpp (relaxed)")
     }
     for(const auto& e: table_7)
     {
+        INFO ("P= ", e.P, ", T= ", e.T);
         CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
         CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
         CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
         CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
 
         CHECK (speed_of_sound_pt (e.P, e.T) == Approx { e.W }.scale (1e3).epsilon (1e-6));
         CHECK (speed_of_sound_tp (e.T, e.P) == Approx { e.W }.scale (1e3).epsilon (1e-6));
         CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
         CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
+        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
+        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
+        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
+        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
 
         CHECK (massic_entropy_pt (e.P, e.T) == Approx { e.S }.scale (1e3).epsilon (1e-6));
         CHECK (massic_entropy_tp (e.T, e.P) == Approx { e.S }.scale (1e3).epsilon (1e-6));
         CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
         CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), 1e-6, info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
 
     }
 } // TEST_CASE("r6_inverse.hpp (relaxed)")
