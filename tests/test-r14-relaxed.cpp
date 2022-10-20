@@ -16,6 +16,10 @@ SUBCASE("main API")
     CHECK(vii::melting_pressure_t (550.0) == Approx { 6308.710e6 }.scale (1e9).epsilon (1e-6));
     CHECK( ih::sublimation_pressure_t (230.0) == Approx { 8.94735 }.scale (1e0).epsilon (1e-6));
 
+    CHECK(iii::melting_temperature_p ( 268.685e6) == Approx { 254.0 }.scale (1e3).epsilon (1e-6));
+    CHECK(  v::melting_temperature_p ( 479.640e6) == Approx { 265.0 }.scale (1e8).epsilon (1e-6));
+    CHECK( vi::melting_temperature_p (1356.760e6) == Approx { 320.0 }.scale (1e9).epsilon (1e-5));
+
 /* Not possible.
     CHECK(melting_pressure_t (260.0) == Approx {  138.268e6 }.scale (1e8).epsilon (1e-8));
     CHECK(melting_pressure_t (254.0) == Approx {  268.685e6 }.scale (1e8).epsilon (1e-8));

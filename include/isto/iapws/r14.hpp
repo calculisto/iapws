@@ -49,6 +49,14 @@ melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
         1. - 0.299948 * (1. - pow (theta, 60.))
     ) * (208.566e6 ISTO_IAPWS_U_P);
 }
+    constexpr auto
+melting_temperature_p (ISTO_IAPWS_P auto const& pressure)
+{
+        using std::pow;
+        auto const
+    pi = pressure / (208.566e6 ISTO_IAPWS_U_P);
+    return pow ((pi - 1. + 0.299948) / 0.299948, 1. / 60.) * (251.165 ISTO_IAPWS_U_T);
+}
 } // namespace iii
     namespace
 v
@@ -63,6 +71,14 @@ melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
         1. - 1.18721 * (1. - pow (theta, 8.))
     ) * (350.1e6 ISTO_IAPWS_U_P);
 }
+    constexpr auto
+melting_temperature_p (ISTO_IAPWS_P auto const& pressure)
+{
+        using std::pow;
+        auto const
+    pi = pressure / (350.1e6 ISTO_IAPWS_U_P);
+    return pow ((pi - 1. + 1.18721) / 1.18721, 1. / 8.) * (256.164 ISTO_IAPWS_U_T);
+}
 } // namespace v
     namespace
 vi
@@ -76,6 +92,14 @@ melting_pressure_t (ISTO_IAPWS_T auto const& temperature)
     return (
         1. - 1.07476 * (1. - pow (theta, 4.6))
     ) * (632.4e6 ISTO_IAPWS_U_P);
+}
+    constexpr auto
+melting_temperature_p (ISTO_IAPWS_P auto const& pressure)
+{
+        using std::pow;
+        auto const
+    pi = pressure / (632.4e6 ISTO_IAPWS_U_P);
+    return pow ((pi - 1. + 1.07476) / 1.07476, 1. / 4.6) * (273.31 ISTO_IAPWS_U_T);
 }
 } // namespace vi
     namespace
