@@ -32,7 +32,7 @@ make_html.o: diagram_*.hpp
 
 
 clean:
-	rm -fr *.dat *.gpl *.png *.txt *.mk *.o diagram_r7 diagram_r6 diagram_r6_inverse diagram_r6_inverse_extended diagram_r7_vs_r6_inverse make_html diagram_lines diagram_r10 diagram_r12 diagram_r12_pt diagram_spinodal
+	rm -fr *.dat *.gpl *.png *.txt *.mk *.o diagram_r7 diagram_r6 diagram_r6_inverse diagram_r6_inverse_extended diagram_r7_vs_r6_inverse make_html diagram_lines diagram_r10 diagram_r12 diagram_r12_pt diagram_spinodal diagram_r6_gas diagram_r6_vs_r6_gas
 
 diagram_%.o: diagram_%.hpp diagram.hpp
 
