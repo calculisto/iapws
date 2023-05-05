@@ -1,4 +1,3 @@
-DOCTEST_HEADERS=../../external/onqtam/doctest
 DEPENDENCIES_HEADERS=                       \
 	 ../../external/isto/array/include        \
 	 ../../external/isto/root_finding/include \
