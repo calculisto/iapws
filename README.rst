@@ -51,9 +51,6 @@ Dependencies
 - `isto::array <https://github.com/le-migou/array>`_.
 - `isto::root_finding <https://github.com/le-migou/root_finding>`_ for R6-inverse.
 
-Optionally, `isto::units <https://github.com/le-migou/units>`_. See
-`Flavors`_ below.
-
 To run the tests:
 
 - `GNU Make <https://www.gnu.org/software/make/>`_.
