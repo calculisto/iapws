@@ -26,13 +26,13 @@ detail
         constexpr auto
     k_2 = 5.2992608;
         constexpr auto
-    T_LL = 228.2 ISTO_IAPWS_U_T;
+    T_LL = 228.2;
         constexpr auto
-    rho_0 = 1081.6482 ISTO_IAPWS_U_D;
+    rho_0 = 1081.6482;
         constexpr auto
-    R = 461.523087 ISTO_IAPWS_U_GC;
+    R = 461.523087;
         constexpr auto
-    pi_0 = 300e6 ISTO_IAPWS_U_P / rho_0 / R / T_LL;
+    pi_0 = 300e6 / rho_0 / R / T_LL;
 
         constexpr auto
     c = array_t
@@ -298,25 +298,25 @@ detail
     p_H (auto const& temperature)
     {
             const auto
-        theta = temperature / 235.15 ISTO_IAPWS_U_T;
+        theta = temperature / 235.15;
         return (
               0.1 
             + 228.27 * (1. - pow (theta, 6.243))
             + 15.724 * (1. - pow (theta, 79.81))
-        ) * 1e6 ISTO_IAPWS_U_P;
+        ) * 1e6;
     }
     /*
         constexpr auto
     dp_H_dt (auto const& temperature)
     {
             const auto
-        theta = temperature / 235.15 ISTO_IAPWS_U_T;
+        theta = temperature / 235.15;
         return (
             + 228.27 * 6.243 * pow (theta, 6.243 - 1.)
             + 15.724 * 79.81 * pow (theta, 79.81 - 1.)
         ) / 235.15 
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-        ISTO_IAPWS_U_P  / 1. ISTO_IAPWS_U_T
+#ifdef ISTO_IAPWS_FLAVOR_
+         / 1.
 #endif
         ;
     }
@@ -325,19 +325,19 @@ detail
     T_H (auto const& pressure)
     {
             const auto
-        p = pressure / (1e6 ISTO_IAPWS_U_P);
+        p = pressure / (1e6);
         return (
               172.82
             + 0.03718 * p
             + 3.403e-5 * p * p
             - 1.573e-8 * p * p * p
-            ) ISTO_IAPWS_U_T;
+            );
     }
 } // namespace detail
     constexpr auto
 massic_volume_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using namespace detail;
         const auto
@@ -357,16 +357,16 @@ massic_volume_tp (
 
     constexpr auto
 density_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
     return 1. / massic_volume_tp (temperature, pressure);
 }
 
     constexpr auto
 massic_entropy_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using namespace detail;
         const auto
@@ -387,8 +387,8 @@ massic_entropy_tp (
 
     constexpr auto
 isothermal_compressibility_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using namespace detail;
         const auto
@@ -411,8 +411,8 @@ isothermal_compressibility_tp (
 
     constexpr auto
 thermal_expansion_coefficient_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using namespace detail;
         const auto
@@ -435,8 +435,8 @@ thermal_expansion_coefficient_tp (
 
     constexpr auto
 massic_isobaric_heat_capacity_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using namespace detail;
         const auto
@@ -458,8 +458,8 @@ massic_isobaric_heat_capacity_tp (
 
     constexpr auto
 massic_isochoric_heat_capacity_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
     return massic_isobaric_heat_capacity_tp (temperature, pressure)
         - temperature
@@ -471,8 +471,8 @@ massic_isochoric_heat_capacity_tp (
 
     constexpr auto
 speed_of_sound_tp (
-      ISTO_IAPWS_T auto const& temperature
-    , ISTO_IAPWS_P auto const& pressure
+      auto const& temperature
+    , auto const& pressure
 ){
         using std::sqrt;
     return pow <-0.5> (
@@ -484,19 +484,19 @@ speed_of_sound_tp (
 }
 
     constexpr auto
-homogeneous_ice_nucleation_limit_temperature_p (ISTO_IAPWS_P auto const& pressure)
+homogeneous_ice_nucleation_limit_temperature_p (auto const& pressure)
 {
         using namespace detail;
         const auto
     P_ = 198871388.776809;
-    if (pressure > P_ ISTO_IAPWS_U_P)
+    if (pressure > P_)
     {
-        return T_H (pressure) ISTO_IAPWS_U_T;
+        return T_H (pressure);
     }
     return zhang (
           [=](auto t){ return p_H (t) - pressure; }
-        , 180. ISTO_IAPWS_U_T
-        , 240. ISTO_IAPWS_U_T
+        , 180.
+        , 240.
         , { .converged = [](auto a, auto b, auto fa, auto fb)
             {
                 return fa == 0 || fb == 0 || fabs (a - b) < 1e-10;
@@ -506,33 +506,11 @@ homogeneous_ice_nucleation_limit_temperature_p (ISTO_IAPWS_P auto const& pressur
     return newton (
           [=](auto t){ return p_H (t) * 1e6 - pressure; }
         , [=](auto t){ return dp_H_dt (t); }
-        , 181.4 ISTO_IAPWS_U_T
+        , 181.4
         , [](auto x){ return fabs (x) < 1e-8; }
     );
     */
 }
 
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                                \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_P auto const& pressure) \
-{                                                                             \
-    return NAME##_tp (temperature, pressure);                                  \
-}                                                                             \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature) \
-{                                                                             \
-    return NAME##_tp (temperature, pressure);                                  \
-}
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_volume)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(density)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_entropy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(thermal_expansion_coefficient)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isobaric_heat_capacity)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(speed_of_sound)
-#undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
-#endif
 } // namespace g12_15
 } // namespace isto::iapws::g12

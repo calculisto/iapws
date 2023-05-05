@@ -1,11 +1,10 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r14.hpp"
     using namespace isto::iapws::r14;
 
-TEST_CASE("r14.hpp (relaxed)")
+TEST_CASE("r14.hpp")
 {
 SUBCASE("main API")
 {
@@ -29,4 +28,4 @@ SUBCASE("main API")
     CHECK(sublimation_pressure_t (230.0) == Approx { 8.94735e-6 }.scale (1e-6).epsilon (1e-8));
 */
 } // SUBCASE("main API")
-} // TEST_CASE("r14.hpp (relaxed)")
+} // TEST_CASE("r14.hpp")

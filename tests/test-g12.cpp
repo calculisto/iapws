@@ -1,11 +1,10 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/g12.hpp"
     using namespace isto::iapws::g12;
 
-TEST_CASE("g12.hpp (relaxed)")
+TEST_CASE("g12.hpp")
 {
         using namespace detail;
     CHECK(L     (273.15 / T_LL - 1. , 0.101325e6 / rho_0 / R / T_LL) == Approx { 0.62120474 } );

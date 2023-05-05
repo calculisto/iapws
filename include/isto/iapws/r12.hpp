@@ -68,7 +68,7 @@ detail
     }
     
         constexpr auto
-    xi (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
+    xi (auto const& temperature, auto const& density)
     {
             constexpr auto
         nu = 0.630;
@@ -82,19 +82,19 @@ detail
 
         T_b_r = 1.5;
             auto const
-        T_b = temperature / (647.096 ISTO_IAPWS_U_T);
+        T_b = temperature / (647.096);
             auto const
-        rho_b = density / (322. ISTO_IAPWS_U_D);
+        rho_b = density / (322.);
             auto const
-        T_r = T_b_r * (647.096 ISTO_IAPWS_U_T);
+        T_r = T_b_r * (647.096);
             auto const
         p = r6::pressure_td (temperature, density);
             auto const
-        p_b = p / (22.064e6 ISTO_IAPWS_U_P);
+        p_b = p / (22.064e6);
             auto const
         p_R = r6::pressure_td (T_r, density);
             auto const
-        p_b_R = p_R / (22.064e6 ISTO_IAPWS_U_P);
+        p_b_R = p_R / (22.064e6);
             auto const
         A = rho_b / p_b * density / r6::isothermal_stress_coefficient_dt (density, temperature);
             auto const
@@ -105,7 +105,7 @@ detail
     }
     
         constexpr auto
-    mu_2 (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
+    mu_2 (auto const& temperature, auto const& density)
     {
         // This requires a reduced conpressibility.
         // https://doi.org/10.1063/1.470718
@@ -142,31 +142,19 @@ detail
     }
 } // namespace detail
     constexpr auto
-viscosity_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
+viscosity_td (auto const& temperature, auto const& density)
 {
         using namespace detail;
         auto const
-    t = temperature / (647.096 ISTO_IAPWS_U_T);
+    t = temperature / (647.096);
         auto const
-    d = density / (322. ISTO_IAPWS_U_D);
-    return (mu_0 (t) * mu_1 (t, d) * mu_2 (temperature, density)) * (1e-6 ISTO_IAPWS_U_M);
+    d = density / (322.);
+    return (mu_0 (t) * mu_1 (t, d) * mu_2 (temperature, density)) * (1e-6);
 }
     constexpr auto
-viscosity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+viscosity_dt (auto const& density, auto const& temperature)
 {
     return viscosity_td (temperature, density);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-viscosity (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density)
-{
-    return viscosity_td (temperature, density);
-}
-    constexpr auto
-viscosity (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return viscosity_td (temperature, density);
-}
-#endif
 } // namespace r12_08_2008
 } // namespace isto::iapws::r12

@@ -851,37 +851,37 @@ phi_r_dt (auto const& delta, auto const& tau)
 
 } // }}} namespace detail
     constexpr auto
-massic_gas_constant = 0.46151805e3 ISTO_IAPWS_U_GC;
+massic_gas_constant = 0.46151805e3;
 
     constexpr auto
-critical_temperature = 647.096 ISTO_IAPWS_U_T;
+critical_temperature = 647.096;
 
     constexpr auto
-critical_pressure = 22.064e6 ISTO_IAPWS_U_P;
+critical_pressure = 22.064e6;
 
     constexpr auto
-critical_density = 322.0 ISTO_IAPWS_U_D;
+critical_density = 322.0;
 
     constexpr auto
-triple_point_temperature = 273.16 ISTO_IAPWS_U_T;
+triple_point_temperature = 273.16;
 
     constexpr auto
-triple_point_pressure = 611.657 ISTO_IAPWS_U_P;
+triple_point_pressure = 611.657;
 
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)                            \
-    constexpr auto                                                                 \
-NAME##_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
-{                                                                                  \
-        auto                                                                       \
-    delta = density / critical_density;                                            \
-        auto                                                                       \
-    tau = critical_temperature / temperature;                                      \
-    return FORMULA;                                                                \
-}                                                                                  \
-    constexpr auto                                                                 \
-NAME##_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
-{                                                                                  \
-    return NAME##_dt (density, temperature);                                       \
+#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)  \
+    constexpr auto                                       \
+NAME##_dt (auto const& density, auto const& temperature) \
+{                                                        \
+        auto                                             \
+    delta = density / critical_density;                  \
+        auto                                             \
+    tau = critical_temperature / temperature;            \
+    return FORMULA;                                      \
+}                                                        \
+    constexpr auto                                       \
+NAME##_td (auto const& temperature, auto const& density) \
+{                                                        \
+    return NAME##_dt (density, temperature);             \
 }
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure, (1. + delta * detail::phi_r_d (delta, tau)) * density * massic_gas_constant * temperature)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy, (tau * (detail::phi_0_t (delta, tau) + detail::phi_r_t (delta, tau))) * massic_gas_constant * temperature)
@@ -898,32 +898,6 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 //ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isobaric_cubic_expansion_coefficient, ((1. + delta * detail::phi_r_d (delta, tau) - delta * tau * detail::phi_r_dt (delta, tau)) / (1. + 2 * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / temperature)
 //ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
-
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                                \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
-{                                                                             \
-    return NAME##_dt (density, temperature);                                  \
-}                                                                             \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
-{                                                                             \
-    return NAME##_td (temperature, density);                                  \
-}
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_entropy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_enthalpy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isobaric_heat_capacity)
-//ISTO_IAPWS_R6_GENERATE_FUNCTIONS(joule_thompson_coefficient)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_gibbs_free_energy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(speed_of_sound)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_stress_coefficient)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient)
-#undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
-#endif
 
 } // inline namespace r6_95_2016
 } // namespace isto::iapws::r6
@@ -1010,37 +984,37 @@ phi_r_dt (auto const& delta, auto const& tau)
 }
 } // namespace detail }}}
     constexpr auto
-massic_gas_constant = 0.46151805e3 ISTO_IAPWS_U_GC;
+massic_gas_constant = 0.46151805e3;
 
     constexpr auto
-critical_temperature = 647.096 ISTO_IAPWS_U_T;
+critical_temperature = 647.096;
 
     constexpr auto
-critical_pressure = 22.064e6 ISTO_IAPWS_U_P;
+critical_pressure = 22.064e6;
 
     constexpr auto
-critical_density = 322.0 ISTO_IAPWS_U_D;
+critical_density = 322.0;
 
     constexpr auto
-triple_point_temperature = 273.16 ISTO_IAPWS_U_T;
+triple_point_temperature = 273.16;
 
     constexpr auto
-triple_point_pressure = 611.657 ISTO_IAPWS_U_P;
+triple_point_pressure = 611.657;
 
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)                            \
-    constexpr auto                                                                 \
-NAME##_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
-{                                                                                  \
-        auto                                                                       \
-    delta = density / critical_density;                                            \
-        auto                                                                       \
-    tau = critical_temperature / temperature;                                      \
-    return FORMULA;                                                                \
-}                                                                                  \
-    constexpr auto                                                                 \
-NAME##_td (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
-{                                                                                  \
-    return NAME##_dt (density, temperature);                                       \
+#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)  \
+    constexpr auto                                       \
+NAME##_dt (auto const& density, auto const& temperature) \
+{                                                        \
+        auto                                             \
+    delta = density / critical_density;                  \
+        auto                                             \
+    tau = critical_temperature / temperature;            \
+    return FORMULA;                                      \
+}                                                        \
+    constexpr auto                                       \
+NAME##_td (auto const& temperature, auto const& density) \
+{                                                        \
+    return NAME##_dt (density, temperature);             \
 }
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure, (1. + delta * detail::phi_r_d (delta, tau)) * density * massic_gas_constant * temperature)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy, (tau * (r6::detail::phi_0_t (delta, tau) + detail::phi_r_t (delta, tau))) * massic_gas_constant * temperature)
@@ -1058,31 +1032,6 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 //ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME)                                \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_D auto const& density) \
-{                                                                             \
-    return NAME##_dt (density, temperature);                                  \
-}                                                                             \
-    constexpr auto                                                            \
-NAME (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature) \
-{                                                                             \
-    return NAME##_td (temperature, density);                                  \
-}
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(pressure)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_internal_energy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_entropy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_enthalpy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isobaric_heat_capacity)
-//ISTO_IAPWS_R6_GENERATE_FUNCTIONS(joule_thompson_coefficient)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_gibbs_free_energy)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(speed_of_sound)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_stress_coefficient)
-ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient)
-#undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
-#endif
 } // inline namespace r6_95_2016
 } // namespace isto::iapws::r6_gas
 // vim: foldmethod=marker

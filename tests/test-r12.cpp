@@ -1,11 +1,10 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r12.hpp"
     using namespace isto::iapws::r12;
 
-TEST_CASE("r12.hpp (relaxed)")
+TEST_CASE("r12.hpp")
 {
 SUBCASE("base functions")
 {
@@ -63,4 +62,4 @@ SUBCASE("main API")
     CHECK(viscosity_dt (372., 647.35) == Approx { 45.688204e-6 }.scale (1e-5).epsilon (1e-8));
     CHECK(viscosity_dt (422., 647.35) == Approx { 49.436256e-6 }.scale (1e-5).epsilon (1e-8));
 } // SUBCASE("main API")
-} // TEST_CASE("r12.hpp (relaxed)")
+} // TEST_CASE("r12.hpp")

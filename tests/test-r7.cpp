@@ -1,7 +1,6 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r7.hpp"
     using namespace isto::iapws::r7;
 #include "../include/isto/iapws/detail/data_for_the_tests.hpp"
@@ -9,7 +8,7 @@
     constexpr auto
 eps = 1e-8;
 
-TEST_CASE("r7.hpp (relaxed)")
+TEST_CASE("r7.hpp")
 {
     SUBCASE("saturation line")
     {

@@ -12,16 +12,16 @@ isto::iapws::r7
 r7_97_2012
 {
     constexpr auto
-massic_gas_constant = 0.461526e3 ISTO_IAPWS_U_GC;
+massic_gas_constant = 0.461526e3;
 
     constexpr auto
-critical_temperature = 647.096 ISTO_IAPWS_U_T;
+critical_temperature = 647.096;
 
     constexpr auto
-critical_pressure = 22.064e6 ISTO_IAPWS_U_P;
+critical_pressure = 22.064e6;
 
     constexpr auto
-critical_density = 322.0 ISTO_IAPWS_U_D;
+critical_density = 322.0;
 
 // §5  Equations for Region 1.
     namespace
@@ -209,68 +209,68 @@ gamma_pt (auto const& pi, auto const& tau)
 // }}}
 
     constexpr auto
-massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_volume_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = (1386. * (1 ISTO_IAPWS_U_T)) / temperature;
+    tau = (1386. * (1)) / temperature;
     return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
 }
     constexpr auto
-massic_enthalpy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_enthalpy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_internal_energy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_internal_energy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_entropy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_entropy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isobaric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
 }
     constexpr auto
-massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+speed_of_sound_pt (auto const& pressure, auto const& temperature)
 {
         using std::pow;
         using std::sqrt;
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return sqrt (
           pow (gamma_p (pi, tau), 2)
         / (
@@ -282,40 +282,40 @@ speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& t
     );
 }
     constexpr auto
-density_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+density_pt (auto const& pressure, auto const& temperature)
 {
     return 1 / (massic_volume_pt (pressure, temperature));
 }
     constexpr auto
-isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isobaric_cubic_expansion_coefficient_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return (1. - tau * gamma_pt (pi, tau) / gamma_p (pi, tau)) / temperature;
 }
     constexpr auto
-isothermal_compressibility_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_compressibility_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return (- pi * gamma_pp (pi, tau) / gamma_p (pi, tau)) / pressure;
 }
     constexpr auto
-relative_pressure_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
-isothermal_stress_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
-temperature_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& enthalpy)
+temperature_ph (auto const& pressure, auto const& enthalpy)
 {
     constexpr auto
 I = array_t //{{{
@@ -390,13 +390,13 @@ n = array_t  //{{{
     , -0.15020185953503e-16 // 20
 }; //}}}
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    eta = enthalpy / (2500e3 ISTO_IAPWS_U_H);
-    return sum (n * pow (pi, I) * pow (eta + 1., J)) * (1 ISTO_IAPWS_U_T);
+    eta = enthalpy / (2500e3);
+    return sum (n * pow (pi, I) * pow (eta + 1., J)) * (1);
 }
     constexpr auto
-temperature_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& entropy)
+temperature_ps (auto const& pressure, auto const& entropy)
 {
     constexpr auto
 I = array_t //{{{
@@ -471,13 +471,13 @@ n = array_t //{{{
     , -0.30732199903668e-30  // 20
 }; //}}}
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    sigma = entropy / (1e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (pi, I) * pow (sigma + 2., J)) * (1 ISTO_IAPWS_U_T);
+    sigma = entropy / (1e3);
+    return sum (n * pow (pi, I) * pow (sigma + 2., J)) * (1);
 }
     constexpr auto
-pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+pressure_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
         constexpr auto
     I = array_t //{{{
@@ -550,98 +550,16 @@ pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& 
     }; //}}}
         using std::pow;
         auto const
-    eta = massic_enthalpy / (3400e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (3400e3);
         auto const
-    sigma = massic_entropy / (7.6e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (eta + 0.05, I) * pow (sigma + 0.05, J)) * (100. ISTO_IAPWS_U_P);
+    sigma = massic_entropy / (7.6e3);
+    return sum (n * pow (eta + 0.05, I) * pow (sigma + 0.05, J)) * (100.);
 }
     constexpr auto
-temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     return temperature_ph (pressure_hs (massic_enthalpy, massic_entropy), massic_enthalpy);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_volume_pt (pressure, temperature);
-}
-    constexpr auto
-massic_enthalpy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_enthalpy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_internal_energy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_internal_energy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_entropy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_entropy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isochoric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-speed_of_sound (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return speed_of_sound_pt (pressure, temperature);
-}
-    constexpr auto
-density (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return density_pt (pressure, temperature);
-}
-    constexpr auto
-isobaric_cubic_expansion_coefficient (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature);
-}
-    constexpr auto
-isothermal_compressibility (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return isothermal_compressibility_pt (pressure, temperature); 
-}
-    constexpr auto
-relative_pressure_coefficient (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return relative_pressure_coefficient_pt (pressure, temperature); 
-}
-    constexpr auto
-isothermal_stress_coefficient (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return isothermal_stress_coefficient_pt (pressure, temperature);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return temperature_ph (pressure, massic_enthalpy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return temperature_ps (pressure, massic_entropy);
-}
-    constexpr auto
-pressure (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return pressure_hs (massic_enthalpy, massic_entropy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return temperature_hs (massic_enthalpy, massic_entropy);
-}
-#endif
 } // namespace r1
 // §5  Equations for Region 2.
     namespace
@@ -959,68 +877,68 @@ gamma_pt (auto const& pi, auto const& tau)
 }
 // }}}
     constexpr auto
-massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_volume_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
 }
     constexpr auto
-massic_enthalpy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_enthalpy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_internal_energy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_internal_energy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_entropy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_entropy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isobaric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
 }
     constexpr auto
-massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+speed_of_sound_pt (auto const& pressure, auto const& temperature)
 {
         using std::pow;
         using std::sqrt;
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return sqrt (
           pow (1. + pi * gamma_r_p (pi, tau), 2)
         / (
@@ -1032,65 +950,65 @@ speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& t
     );
 }
     constexpr auto
-density_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+density_pt (auto const& pressure, auto const& temperature)
 {
     return 1 / massic_volume_pt (pressure, temperature);
 }
     constexpr auto
-isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isobaric_cubic_expansion_coefficient_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = (540. ISTO_IAPWS_U_T) / temperature;
+    tau = (540.) / temperature;
     return (1. - tau * gamma_pt (pi, tau) / gamma_p (pi, tau)) / temperature;
 }
     constexpr auto
-isothermal_compressibility_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_compressibility_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = (540. ISTO_IAPWS_U_T) / temperature;
+    tau = (540.) / temperature;
     return (- pi * gamma_pp (pi, tau) / gamma_p (pi, tau)) / pressure;
 }
     constexpr auto
-relative_pressure_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
-isothermal_stress_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
-b2bc_h (ISTO_IAPWS_H auto const& massic_enthalpy)
+b2bc_h (auto const& massic_enthalpy)
 {
         auto const
-    eta = massic_enthalpy / (1e3 ISTO_IAPWS_U_H);
-    return (0.90584278514723e3 - 0.67955786399241 * eta + 0.12809002730136e-3 * eta * eta) * (1e6 ISTO_IAPWS_U_P);
+    eta = massic_enthalpy / (1e3);
+    return (0.90584278514723e3 - 0.67955786399241 * eta + 0.12809002730136e-3 * eta * eta) * 1e6;
 }
     constexpr auto
-b2bc_p (ISTO_IAPWS_P auto const& pressure)
+b2bc_p (auto const& pressure)
 {
         using std::sqrt;
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-    return (0.26526571908428e4 + sqrt ((pi - 0.45257578905948e1 ) / 0.12809002730136e-3)) * (1e3 ISTO_IAPWS_U_H);
+    pi = pressure / 1e6;
+    return (0.26526571908428e4 + sqrt ((pi - 0.45257578905948e1 ) / 0.12809002730136e-3)) * (1e3);
 }
     constexpr auto
-subregion_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+subregion_ph (auto const& pressure, auto const& massic_enthalpy)
 {
-    if (pressure < 4. * (1e6 ISTO_IAPWS_U_P)) return 1;
+    if (pressure < 4. * 1e6) return 1;
     if (pressure < b2bc_h (massic_enthalpy)) return 2;
     return 3;
 }
     constexpr auto
-subregion_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+subregion_ps (auto const& pressure, auto const& massic_entropy)
 {
-    if (pressure < 4. * (1e6 ISTO_IAPWS_U_P)) return 1;
-    if (massic_entropy >= 5.85 * (1e3 ISTO_IAPWS_U_S)) return 2;
+    if (pressure < 4. * 1e6) return 1;
+    if (massic_entropy >= 5.85 * (1e3)) return 2;
     return 3;
 }
     namespace
@@ -1844,67 +1762,67 @@ n = array_t //{{{
 } // namespace s
 
     constexpr auto
-temperature_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+temperature_ph (auto const& pressure, auto const& massic_enthalpy)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    eta = massic_enthalpy / (2000e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (2000e3);
         using namespace t_ph;
     switch (subregion_ph (pressure, massic_enthalpy))
     {
-        case 1: return sum (a::n * pow (pi,       a::I) * pow (eta - 2.1, a::J)) ISTO_IAPWS_U_T;
-        case 2: return sum (b::n * pow (pi - 2.,  b::I) * pow (eta - 2.6, b::J)) ISTO_IAPWS_U_T;
-        case 3: return sum (c::n * pow (pi + 25., c::I) * pow (eta - 1.8, c::J)) ISTO_IAPWS_U_T;
+        case 1: return sum (a::n * pow (pi,       a::I) * pow (eta - 2.1, a::J));
+        case 2: return sum (b::n * pow (pi - 2.,  b::I) * pow (eta - 2.6, b::J));
+        case 3: return sum (c::n * pow (pi + 25., c::I) * pow (eta - 1.8, c::J));
     }
     throw internal_error_e {};
 }
     constexpr auto
-temperature_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_ps (auto const& pressure, auto const& massic_entropy)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         using namespace t_ps;
     switch (subregion_ps (pressure, massic_entropy))
     {
         case 1:
         {
                 auto const
-            sigma = massic_entropy / (2e3 ISTO_IAPWS_U_S);
-            return sum (a::n * pow (pi, a::I) * pow (sigma - 2., a::J))  ISTO_IAPWS_U_T;
+            sigma = massic_entropy / (2e3);
+            return sum (a::n * pow (pi, a::I) * pow (sigma - 2., a::J)) ;
         }
         case 2:
         {
                 auto const
-            sigma = massic_entropy / (0.7853e3 ISTO_IAPWS_U_S);
-            return sum (b::n * pow (pi, b::I) * pow (10. - sigma, b::J)) ISTO_IAPWS_U_T;
+            sigma = massic_entropy / (0.7853e3);
+            return sum (b::n * pow (pi, b::I) * pow (10. - sigma, b::J));
         }
         case 3:
         {
                 auto const
-            sigma = massic_entropy / (2.9251e3 ISTO_IAPWS_U_S);
-            return sum (c::n * pow (pi, c::I) * pow (2. - sigma, c::J))  ISTO_IAPWS_U_T;
+            sigma = massic_entropy / (2.9251e3);
+            return sum (c::n * pow (pi, c::I) * pow (2. - sigma, c::J)) ;
         }
     }
     throw internal_error_e {};
 }
     constexpr auto
-b2ab_s (ISTO_IAPWS_S auto const& massic_entropy)
+b2ab_s (auto const& massic_entropy)
 {
         auto const
-    sigma = massic_entropy / (1e3 ISTO_IAPWS_U_S);
+    sigma = massic_entropy / (1e3);
     return (
           -0.349898083432139e4
         +  0.257560716905876e4 * sigma
         + -0.421073558227969e3 * sigma * sigma
         +  0.276349063799944e2 * sigma * sigma * sigma
-    ) * (1e3 ISTO_IAPWS_U_H);
+    ) * (1e3);
 }
     constexpr auto
-subregion_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+subregion_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     if (massic_enthalpy < b2ab_s (massic_entropy)) return 1;
-    if (massic_entropy >= 5.85 * (1e3 ISTO_IAPWS_U_S)) return 2;
+    if (massic_entropy >= 5.85 * (1e3)) return 2;
     return 3;
 }
 
@@ -2246,7 +2164,7 @@ n = array_t ///{{{
 } // namespace c
 } // namespace p_hs
     constexpr auto
-pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+pressure_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
         using namespace p_hs;
     switch (subregion_hs (massic_enthalpy, massic_entropy))
@@ -2254,97 +2172,35 @@ pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& 
         case 1:
         {
                 auto const
-            eta = massic_enthalpy / (4200e3 ISTO_IAPWS_U_H);
+            eta = massic_enthalpy / (4200e3);
                 auto const
-            sigma = massic_entropy / (12e3 ISTO_IAPWS_U_S);
-            return pow (sum (a::n * pow (eta - 0.5, a::I) * pow (sigma - 1.2, a::J)), 4) * (4e6 ISTO_IAPWS_U_P);
+            sigma = massic_entropy / (12e3);
+            return pow (sum (a::n * pow (eta - 0.5, a::I) * pow (sigma - 1.2, a::J)), 4) * (4e6);
         }
         case 2:
         {
                 auto const
-            eta = massic_enthalpy / (4100e3 ISTO_IAPWS_U_H);
+            eta = massic_enthalpy / (4100e3);
                 auto const
-            sigma = massic_entropy / (7.9e3 ISTO_IAPWS_U_S);
-            return pow (sum (b::n * pow (eta - 0.6, b::I) * pow (sigma - 1.01, b::J)), 4) * (100e6 ISTO_IAPWS_U_P);
+            sigma = massic_entropy / (7.9e3);
+            return pow (sum (b::n * pow (eta - 0.6, b::I) * pow (sigma - 1.01, b::J)), 4) * (100e6);
         }
         case 3:
         {
                 auto const
-            eta = massic_enthalpy / (3500e3 ISTO_IAPWS_U_H);
+            eta = massic_enthalpy / (3500e3);
                 auto const
-            sigma = massic_entropy / (5.9e3 ISTO_IAPWS_U_S);
-            return pow (sum (c::n * pow (eta - 0.7, c::I) * pow (sigma - 1.1, c::J)), 4) * (100e6 ISTO_IAPWS_U_P);
+            sigma = massic_entropy / (5.9e3);
+            return pow (sum (c::n * pow (eta - 0.7, c::I) * pow (sigma - 1.1, c::J)), 4) * (100e6);
         }
     }
     throw internal_error_e {};
 }
     constexpr auto
-temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     return temperature_ph (pressure_hs (massic_enthalpy, massic_entropy), massic_enthalpy);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_volume_pt (pressure, temperature);
-}
-    constexpr auto
-massic_enthalpy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_enthalpy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_internal_energy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_internal_energy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_entropy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_entropy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isochoric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-speed_of_sound (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return speed_of_sound_pt (pressure, temperature);
-}
-    constexpr auto
-density (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return density_pt (pressure, temperature);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return temperature_ph (pressure, massic_enthalpy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return temperature_ps (pressure, massic_entropy);
-}
-    constexpr auto
-pressure (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return pressure_hs (massic_enthalpy, massic_entropy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    temperature_hs (massic_enthalpy, massic_entropy);
-}
-#endif
 } //namespace r2
 
     namespace
@@ -2559,68 +2415,68 @@ gamma_pt (auto const& pi, auto const& tau)
 }
 // }}}
     constexpr auto
-massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_volume_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
 }
     constexpr auto
-massic_enthalpy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_enthalpy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_internal_energy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_internal_energy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_entropy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_entropy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isobaric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
 }
     constexpr auto
-massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+speed_of_sound_pt (auto const& pressure, auto const& temperature)
 {
         using std::pow;
         using std::sqrt;
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 540 * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 540 * (1) / temperature;
     return sqrt (
           pow (1. + pi * gamma_r_p (pi, tau), 2)
         / (
@@ -2631,43 +2487,6 @@ speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& t
         * massic_gas_constant * temperature
     );
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_volume_pt (pressure, temperature);
-}
-    constexpr auto
-massic_enthalpy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_enthalpy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_internal_energy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_internal_energy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_entropy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_entropy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isochoric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-speed_of_sound (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return speed_of_sound_pt (pressure, temperature);
-}
-#endif
 } // namespace r2_metastable_vapor
 
 // Saturated region
@@ -2690,13 +2509,13 @@ n = array_t //{{{
 }; //}}}
 } // namespace detail
     auto
-saturation_pressure_t (ISTO_IAPWS_T auto const& temperature)
+saturation_pressure_t (auto const& temperature)
 {
         using std::pow;
         using std::sqrt;
         using namespace pt_sat;
         auto const
-    t = temperature / (1 ISTO_IAPWS_U_T);
+    t = temperature / (1);
         auto const
     theta = t + n[8] / (t - n[9]);
         auto const
@@ -2705,17 +2524,17 @@ saturation_pressure_t (ISTO_IAPWS_T auto const& temperature)
     B = n[2] * theta * theta + n[3] * theta + n[4];
         auto const
     C = n[5] * theta * theta + n[6] * theta + n[7];
-    return pow (2. * C / (-B + sqrt (B * B - 4. * A * C)), 4) * 1e6 ISTO_IAPWS_U_P;
+    return pow (2. * C / (-B + sqrt (B * B - 4. * A * C)), 4) * 1e6;
 }
 
     constexpr auto
-saturation_temperature_p (ISTO_IAPWS_P auto const& pressure)
+saturation_temperature_p (auto const& pressure)
 {
         using std::pow;
         using std::sqrt;
         using namespace pt_sat;
         auto const
-    beta = pow (pressure / (1e6 ISTO_IAPWS_U_P), 0.25);
+    beta = pow (pressure / 1e6, 0.25);
         auto const
     E = beta * beta + n[2] * beta + n[5];
         auto const
@@ -2724,7 +2543,7 @@ saturation_temperature_p (ISTO_IAPWS_P auto const& pressure)
     G = n[1] * beta * beta + n[4] * beta + n[7];
         auto const
     D = 2. * G / (-F - sqrt (F * F - 4. * E * G));
-    return (n[9] + D - sqrt (pow (n[9] + D, 2) - 4. * (n[8] + n[9] * D))) / 2. ISTO_IAPWS_U_T;
+    return (n[9] + D - sqrt (pow (n[9] + D, 2) - 4. * (n[8] + n[9] * D))) / 2.;
 }
     namespace
 t_sat_hs
@@ -2853,14 +2672,14 @@ n = array_t //{{{
 }; //}}}
 } // namespace t_sat_hs
     constexpr auto
-saturation_temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+saturation_temperature_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
         using namespace t_sat_hs;
         auto const
-    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (2800e3);
         auto const
-    sigma = massic_entropy / (9.2e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (eta - 0.119, I) * pow (sigma - 1.07, J)) * (550 ISTO_IAPWS_U_T);
+    sigma = massic_entropy / (9.2e3);
+    return sum (n * pow (eta - 0.119, I) * pow (sigma - 1.07, J)) * (550);
 }
     namespace
 p_sat_h
@@ -2921,12 +2740,12 @@ n = array_t //{{{
 }; //}}}
 } // namespace p_sat_h
     constexpr auto
-saturation_pressure_h (ISTO_IAPWS_H auto const& massic_enthalpy)
+saturation_pressure_h (auto const& massic_enthalpy)
 {
         using namespace p_sat_h;
         auto const
-    eta = massic_enthalpy / (2600e3 ISTO_IAPWS_U_H);
-    return sum (n * pow (eta - 1.02, I) * pow (eta - 0.608, J)) * (22e6 ISTO_IAPWS_U_P);
+    eta = massic_enthalpy / (2600e3);
+    return sum (n * pow (eta - 1.02, I) * pow (eta - 0.608, J)) * (22e6);
 }
     namespace
 p_sat_s
@@ -2975,25 +2794,13 @@ n = array_t //{{{
 }; //}}}
 } //namespace p_sat_s
     constexpr auto
-saturation_pressure_s (ISTO_IAPWS_S auto const& massic_entropy)
+saturation_pressure_s (auto const& massic_entropy)
 {
         using namespace p_sat_s;
         auto const
-    sigma = massic_entropy / (5.2e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (sigma - 1.03, I) * pow (sigma - 0.699, J)) * (22e6 ISTO_IAPWS_U_P);
+    sigma = massic_entropy / (5.2e3);
+    return sum (n * pow (sigma - 1.03, I) * pow (sigma - 0.699, J)) * (22e6);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-saturation_pressure (ISTO_IAPWS_T auto const& temperature)
-{
-    return saturation_pressure_t (temperature);
-}
-    constexpr auto
-saturation_temperature (ISTO_IAPWS_P auto const& pressure)
-{
-    return saturation_temperature_p (pressure);
-}
-#endif
 
 // §5  Equations for Region 3.
     namespace
@@ -3233,7 +3040,7 @@ phi_dt (auto const& delta, auto const& tau)
 }
 // }}}
     constexpr auto
-pressure_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+pressure_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3242,7 +3049,7 @@ pressure_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperat
     return (delta * phi_d (delta, tau)) * density * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_internal_energy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+massic_internal_energy_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3251,7 +3058,7 @@ massic_internal_energy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto c
     return (tau * phi_t (delta, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_entropy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+massic_entropy_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3260,7 +3067,7 @@ massic_entropy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& te
     return (tau * phi_t (delta, tau) - phi (delta, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_enthalpy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+massic_enthalpy_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3269,7 +3076,7 @@ massic_enthalpy_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& t
     return (tau * phi_t (delta, tau) + delta * phi_d (delta, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_isochoric_heat_capacity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+massic_isochoric_heat_capacity_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3278,7 +3085,7 @@ massic_isochoric_heat_capacity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_
     return (- tau * tau * phi_tt (delta, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_isobaric_heat_capacity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+massic_isobaric_heat_capacity_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3287,7 +3094,7 @@ massic_isobaric_heat_capacity_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T
     return (- tau * tau * phi_tt (delta, tau) + pow (delta * phi_d (delta, tau) - delta * tau * phi_dt (delta, tau), 2) / (2. * delta * phi_d (delta, tau) + delta * delta * phi_dd (delta, tau))) * massic_gas_constant;
 }
     constexpr auto
-speed_of_sound_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+speed_of_sound_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3301,7 +3108,7 @@ speed_of_sound_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& te
     ) * massic_gas_constant * temperature);
 }
     constexpr auto
-isobaric_cubic_expansion_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+isobaric_cubic_expansion_coefficient_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3310,7 +3117,7 @@ isobaric_cubic_expansion_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_
     return ((phi_d (delta, tau) - tau * phi_dt (delta, tau)) / (2. * phi_d (delta, tau) + delta * phi_dd (delta, tau))) / temperature;
 }
     constexpr auto
-isothermal_compressibility_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+isothermal_compressibility_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3319,7 +3126,7 @@ isothermal_compressibility_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T au
     return (1. / (2. * delta * phi_d (delta, tau) + delta * delta * phi_dd (delta, tau))) / density / massic_gas_constant / temperature;
 }
     constexpr auto
-relative_pressure_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+relative_pressure_coefficient_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3328,7 +3135,7 @@ relative_pressure_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T
     return (1. - tau * phi_dt (delta, tau) / phi_d (delta, tau)) / temperature;
 }
     constexpr auto
-isothermal_stress_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
+isothermal_stress_coefficient_dt (auto const& density, auto const& temperature)
 {
         auto const
     delta = density / critical_density;
@@ -3337,16 +3144,16 @@ isothermal_stress_coefficient_dt (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T
     return (2. + delta * phi_dd (delta, tau) / phi_d (delta, tau)) * density;
 }
     constexpr auto
-b3ab_p (ISTO_IAPWS_P auto const& pressure)
+b3ab_p (auto const& pressure)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
     return (
            0.201464004206875e4
         +  0.374696550136983e1  * pi
         + -0.219921901054187e-1 * pi * pi
         +  0.875131686009950e-4 * pi * pi * pi
-    ) * ( 1e3 ISTO_IAPWS_U_H);
+    ) * ( 1e3);
 }
     namespace
 t_ph
@@ -3577,20 +3384,20 @@ n = array_t //{{{
 } // namespace b
 } // namespace t_ph
     constexpr auto
-temperature_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+temperature_ph (auto const& pressure, auto const& massic_enthalpy)
 {
         using namespace t_ph;
         auto const
-    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    pi = pressure / (100e6);
     if (massic_enthalpy < b3ab_p (pressure))
     {
             auto const
-        eta = massic_enthalpy / (2300e3 ISTO_IAPWS_U_H);
-        return sum (a::n * pow (pi + 0.240, a::I) * pow (eta - 0.615, a::J)) * (760 ISTO_IAPWS_U_T);
+        eta = massic_enthalpy / (2300e3);
+        return sum (a::n * pow (pi + 0.240, a::I) * pow (eta - 0.615, a::J)) * (760);
     }
         auto const
-    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
-    return sum (b::n * pow (pi + 0.298, b::I) * pow (eta - 0.720, b::J)) * (860 ISTO_IAPWS_U_T);
+    eta = massic_enthalpy / (2800e3);
+    return sum (b::n * pow (pi + 0.298, b::I) * pow (eta - 0.720, b::J)) * (860);
 }
     namespace
 v_ph
@@ -3815,20 +3622,20 @@ n = array_t //{{{
 } // namespace b
 } //namespace v_ph
     constexpr auto
-massic_volume_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+massic_volume_ph (auto const& pressure, auto const& massic_enthalpy)
 {
         using namespace v_ph;
         auto const
-    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    pi = pressure / (100e6);
     if (massic_enthalpy < b3ab_p (pressure))
     {
             auto const
-        eta = massic_enthalpy / (2100e3 ISTO_IAPWS_U_H);
-        return sum (a::n * pow (pi + 0.128, a::I) * pow (eta - 0.727, a::J)) * (0.0028 ISTO_IAPWS_U_V);
+        eta = massic_enthalpy / (2100e3);
+        return sum (a::n * pow (pi + 0.128, a::I) * pow (eta - 0.727, a::J)) * (0.0028);
     }
         auto const
-    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
-    return sum (b::n * pow (pi + 0.0661, b::I) * pow (eta - 0.720, b::J)) * (0.0088 ISTO_IAPWS_U_V);
+    eta = massic_enthalpy / (2800e3);
+    return sum (b::n * pow (pi + 0.0661, b::I) * pow (eta - 0.720, b::J)) * (0.0088);
 }
     namespace
 t_ps
@@ -4050,20 +3857,20 @@ n = array_t //{{{
 } // namespace b
 } // namespace t_ps
     constexpr auto
-temperature_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_ps (auto const& pressure, auto const& massic_entropy)
 {
         using namespace t_ps;
         auto const
-    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    pi = pressure / (100e6);
     if (massic_entropy < 4.41202148223476e3)
     {
             auto const
-        sigma = massic_entropy / (4.4e3 ISTO_IAPWS_U_S);
-        return sum (a::n * pow (pi + 0.240, a::I) * pow (sigma - 0.703, a::J)) * (760 ISTO_IAPWS_U_T);
+        sigma = massic_entropy / (4.4e3);
+        return sum (a::n * pow (pi + 0.240, a::I) * pow (sigma - 0.703, a::J)) * (760);
     }
         auto const
-    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
-    return sum (b::n * pow (pi + 0.760, b::I) * pow (sigma - 0.818, b::J)) * (860 ISTO_IAPWS_U_T);
+    sigma = massic_entropy / (5.3e3);
+    return sum (b::n * pow (pi + 0.760, b::I) * pow (sigma - 0.818, b::J)) * (860);
 }
     namespace
 v_ps
@@ -4279,20 +4086,20 @@ n = array_t //{{{
 } // namespace b
 } // namespace v_ps
     constexpr auto
-massic_volume_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+massic_volume_ps (auto const& pressure, auto const& massic_entropy)
 {
         using namespace v_ps;
         auto const
-    pi = pressure / (100e6 ISTO_IAPWS_U_P);
+    pi = pressure / (100e6);
     if (massic_entropy < 4.41202148223476e3)
     {
             auto const
-        sigma = massic_entropy / (4.4e3 ISTO_IAPWS_U_S);
-        return sum (a::n * pow (pi + 0.187, a::I) * pow (sigma - 0.755, a::J)) * (0.0028 ISTO_IAPWS_U_V);
+        sigma = massic_entropy / (4.4e3);
+        return sum (a::n * pow (pi + 0.187, a::I) * pow (sigma - 0.755, a::J)) * (0.0028);
     }
         auto const
-    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
-    return sum (b::n * pow (pi + 0.298, b::I) * pow (sigma - 0.816, b::J)) * (0.0088 ISTO_IAPWS_U_V);
+    sigma = massic_entropy / (5.3e3);
+    return sum (b::n * pow (pi + 0.298, b::I) * pow (sigma - 0.816, b::J)) * (0.0088);
 }
     namespace
 p_hs
@@ -4538,139 +4345,52 @@ n = array_t //{{{
 } // namespace b
 } // namespace p_hs
     constexpr auto
-pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+pressure_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
         using namespace p_hs;
-    if (massic_entropy <= (4.41202148223476e3 ISTO_IAPWS_U_S))
+    if (massic_entropy <= (4.41202148223476e3))
     {
             auto const
-        eta = massic_enthalpy / (2300e3 ISTO_IAPWS_U_H);
+        eta = massic_enthalpy / (2300e3);
             auto const
-        sigma = massic_entropy / (4.4e3 ISTO_IAPWS_U_S);
-        return sum (a::n * pow (eta - 1.01, a::I) * pow (sigma - 0.750, a::J)) * (99e6 ISTO_IAPWS_U_P);
+        sigma = massic_entropy / (4.4e3);
+        return sum (a::n * pow (eta - 1.01, a::I) * pow (sigma - 0.750, a::J)) * (99e6);
     }
         auto const
-    eta = massic_enthalpy / (2800e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (2800e3);
         auto const
-    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
-    return (16.6e6 ISTO_IAPWS_U_P) / sum (b::n * pow (eta - 0.681, b::I) * pow (sigma - 0.792, b::J));
+    sigma = massic_entropy / (5.3e3);
+    return (16.6e6) / sum (b::n * pow (eta - 0.681, b::I) * pow (sigma - 0.792, b::J));
 }
     constexpr auto
-temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     return temperature_ph (pressure_hs (massic_enthalpy, massic_entropy), massic_enthalpy);
 }
     constexpr auto
-massic_volume_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+massic_volume_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     return massic_volume_ps (pressure_hs (massic_enthalpy, massic_entropy), massic_entropy);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-pressure (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return pressure_dt (density, temperature);
-}
-    constexpr auto
-massic_internal_energy (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_internal_energy_dt (density, temperature);
-}
-    constexpr auto
-massic_entropy (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_entropy_dt (density, temperature);
-}
-    constexpr auto
-massic_enthalpy (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_enthalpy_dt (density, temperature);
-}
-    constexpr auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_dt (density, temperature);
-}
-    constexpr auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_dt (density, temperature);
-}
-    constexpr auto
-speed_of_sound (ISTO_IAPWS_D auto const& density, ISTO_IAPWS_T auto const& temperature)
-{
-    return speed_of_sound_dt (density, temperature);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return temperature_ph (pressure, massic_enthalpy);
-}
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return massic_volume_ph (pressure, massic_enthalpy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return temperature_ps (pressure, massic_entropy);
-}
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return massic_volume_ps (pressure, massic_entropy);
-}
-    constexpr auto
-saturation_pressure (ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return saturation_pressure_h (massic_enthalpy);
-}
-    constexpr auto
-saturation_pressure (ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return saturation_pressure_s (massic_entropy);
-}
-    constexpr auto
-pressure (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return pressure_hs (massic_enthalpy, massic_entropy);
-}
-    constexpr auto
-temperature (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return temperature_hs (massic_enthalpy, massic_entropy);
-}
-    constexpr auto
-massic_volume (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return massic_volume_hs (massic_enthalpy, massic_entropy);
-}
-    constexpr auto
-saturation_temperature (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return saturation_temperature_hs (massic_enthalpy, massic_entropy);
-}
-#endif
 #define ISTO_IAPWS_GEN_T3_1(X)                         \
     constexpr auto                                     \
-t_3##X##_p (ISTO_IAPWS_P auto const& pressure)            \
+t_3##X##_p (auto const& pressure)            \
 {                                                      \
         using namespace t_3##X;                        \
         auto const                                     \
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);              \
+    pi = pressure / 1e6;              \
         using std::pow;                                \
-    return sum (n * pow (pi, I)) * (1 ISTO_IAPWS_U_T); \
+    return sum (n * pow (pi, I)) * (1); \
 }
 #define ISTO_IAPWS_GEN_T3_2(X)                               \
     constexpr auto                                           \
-t_3##X##_p (ISTO_IAPWS_P auto const& pressure)                    \
+t_3##X##_p (auto const& pressure)                    \
 {                                                            \
         using namespace t_3##X;                              \
         auto const                                           \
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);                    \
+    pi = pressure / 1e6;                    \
         using std::pow, std::log;                            \
-    return sum (n * pow (log (pi), I)) * (1 ISTO_IAPWS_U_T); \
+    return sum (n * pow (log (pi), I)) * (1); \
 }
     namespace
 t_3ab
@@ -4717,11 +4437,11 @@ t_3cd
 } // namespace t_3cd
 ISTO_IAPWS_GEN_T3_1(cd);
     constexpr auto
-t_3ef_p (ISTO_IAPWS_P auto const& pressure)
+t_3ef_p (auto const& pressure)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
-    return (3.727888004 * (pi - 22.064) + 647.096) * (1 ISTO_IAPWS_U_T);
+    pi = pressure / 1e6;
+    return (3.727888004 * (pi - 22.064) + 647.096) * (1);
 }
     namespace
 t_3gh
@@ -5030,9 +4750,9 @@ n = array_t //{{{
 	,  0.633828037528420e-2
 	,  0.797441793901017e-1
 }; //}}}
-    constexpr auto v_s = 0.0024 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 100e6  ISTO_IAPWS_U_P;
-    constexpr auto t_s = 760.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0024;
+    constexpr auto p_s = 100e6 ;
+    constexpr auto t_s = 760.  ;
     constexpr auto N   = 30.;
     constexpr auto a   = 0.085;
     constexpr auto b   = 0.817;
@@ -5151,9 +4871,9 @@ n = array_t //{{{
 	, -0.269798180310075e-1
 	,  0.128369435967012
 }; //}}}
-    constexpr auto v_s = 0.0041 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 100e6  ISTO_IAPWS_U_P;
-    constexpr auto t_s = 860.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0041;
+    constexpr auto p_s = 100e6 ;
+    constexpr auto t_s = 860.  ;
     constexpr auto N   = 32.;
     constexpr auto a   = 0.280;
     constexpr auto b   = 0.779;
@@ -5281,9 +5001,9 @@ n = array_t //{{{
 	, -0.107077716660869e7
 	,  0.438319858566475e-1
 }; //}}}
-    constexpr auto v_s = 0.0022 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 40e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 690.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0022;
+    constexpr auto p_s = 40e6  ;
+    constexpr auto t_s = 690.  ;
     constexpr auto N   = 35.;
     constexpr auto a   = 0.259;
     constexpr auto b   = 0.903;
@@ -5420,9 +5140,9 @@ n = array_t //{{{
 	,  0.498044171727877e4
 	,  0.551478022765087e-2
 }; //}}}
-    constexpr auto v_s = 0.0029 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 40e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 690.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0029;
+    constexpr auto p_s = 40e6  ;
+    constexpr auto t_s = 690.  ;
     constexpr auto N   = 38.;
     constexpr auto a   = 0.559;
     constexpr auto b   = 0.939;
@@ -5532,9 +5252,9 @@ n = array_t //{{{
 	,  0.413197481515899
 	, -0.341931835910405e2
 }; //}}}
-    constexpr auto v_s = 0.0032 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 40e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 710.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0032;
+    constexpr auto p_s = 40e6  ;
+    constexpr auto t_s = 710.  ;
     constexpr auto N   = 29.;
     constexpr auto a   = 0.587;
     constexpr auto b   = 0.918;
@@ -5683,9 +5403,9 @@ n = array_t //{{{
 	,  0.189424143498011e-9
 	, -0.486632965074563e-9
 }; //}}}
-    constexpr auto v_s = 0.0064 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 40e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 730.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0064;
+    constexpr auto p_s = 40e6  ;
+    constexpr auto t_s = 730.  ;
     constexpr auto N   = 42.;
     constexpr auto a   = 0.587;
     constexpr auto b   = 0.891;
@@ -5822,9 +5542,9 @@ n = array_t //{{{
 	, -0.367279669545448e5
 	, -0.837513931798655e16
 }; //}}}
-    constexpr auto v_s = 0.0027 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 25e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 660.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0027;
+    constexpr auto p_s = 25e6  ;
+    constexpr auto t_s = 660.  ;
     constexpr auto N   = 38.;
     constexpr auto a   = 0.872;
     constexpr auto b   = 0.971;
@@ -5934,9 +5654,9 @@ n = array_t //{{{
 	, -0.211346402240858
 	,  0.249971752957491e2
 }; //}}}
-    constexpr auto v_s = 0.0032 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 25e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 660.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0032;
+    constexpr auto p_s = 25e6  ;
+    constexpr auto t_s = 660.  ;
     constexpr auto N   = 29.;
     constexpr auto a   = 0.898;
     constexpr auto b   = 0.983;
@@ -6085,9 +5805,9 @@ n = array_t //{{{
 	, -0.247690616026922e-1
 	,  0.658110546759474e2
 }; //}}}
-    constexpr auto v_s = 0.0041 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 25e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 660.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0041;
+    constexpr auto p_s = 25e6  ;
+    constexpr auto t_s = 660.  ;
     constexpr auto N   = 42.;
     constexpr auto a   = 0.910;
     constexpr auto b   = 0.984;
@@ -6197,9 +5917,9 @@ n = array_t //{{{
 	,  0.283911742354706e-10
 	,  0.270929002720228e1
 }; //}}}
-    constexpr auto v_s = 0.0054 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 25e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 670.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0054;
+    constexpr auto p_s = 25e6  ;
+    constexpr auto t_s = 670.  ;
     constexpr auto N   = 29.;
     constexpr auto a   = 0.875;
     constexpr auto b   = 0.964;
@@ -6324,9 +6044,9 @@ n = array_t //{{{
 	, -0.149095328506000e-11
 	,  0.541449377329581e-8
 }; //}}}
-    constexpr auto v_s = 0.0077 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 25e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 680.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0077;
+    constexpr auto p_s = 25e6  ;
+    constexpr auto t_s = 680.  ;
     constexpr auto N   = 34.;
     constexpr auto a   = 0.802;
     constexpr auto b   = 0.935;
@@ -6478,9 +6198,9 @@ n = array_t //{{{
 	, -0.445703369196945e33
 	,  0.642794932373694e33
 }; //}}}
-    constexpr auto v_s = 0.0026 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 24e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0026;
+    constexpr auto p_s = 24e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 43.;
     constexpr auto a   = 0.908;
     constexpr auto b   = 0.989;
@@ -6623,9 +6343,9 @@ n = array_t //{{{
 	, -0.128617899887675e49
 	,  0.479817895699239e65
 }; //}}}
-    constexpr auto v_s = 0.0028 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0028;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 40.;
     constexpr auto a   = 1.0;
     constexpr auto b   = 0.997;
@@ -6765,9 +6485,9 @@ n = array_t //{{{
 	,  0.354542769185671e12
 	,  0.400849240129329e15
 }; //}}}
-    constexpr auto v_s = 0.0031 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0031;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 39.;
     constexpr auto a   = 0.976;
     constexpr auto b   = 0.997;
@@ -6859,9 +6579,9 @@ n = array_t //{{{
 	,  0.377682649089149e-8
 	, -0.516720236575302e-10
 }; //}}}
-    constexpr auto v_s = 0.0034 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0034;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 24.;
     constexpr auto a   = 0.974;
     constexpr auto b   = 0.996;
@@ -6965,9 +6685,9 @@ n = array_t //{{{
 	,  0.179946628317437e-2
 	, -0.345042834640005e-3
 }; //}}}
-    constexpr auto v_s = 0.0041 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0041;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 27.;
     constexpr auto a   = 0.972;
     constexpr auto b   = 0.997;
@@ -7062,9 +6782,9 @@ n = array_t //{{{
 	,  0.247795908411492e1
 	, -0.319114969006533e4
 }; //}}}
-    constexpr auto v_s = 0.0022 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0022;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 24.;
     constexpr auto a   = 0.848;
     constexpr auto b   = 0.983;
@@ -7168,9 +6888,9 @@ n = array_t //{{{
 	, -0.337209709340105e-9
 	,  0.377501980025469e-8
 }; //}}}
-    constexpr auto v_s = 0.0054 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0054;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 27.;
     constexpr auto a   = 0.874;
     constexpr auto b   = 0.982;
@@ -7280,9 +7000,9 @@ n = array_t //{{{
 	,  0.193568768917797e10
 	,  0.950898170425042e54
 }; //}}}
-    constexpr auto v_s = 0.0022 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 21e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 640.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0022;
+    constexpr auto p_s = 21e6  ;
+    constexpr auto t_s = 640.  ;
     constexpr auto N   = 29.;
     constexpr auto a   = 0.886;
     constexpr auto b   = 0.990;
@@ -7404,9 +7124,9 @@ n = array_t //{{{
 	, -0.444227367758304e72
 	, -0.281396013562745e77
 }; //}}}
-    constexpr auto v_s = 0.0088 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 20e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0088;
+    constexpr auto p_s = 20e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 33.;
     constexpr auto a   = 0.803;
     constexpr auto b   = 1.020;
@@ -7543,9 +7263,9 @@ n = array_t //{{{
 	, -0.227700464643920e5
 	, -0.781754507698846e28
 }; //}}}
-    constexpr auto v_s = 0.0026 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0026;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 38.;
     constexpr auto a   = 0.902;
     constexpr auto b   = 0.988;
@@ -7685,9 +7405,9 @@ n = array_t //{{{
 	, -0.100375333864186e15
 	,  0.247761392329058e27
 }; //}}}
-    constexpr auto v_s = 0.0031 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0031;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 39.;
     constexpr auto a   = 0.960;
     constexpr auto b   = 0.995;
@@ -7815,9 +7535,9 @@ n = array_t //{{{
 	,  0.266170454405981e-13
 	,  0.858133791857099e-5
 }; //}}}
-    constexpr auto v_s = 0.0039 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0039;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 35.;
     constexpr auto a   = 0.959;
     constexpr auto b   = 0.995;
@@ -7948,9 +7668,9 @@ n = array_t //{{{
 	, -0.119228759669889e4
 	,  0.430867658061468e7
 }; //}}}
-    constexpr auto v_s = 0.0049 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 23e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0049;
+    constexpr auto p_s = 23e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 36.;
     constexpr auto a   = 0.910;
     constexpr auto b   = 0.988;
@@ -8033,9 +7753,9 @@ n = array_t //{{{
 	,  0.514411468376383e10
 	, -0.828198594040141e5
 }; //}}}
-    constexpr auto v_s = 0.0031 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 22e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0031;
+    constexpr auto p_s = 22e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 20.;
     constexpr auto a   = 0.996;
     constexpr auto b   = 0.994;
@@ -8127,9 +7847,9 @@ n = array_t //{{{
 	, -0.248488015614543e-3
 	,  0.394536049497068e7
 }; //}}}
-    constexpr auto v_s = 0.0038 ISTO_IAPWS_U_V;
-    constexpr auto p_s = 22e6   ISTO_IAPWS_U_P;
-    constexpr auto t_s = 650.   ISTO_IAPWS_U_T;
+    constexpr auto v_s = 0.0038;
+    constexpr auto p_s = 22e6  ;
+    constexpr auto t_s = 650.  ;
     constexpr auto N   = 23.;
     constexpr auto a   = 0.993;
     constexpr auto b   = 0.994;
@@ -8169,21 +7889,21 @@ detail
     constexpr auto z = 26;
 
         constexpr auto
-    subregion_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+    subregion_pt (auto const& pressure, auto const& temperature)
     {
-        if (pressure > (40e6 ISTO_IAPWS_U_P))
+        if (pressure > (40e6))
         {
             if (temperature <= t_3ab_p (pressure)) return a;
             return b;
         }
-        if (pressure > (25e6 ISTO_IAPWS_U_P))
+        if (pressure > (25e6))
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3ab_p (pressure)) return d;
             if (temperature <= t_3ef_p (pressure)) return e;
             return f;
         }
-        if (pressure > (23.5e6 ISTO_IAPWS_U_P))
+        if (pressure > (23.5e6))
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3gh_p (pressure)) return g;
@@ -8192,7 +7912,7 @@ detail
             if (temperature <= t_3jk_p (pressure)) return j;
             return k;
         }
-        if (pressure > (22.5e6 ISTO_IAPWS_U_P))
+        if (pressure > (22.5e6))
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3gh_p (pressure)) return l;
@@ -8204,7 +7924,7 @@ detail
             return k;
         }
         // supercritical
-        if (pressure > 22.11e6 ISTO_IAPWS_U_P)
+        if (pressure > 22.11e6)
         {
             // sec. 5
             if (temperature <= t_3cd_p (pressure)) return c;
@@ -8218,7 +7938,7 @@ detail
             if (temperature <= t_3jk_p (pressure)) return r;
             return k;
         }
-        if (pressure > 22.064e6 ISTO_IAPWS_U_P)
+        if (pressure > 22.064e6)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3qu_p (pressure)) return q;
@@ -8230,7 +7950,7 @@ detail
             return k;
         }
         // subcritical
-        if (pressure > 21.93161551e6 ISTO_IAPWS_U_P)
+        if (pressure > 21.93161551e6)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3qu_p (pressure)) return q;
@@ -8241,7 +7961,7 @@ detail
             if (temperature <= t_3jk_p (pressure)) return r;
             return k;
         }
-        if (pressure > 21.93161551e6 ISTO_IAPWS_U_P)
+        if (pressure > 21.93161551e6)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3qu_p (pressure)) return q;
@@ -8250,7 +7970,7 @@ detail
             if (temperature <= t_3jk_p (pressure)) return r;
             return k;
         }
-        if (pressure > 21.04336732e6 ISTO_IAPWS_U_P)
+        if (pressure > 21.04336732e6)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= t_3qu_p (pressure)) return q;
@@ -8259,14 +7979,14 @@ detail
             if (temperature <= t_3jk_p (pressure)) return r;
             return k;
         }
-        if (pressure > 20.5e6 ISTO_IAPWS_U_P)
+        if (pressure > 20.5e6)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= saturation_temperature_p (pressure)) return s;
             if (temperature <= t_3jk_p (pressure)) return r;
             return k;
         }
-        if (pressure > 1.900881189173929e7 ISTO_IAPWS_U_P)
+        if (pressure > 1.900881189173929e7)
         {
             if (temperature <= t_3cd_p (pressure)) return c;
             if (temperature <= saturation_temperature_p (pressure)) return s;
@@ -8277,136 +7997,85 @@ detail
     }
 } // namespace detail
   //
-#define ISTO_IAPWS_GEN_DERIVED                                                                                    \
-    constexpr auto                                                                                                \
-density_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                              \
-{                                                                                                                 \
-    return 1 / massic_volume_pt (pressure, temperature);                                                          \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-massic_internal_energy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)               \
-{                                                                                                                 \
-    return massic_internal_energy_dt (density_pt (pressure, temperature), temperature);                           \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-massic_entropy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                       \
-{                                                                                                                 \
-    return massic_entropy_dt (density_pt (pressure, temperature), temperature);                                   \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-massic_enthalpy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                      \
-{                                                                                                                 \
-    return massic_enthalpy_dt (density_pt (pressure, temperature), temperature);                                  \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)       \
-{                                                                                                                 \
-    return massic_isochoric_heat_capacity_dt (density_pt (pressure, temperature), temperature);                   \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)        \
-{                                                                                                                 \
-    return massic_isobaric_heat_capacity_dt (density_pt (pressure, temperature), temperature);                    \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                       \
-{                                                                                                                 \
-    return speed_of_sound_dt (density_pt (pressure, temperature), temperature);                                   \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature) \
-{                                                                                                                 \
-    return isobaric_cubic_expansion_coefficient_dt (density_pt (pressure, temperature), temperature);             \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-isothermal_compressibility_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)           \
-{                                                                                                                 \
-    return isothermal_compressibility_dt (density_pt (pressure, temperature), temperature);                       \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-relative_pressure_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)        \
-{                                                                                                                 \
-    return relative_pressure_coefficient_dt (density_pt (pressure, temperature), temperature);                    \
-}                                                                                                                 \
-    constexpr auto                                                                                                \
-isothermal_stress_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)        \
-{                                                                                                                 \
-    return isothermal_stress_coefficient_dt (density_pt (pressure, temperature), temperature);                    \
+#define ISTO_IAPWS_GEN_DERIVED                                                                        \
+    constexpr auto                                                                                    \
+density_pt (auto const& pressure, auto const& temperature)                                            \
+{                                                                                                     \
+    return 1 / massic_volume_pt (pressure, temperature);                                              \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_internal_energy_pt (auto const& pressure, auto const& temperature)                             \
+{                                                                                                     \
+    return massic_internal_energy_dt (density_pt (pressure, temperature), temperature);               \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_entropy_pt (auto const& pressure, auto const& temperature)                                     \
+{                                                                                                     \
+    return massic_entropy_dt (density_pt (pressure, temperature), temperature);                       \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_enthalpy_pt (auto const& pressure, auto const& temperature)                                    \
+{                                                                                                     \
+    return massic_enthalpy_dt (density_pt (pressure, temperature), temperature);                      \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature)                     \
+{                                                                                                     \
+    return massic_isochoric_heat_capacity_dt (density_pt (pressure, temperature), temperature);       \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_isobaric_heat_capacity_pt (auto const& pressure, auto const& temperature)                      \
+{                                                                                                     \
+    return massic_isobaric_heat_capacity_dt (density_pt (pressure, temperature), temperature);        \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+speed_of_sound_pt (auto const& pressure, auto const& temperature)                                     \
+{                                                                                                     \
+    return speed_of_sound_dt (density_pt (pressure, temperature), temperature);                       \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+isobaric_cubic_expansion_coefficient_pt (auto const& pressure, auto const& temperature)               \
+{                                                                                                     \
+    return isobaric_cubic_expansion_coefficient_dt (density_pt (pressure, temperature), temperature); \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+isothermal_compressibility_pt (auto const& pressure, auto const& temperature)                         \
+{                                                                                                     \
+    return isothermal_compressibility_dt (density_pt (pressure, temperature), temperature);           \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)                      \
+{                                                                                                     \
+    return relative_pressure_coefficient_dt (density_pt (pressure, temperature), temperature);        \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)                      \
+{                                                                                                     \
+    return isothermal_stress_coefficient_dt (density_pt (pressure, temperature), temperature);        \
 }
 
-#define ISTO_IAPWS_GEN_DERIVED_CONSTRAINED                                                               \
-    constexpr auto                                                                                       \
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                  \
-{                                                                                                        \
-    return massic_volume_pt (pressure, temperature);                                                     \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-density (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                        \
-{                                                                                                        \
-    return density_pt (pressure, temperature);                                                           \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-massic_internal_energy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)         \
-{                                                                                                        \
-    return massic_internal_energy_pt (pressure, temperature);                                            \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-massic_entropy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                 \
-{                                                                                                        \
-    return massic_entropy_pt (pressure, temperature);                                                    \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-massic_enthalpy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                \
-{                                                                                                        \
-    return massic_enthalpy_pt (pressure, temperature);                                                   \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-massic_isochoric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature) \
-{                                                                                                        \
-    return massic_isochoric_heat_capacity_pt (pressure, temperature);                                    \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-massic_isobaric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)  \
-{                                                                                                        \
-    return massic_isobaric_heat_capacity_pt (pressure, temperature);                                     \
-}                                                                                                        \
-    constexpr auto                                                                                       \
-speed_of_sound (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                 \
-{                                                                                                        \
-    return speed_of_sound_pt (pressure, temperature);                                                    \
-}
-
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_GEN_ALL           \
-ISTO_IAPWS_GEN_DERIVED               \
-ISTO_IAPWS_GEN_DERIVED_CONSTRAINED
-#else
-#define ISTO_IAPWS_GEN_ALL           \
-ISTO_IAPWS_GEN_DERIVED
-#endif
-
-#define ISTO_IAPWS_GEN_R3_FUNC(X)          \
-    namespace                              \
-r##X                                       \
-{                                          \
-    constexpr auto                         \
-massic_volume_pt (                         \
-      ISTO_IAPWS_P auto const& pressure    \
-    , ISTO_IAPWS_T auto const& temperature \
-){                                         \
-        using namespace v_3##X;            \
-        using std::pow;                    \
-        auto const                         \
-    pi = pressure / p_s;                   \
-        auto const                         \
-    theta = temperature / t_s;             \
-    return pow (sum (                      \
-          n                                \
-        * pow (pow (pi - a, c), I)         \
-        * pow (pow (theta - b, d), J)      \
-    ), e) * v_s;                           \
-}                                          \
-ISTO_IAPWS_GEN_ALL                         \
+#define ISTO_IAPWS_GEN_R3_FUNC(X)     \
+    namespace                         \
+r##X                                  \
+{                                     \
+    constexpr auto                    \
+massic_volume_pt (                    \
+      auto const& pressure            \
+    , auto const& temperature         \
+){                                    \
+        using namespace v_3##X;       \
+        using std::pow;               \
+        auto const                    \
+    pi = pressure / p_s;              \
+        auto const                    \
+    theta = temperature / t_s;        \
+    return pow (sum (                 \
+          n                           \
+        * pow (pow (pi - a, c), I)    \
+        * pow (pow (theta - b, d), J) \
+    ), e) * v_s;                      \
+}                                     \
+ISTO_IAPWS_GEN_DERIVED                \
 } // namespace X
 ISTO_IAPWS_GEN_R3_FUNC(a)
 ISTO_IAPWS_GEN_R3_FUNC(b)
@@ -8439,8 +8108,8 @@ rn
 {
     constexpr auto
 massic_volume_pt (
-      ISTO_IAPWS_P auto const& pressure
-    , ISTO_IAPWS_T auto const& temperature
+      auto const& pressure
+    , auto const& temperature
 ){
         using namespace v_3n;
         using std::exp, std::pow;
@@ -8453,7 +8122,7 @@ massic_volume_pt (
 } // namespace n
 
     constexpr auto
-massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_volume_pt (auto const& pressure, auto const& temperature)
 {
         using std::pow;
     switch (detail::subregion_pt (pressure, temperature))
@@ -8512,10 +8181,9 @@ massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& te
     throw internal_error_e {};
 }
 
-ISTO_IAPWS_GEN_ALL
+ISTO_IAPWS_GEN_DERIVED
 #undef ISTO_IAPWS_GEN_ALL
 #undef ISTO_IAPWS_GEN_DERIVED
-#undef ISTO_IAPWS_GEN_DERIVED_CONSTRAINED
 } // namespace r3
     namespace
 r5
@@ -8667,68 +8335,68 @@ gamma_pt (auto const& pi, auto const& tau)
     using namespace detail;
 
     constexpr auto
-massic_volume_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_volume_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return pi * gamma_p (pi, tau) * massic_gas_constant * temperature / pressure;
 }
     constexpr auto
-massic_enthalpy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_enthalpy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return tau * gamma_t (pi, tau) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_internal_energy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_internal_energy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
 }
     constexpr auto
-massic_entropy_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_entropy_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return (tau * gamma_t (pi, tau) - gamma (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-massic_isobaric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isobaric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return - tau * tau * gamma_tt (pi, tau) * massic_gas_constant;
 }
     constexpr auto
-massic_isochoric_heat_capacity_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
-speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+speed_of_sound_pt (auto const& pressure, auto const& temperature)
 {
         using std::pow;
         using std::sqrt;
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = 1000. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1000. * (1) / temperature;
     return sqrt (
           pow (1. + pi * gamma_r_p (pi, tau), 2)
         / (
@@ -8740,86 +8408,44 @@ speed_of_sound_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& t
     );
 }
     constexpr auto
-density_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+density_pt (auto const& pressure, auto const& temperature)
 {
     return 1 / massic_volume_pt (pressure, temperature);
 }
     constexpr auto
-isobaric_cubic_expansion_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isobaric_cubic_expansion_coefficient_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (1e6 ISTO_IAPWS_U_P);
+    pi = pressure / 1e6;
         auto const
-    tau = (100. ISTO_IAPWS_U_T) / temperature;
+    tau = (100.) / temperature;
     return ((1. + pi * gamma_r_p (pi, tau) - tau * pi * gamma_r_pt (pi, tau)) / (1. + pi * gamma_r_p (pi, tau))) / temperature;
 }
     constexpr auto
-isothermal_compressibility_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_compressibility_pt (auto const& pressure, auto const& temperature)
 {
         auto const
-    pi = pressure / (16.53 * (1e6 ISTO_IAPWS_U_P));
+    pi = pressure / (16.53 * 1e6);
         auto const
-    tau = 1386. * (1 ISTO_IAPWS_U_T) / temperature;
+    tau = 1386. * (1) / temperature;
     return ((1. - pi * pi * gamma_r_pp (pi, tau)) / (1. + pi * gamma_r_p (pi, tau))) / pressure;
 }
     constexpr auto
-relative_pressure_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
-isothermal_stress_coefficient_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
 
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-massic_volume (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_volume_pt (pressure, temperature);
-}
-    constexpr auto
-massic_enthalpy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_enthalpy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_internal_energy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_internal_energy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_entropy (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_entropy_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isobaric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isobaric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-massic_isochoric_heat_capacity (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return massic_isochoric_heat_capacity_pt (pressure, temperature);
-}
-    constexpr auto
-speed_of_sound (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return speed_of_sound_pt (pressure, temperature);
-}
-    constexpr auto
-density (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return density_pt (pressure, temperature);
-}
-#endif
 } // namespace r5
 
 // §4 Auxiliary Equation for the Boundary between Regions 2 and 3.
     constexpr auto
-p_b23_t (ISTO_IAPWS_T auto const& temperature)
+p_b23_t (auto const& temperature)
 {
         constexpr double
     n1 =  0.34805185628969e3;
@@ -8828,12 +8454,12 @@ p_b23_t (ISTO_IAPWS_T auto const& temperature)
         constexpr double
     n3 =  0.10192970039326e-2;
         auto const
-    t = temperature / (1 ISTO_IAPWS_U_T);
-    return (n1 + n2 * t + n3 * t * t) * (1e6 ISTO_IAPWS_U_P);
+    t = temperature / (1);
+    return (n1 + n2 * t + n3 * t * t) * 1e6;
 }
 
     /*constexpr*/ auto // Someday, std::sqrt might be constexpr.
-t_b23_p (ISTO_IAPWS_P auto const& pressure)
+t_b23_p (auto const& pressure)
 {
         using std::sqrt;
         constexpr double
@@ -8843,25 +8469,13 @@ t_b23_p (ISTO_IAPWS_P auto const& pressure)
         constexpr double
     n5 = 0.13918839778870e2;
         auto const
-    p = pressure / (1e6 ISTO_IAPWS_U_P);
-    return (n4 + sqrt ((p - n5) / n3)) * (1 ISTO_IAPWS_U_T);
+    p = pressure / 1e6;
+    return (n4 + sqrt ((p - n5) / n3)) * (1);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr auto
-b23 (ISTO_IAPWS_T auto const& temperature)
-{
-    return p_b23_t (temperature);
-}
-    constexpr auto
-b23 (ISTO_IAPWS_P auto const& pressure)
-{
-    return t_b23_p (pressure);
-}
-#endif
     constexpr int
-region_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
+region_pt (auto const& pressure, auto const& temperature)
 {
-    if (temperature <= (623.15 ISTO_IAPWS_U_T))
+    if (temperature <= (623.15))
     {
             auto const
         ps = saturation_pressure_t (temperature);
@@ -8869,7 +8483,7 @@ region_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperatu
         if (pressure < ps) return 2;
         return 4;
     }
-    if (temperature <= 1073.15 ISTO_IAPWS_U_T)
+    if (temperature <= 1073.15)
     {
             auto const
         p23 = p_b23_t (temperature);
@@ -8878,13 +8492,6 @@ region_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperatu
     }
     return 5;
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr int
-region (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)
-{
-    return region_pt (pressure, temperature);
-}
-#endif
 
 // Region (h, s) (Supp-phs3-2014.pdf, sec. 4)
     namespace
@@ -8990,12 +8597,12 @@ n = array_t //{{{
 }; //}}}
 } // namespace h_p_1
     constexpr auto
-h_p_1_s (ISTO_IAPWS_S auto const& massic_entropy)
+h_p_1_s (auto const& massic_entropy)
 {
         auto const
-    sigma = massic_entropy / (3.8e3 ISTO_IAPWS_U_S);
+    sigma = massic_entropy / (3.8e3);
         using namespace h_p_1;
-    return sum (n * pow (sigma - 1.09, I) * pow (sigma + 0.366e-4, J)) * (1700e3 ISTO_IAPWS_U_H);
+    return sum (n * pow (sigma - 1.09, I) * pow (sigma + 0.366e-4, J)) * (1700e3);
 }
     namespace
 h_p_3a
@@ -9073,12 +8680,12 @@ n = array_t //{{{
 }; //}}}
 } // namespace h_p_3a
     constexpr auto
-h_p_3a_s (ISTO_IAPWS_S auto const& massic_entropy)
+h_p_3a_s (auto const& massic_entropy)
 {
         auto const
-    sigma = massic_entropy / (3.8e3 ISTO_IAPWS_U_S);
+    sigma = massic_entropy / (3.8e3);
         using namespace h_p_3a;
-    return sum (n * pow (sigma - 1.09, I) * pow (sigma + 0.366e-4, J)) * (1700e3 ISTO_IAPWS_U_H);
+    return sum (n * pow (sigma - 1.09, I) * pow (sigma + 0.366e-4, J)) * (1700e3);
 }
     namespace
 h_pp_2ab
@@ -9189,14 +8796,14 @@ n = array_t //{{{
 }; //}}}
 } // namespace h_pp_2ab
     constexpr auto
-h_pp_2ab_s (ISTO_IAPWS_S auto const& massic_entropy)
+h_pp_2ab_s (auto const& massic_entropy)
 {
         using namespace h_pp_2ab;
         auto const
-    sigma1 = massic_entropy / (5.21e3 ISTO_IAPWS_U_S);
+    sigma1 = massic_entropy / (5.21e3);
         auto const
-    sigma2 = massic_entropy / (9.2e3 ISTO_IAPWS_U_S);
-    return exp(sum (n * pow ((1 / sigma1) - 0.513, I) * pow (sigma2 - 0.524, J))) * (2800e3 ISTO_IAPWS_U_H);
+    sigma2 = massic_entropy / (9.2e3);
+    return exp(sum (n * pow ((1 / sigma1) - 0.513, I) * pow (sigma2 - 0.524, J))) * (2800e3);
 }
     namespace
 h_pp_2c3b
@@ -9266,12 +8873,12 @@ n = array_t //{{{
 }; //}}}
 } // namespace h_pp_2c3b
     constexpr auto
-h_pp_2c3b_s (ISTO_IAPWS_S auto const& massic_entropy)
+h_pp_2c3b_s (auto const& massic_entropy)
 {
         using namespace h_pp_2c3b;
         auto const
-    sigma = massic_entropy / (5.9e3 ISTO_IAPWS_U_S);
-    return pow (sum (n * pow (sigma - 1.02, I) * pow (sigma - 0.726, J)), 4) * (2800e3 ISTO_IAPWS_U_H);
+    sigma = massic_entropy / (5.9e3);
+    return pow (sum (n * pow (sigma - 1.02, I) * pow (sigma - 0.726, J)), 4) * (2800e3);
 }
     namespace
 h_b13
@@ -9310,12 +8917,12 @@ n = array_t //{{{
 }; //}}}
 } // namespace h_b13
     constexpr auto
-h_b13_s (ISTO_IAPWS_S auto const& massic_entropy)
+h_b13_s (auto const& massic_entropy)
 {
         using namespace h_b13;
         auto const
-    sigma = massic_entropy / (3.8e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (sigma - 0.884, I) * pow (sigma - 0.864, J)) * (1700e3 ISTO_IAPWS_U_H);
+    sigma = massic_entropy / (3.8e3);
+    return sum (n * pow (sigma - 0.884, I) * pow (sigma - 0.864, J)) * (1700e3);
 }
     namespace
 t_b23
@@ -9411,21 +9018,21 @@ n = array_t //{{{
 }; //}}}
 } // namespace t_b23
     constexpr auto
-t_b23_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+t_b23_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
         using namespace t_b23;
         auto const
-    eta = massic_enthalpy / (3000e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (3000e3);
         auto const
-    sigma = massic_entropy / (5.3e3 ISTO_IAPWS_U_S);
-    return sum (n * pow (eta - 0.727, I) * pow (sigma - 0.864, J)) * (900 ISTO_IAPWS_U_T);
+    sigma = massic_entropy / (5.3e3);
+    return sum (n * pow (eta - 0.727, I) * pow (sigma - 0.864, J)) * (900);
 }
 } // namespace detail
     namespace
 r2
 {
     constexpr auto
-pressure_c_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+pressure_c_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     constexpr auto
 I = array_t ///{{{
@@ -9535,39 +9142,39 @@ n = array_t ///{{{
     , -0.111754907323424e16
 }; //}}}
         auto const
-    eta = massic_enthalpy / (3500e3 ISTO_IAPWS_U_H);
+    eta = massic_enthalpy / (3500e3);
         auto const
-    sigma = massic_entropy / (5.9e3 ISTO_IAPWS_U_S);
-    return pow (sum (n * pow (eta - 0.7, I) * pow (sigma - 1.1, J)), 4) * (100e6 ISTO_IAPWS_U_P);
+    sigma = massic_entropy / (5.9e3);
+    return pow (sum (n * pow (eta - 0.7, I) * pow (sigma - 1.1, J)), 4) * (100e6);
 }
 } // namespace r2;
 
     constexpr int
-region_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+region_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
-    if (massic_entropy <= (3.778281340e3 ISTO_IAPWS_U_S))
+    if (massic_entropy <= (3.778281340e3))
     {
         if (massic_enthalpy <= detail::h_p_1_s (massic_entropy)) return 4;
         if (massic_enthalpy <= detail::h_b13_s (massic_entropy)) return 1;
         return 3;
     }
-    if (massic_entropy <= (4.412021482234e3 ISTO_IAPWS_U_S))
+    if (massic_entropy <= (4.412021482234e3))
     {
         if (massic_enthalpy <= detail::h_p_3a_s (massic_entropy)) return 4;
         return 3;
     }
-    if (massic_entropy <= (5.85e3 ISTO_IAPWS_U_S))
+    if (massic_entropy <= (5.85e3))
     {
         if (massic_enthalpy <= detail::h_pp_2c3b_s (massic_entropy)) return 4;
         if (
-               massic_entropy  <= (5.048096828e3 ISTO_IAPWS_U_S)  
-            || massic_enthalpy <= (2.563592004e6 ISTO_IAPWS_U_H)
+               massic_entropy  <= (5.048096828e3)  
+            || massic_enthalpy <= (2.563592004e6)
         ){
             return 3;
         }
         if (
-               massic_entropy  >= (5.260578707e3 ISTO_IAPWS_U_S)
-            || massic_enthalpy >= (2.812942061e6 ISTO_IAPWS_U_H)
+               massic_entropy  >= (5.260578707e3)
+            || massic_enthalpy >= (2.812942061e6)
         ){
             return 2;
         }
@@ -9584,23 +9191,16 @@ region_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& ma
     if (massic_enthalpy <= detail::h_pp_2ab_s (massic_entropy)) return 4;
     return 2;
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr int
-region (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return region_hs (massic_enthalpy, massic_entropy);
-}
-#endif
 
 // Region (p, h) (Supp-phs3-2014.pdf, sec. 4)   
     namespace
 detail
 {
         const auto
-    p_s_623_15 = saturation_pressure_t (623.15 ISTO_IAPWS_U_T);
+    p_s_623_15 = saturation_pressure_t (623.15);
 } // namespace detail
     constexpr int
-region_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+region_ph (auto const& pressure, auto const& massic_enthalpy)
 {
     if (pressure <= detail::p_s_623_15)
     {
@@ -9608,13 +9208,13 @@ region_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_en
         if (massic_enthalpy <= r2::massic_enthalpy_pt (pressure, saturation_temperature_p (pressure))) return 4;
         return 2;
     }
-    if (massic_enthalpy <= r1::massic_enthalpy_pt (pressure, 623.15 ISTO_IAPWS_U_T)) return 1;
+    if (massic_enthalpy <= r1::massic_enthalpy_pt (pressure, 623.15)) return 1;
     if (massic_enthalpy > r2::massic_enthalpy_pt (pressure, t_b23_p (pressure))) return 2;
     if (pressure <= saturation_pressure_h (massic_enthalpy)) return 4;
     return 3;
 }
     constexpr int
-region_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+region_ps (auto const& pressure, auto const& massic_entropy)
 {
     if (pressure <= detail::p_s_623_15)
     {
@@ -9622,29 +9222,17 @@ region_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_en
         if (massic_entropy <= r2::massic_entropy_pt (pressure, saturation_temperature_p (pressure))) return 4;
         return 2;
     }
-    if (massic_entropy <= r1::massic_entropy_pt (pressure, 623.15 ISTO_IAPWS_U_T)) return 1;
+    if (massic_entropy <= r1::massic_entropy_pt (pressure, 623.15)) return 1;
     if (massic_entropy > r2::massic_entropy_pt (pressure, t_b23_p (pressure))) return 2;
     if (pressure <= saturation_pressure_s (massic_entropy)) return 4;
     return 3;
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    constexpr int
-region (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
-{
-    return region_ph (pressure, massic_enthalpy);
-}
-    constexpr int
-region (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
-{
-    return region_ps (pressure, massic_entropy);
-}
-#endif
 
 // Main API
 // P-T
 #define ISTO_IAPWS_R7_GEN_PT(NAME)                                                                      \
     constexpr auto                                                                                      \
-NAME##_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature)                     \
+NAME##_pt (auto const& pressure, auto const& temperature)                                               \
 {                                                                                                       \
     switch (region_pt (pressure, temperature))                                                          \
     {                                                                                                   \
@@ -9657,7 +9245,7 @@ NAME##_pt (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperatu
     }                                                                                                   \
 }                                                                                                       \
     constexpr auto                                                                                      \
-NAME##_tp (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_P auto const& pressure)                     \
+NAME##_tp (auto const& temperature, auto const& pressure)                                               \
 {                                                                                                       \
     return NAME##_pt (pressure, temperature);                                                           \
 }
@@ -9674,37 +9262,10 @@ ISTO_IAPWS_R7_GEN_PT(isothermal_compressibility)
 ISTO_IAPWS_R7_GEN_PT(relative_pressure_coefficient)
 ISTO_IAPWS_R7_GEN_PT(isothermal_stress_coefficient)
 #undef ISTO_IAPWS_R7_GEN_PT
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R7_GEN_PT(NAME)                                             \
-    constexpr auto                                                             \
-NAME (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_T auto const& temperature) \
-{                                                                              \
-    return NAME##_pt (pressure, temperature);                                  \
-}                                                                              \
-    constexpr auto                                                             \
-NAME (ISTO_IAPWS_T auto const& temperature, ISTO_IAPWS_P auto const& pressure) \
-{                                                                              \
-    return NAME##_tp (temperature, pressure);                                  \
-}
-ISTO_IAPWS_R7_GEN_PT(massic_volume)
-ISTO_IAPWS_R7_GEN_PT(density)
-ISTO_IAPWS_R7_GEN_PT(massic_enthalpy)
-ISTO_IAPWS_R7_GEN_PT(massic_internal_energy)
-ISTO_IAPWS_R7_GEN_PT(massic_entropy)
-ISTO_IAPWS_R7_GEN_PT(massic_isobaric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PT(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PT(speed_of_sound)
-ISTO_IAPWS_R7_GEN_PT(isobaric_cubic_expansion_coefficient)
-ISTO_IAPWS_R7_GEN_PT(isothermal_compressibility)
-ISTO_IAPWS_R7_GEN_PT(relative_pressure_coefficient)
-ISTO_IAPWS_R7_GEN_PT(isothermal_stress_coefficient)
-#undef ISTO_IAPWS_R7_GEN_PT
-#endif
-
 
 // H-S
     constexpr auto
-pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+pressure_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     switch (region_hs (massic_enthalpy, massic_entropy))
     {
@@ -9717,12 +9278,12 @@ pressure_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& 
     }
 }
     constexpr auto
-pressure_sh (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_H auto const& massic_enthalpy)
+pressure_sh (auto const& massic_entropy, auto const& massic_enthalpy)
 {
     return pressure_hs (massic_enthalpy, massic_entropy);
 }
     constexpr auto
-temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_hs (auto const& massic_enthalpy, auto const& massic_entropy)
 {
     switch (region_hs (massic_enthalpy, massic_entropy))
     {
@@ -9735,23 +9296,23 @@ temperature_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto cons
     }
 }
     constexpr auto
-temperature_sh (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_H auto const& massic_enthalpy)
+temperature_sh (auto const& massic_entropy, auto const& massic_enthalpy)
 {
     return temperature_hs (massic_enthalpy, massic_entropy);
 }
-#define ISTO_IAPWS_R7_GEN_HS(NAME)                                                            \
-    constexpr auto                                                                            \
-NAME##_hs (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy) \
-{                                                                                             \
-    return NAME##_pt (                                                                        \
-          pressure_hs    (massic_enthalpy, massic_entropy)                                    \
-        , temperature_hs (massic_enthalpy, massic_entropy)                                    \
-    );                                                                                        \
-}                                                                                             \
-    constexpr auto                                                                            \
-NAME##_sh (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_H auto const& massic_enthalpy) \
-{                                                                                             \
-    return NAME##_hs (massic_enthalpy, massic_entropy);                                       \
+#define ISTO_IAPWS_R7_GEN_HS(NAME)                                  \
+    constexpr auto                                                  \
+NAME##_hs (auto const& massic_enthalpy, auto const& massic_entropy) \
+{                                                                   \
+    return NAME##_pt (                                              \
+          pressure_hs    (massic_enthalpy, massic_entropy)          \
+        , temperature_hs (massic_enthalpy, massic_entropy)          \
+    );                                                              \
+}                                                                   \
+    constexpr auto                                                  \
+NAME##_sh (auto const& massic_entropy, auto const& massic_enthalpy) \
+{                                                                   \
+    return NAME##_hs (massic_enthalpy, massic_entropy);             \
 }
 ISTO_IAPWS_R7_GEN_HS(massic_volume)
 ISTO_IAPWS_R7_GEN_HS(density)
@@ -9759,32 +9320,10 @@ ISTO_IAPWS_R7_GEN_HS(massic_internal_energy)
 ISTO_IAPWS_R7_GEN_HS(massic_isobaric_heat_capacity)
 ISTO_IAPWS_R7_GEN_HS(speed_of_sound)
 #undef ISTO_IAPWS_R7_GEN_HS
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R7_GEN_HS(NAME)                                                       \
-    constexpr auto                                                                       \
-NAME (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_S auto const& massic_entropy) \
-{                                                                                        \
-    return NAME##_hs (massic_enthalpy, massic_entropy);                                  \
-}                                                                                        \
-    constexpr auto                                                                       \
-NAME (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_H auto const& massic_enthalpy) \
-{                                                                                        \
-    return NAME##_sh (massic_entropy, massic_enthalpy);                                  \
-}
-ISTO_IAPWS_R7_GEN_HS(pressure)
-ISTO_IAPWS_R7_GEN_HS(temperature)
-ISTO_IAPWS_R7_GEN_HS(massic_volume)
-ISTO_IAPWS_R7_GEN_HS(density)
-ISTO_IAPWS_R7_GEN_HS(massic_internal_energy)
-ISTO_IAPWS_R7_GEN_HS(massic_isobaric_heat_capacity)
-ISTO_IAPWS_R7_GEN_HS(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R7_GEN_HS(speed_of_sound)
-#undef ISTO_IAPWS_R7_GEN_HS
-#endif
 
 // P-H
     constexpr auto
-temperature_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+temperature_ph (auto const& pressure, auto const& massic_enthalpy)
 {
     switch (region_ph (pressure, massic_enthalpy))
     {
@@ -9797,23 +9336,23 @@ temperature_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& mass
     }
 }
     constexpr auto
-temperature_hp (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_P auto const& pressure)
+temperature_hp (auto const& massic_enthalpy, auto const& pressure)
 {
     return temperature_ph (pressure, massic_enthalpy);
 }
-#define ISTO_IAPWS_R7_GEN_PH(NAME)                                                      \
-    constexpr auto                                                                      \
-NAME##_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy) \
-{                                                                                       \
-    return NAME##_pt (                                                                  \
-          pressure                                                                      \
-        , temperature_ph (pressure, massic_enthalpy)                                    \
-    );                                                                                  \
-}                                                                                       \
-    constexpr auto                                                                      \
-NAME##_hp (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_P auto const& pressure) \
-{                                                                                       \
-    return NAME##_ph (pressure, massic_enthalpy);                                       \
+#define ISTO_IAPWS_R7_GEN_PH(NAME)                            \
+    constexpr auto                                            \
+NAME##_ph (auto const& pressure, auto const& massic_enthalpy) \
+{                                                             \
+    return NAME##_pt (                                        \
+          pressure                                            \
+        , temperature_ph (pressure, massic_enthalpy)          \
+    );                                                        \
+}                                                             \
+    constexpr auto                                            \
+NAME##_hp (auto const& massic_enthalpy, auto const& pressure) \
+{                                                             \
+    return NAME##_ph (pressure, massic_enthalpy);             \
 }
 ISTO_IAPWS_R7_GEN_PH(density)
 ISTO_IAPWS_R7_GEN_PH(massic_internal_energy)
@@ -9822,7 +9361,7 @@ ISTO_IAPWS_R7_GEN_PH(massic_isobaric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PH(speed_of_sound)
 #undef ISTO_IAPWS_R7_GEN_PH
     constexpr auto
-massic_volume_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy)
+massic_volume_ph (auto const& pressure, auto const& massic_enthalpy)
 {
     if (region_ph (pressure, massic_enthalpy) == 3) 
         return r3::massic_volume_ph (pressure, massic_enthalpy);
@@ -9832,36 +9371,14 @@ massic_volume_ph (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& ma
     );
 }
     constexpr auto
-massic_volume_hp (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_P auto const& pressure)
+massic_volume_hp (auto const& massic_enthalpy, auto const& pressure)
 {
     return massic_volume_ph (pressure, massic_enthalpy);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R7_GEN_PH(NAME)                                                 \
-    constexpr auto                                                                 \
-NAME (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_H auto const& massic_enthalpy) \
-{                                                                                  \
-    return NAME##_ph (pressure, massic_enthalpy);                                  \
-}                                                                                  \
-    constexpr auto                                                                 \
-NAME (ISTO_IAPWS_H auto const& massic_enthalpy, ISTO_IAPWS_P auto const& pressure) \
-{                                                                                  \
-    return NAME##_hp (massic_enthalpy, pressure);                                  \
-}
-ISTO_IAPWS_R7_GEN_PH(temperature)
-ISTO_IAPWS_R7_GEN_PH(massic_volume)
-ISTO_IAPWS_R7_GEN_PH(density)
-ISTO_IAPWS_R7_GEN_PH(massic_entropy)
-ISTO_IAPWS_R7_GEN_PH(massic_internal_energy)
-ISTO_IAPWS_R7_GEN_PH(massic_isobaric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PH(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PH(speed_of_sound)
-#undef ISTO_IAPWS_R7_GEN_PH
-#endif
 
 // P-S
     constexpr auto
-temperature_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+temperature_ps (auto const& pressure, auto const& massic_entropy)
 {
     switch (region_ps (pressure, massic_entropy))
     {
@@ -9874,23 +9391,23 @@ temperature_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& mass
     }
 }
     constexpr auto
-temperature_sp (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_P auto const& pressure)
+temperature_sp (auto const& massic_entropy, auto const& pressure)
 {
     return temperature_ps (pressure, massic_entropy);
 }
-#define ISTO_IAPWS_R7_GEN_PS(NAME)                                                     \
-    constexpr auto                                                                     \
-NAME##_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy) \
-{                                                                                      \
-    return NAME##_pt (                                                                 \
-          pressure                                                                     \
-        , temperature_ps (pressure, massic_entropy)                                    \
-    );                                                                                 \
-}                                                                                      \
-    constexpr auto                                                                     \
-NAME##_sp (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_P auto const& pressure) \
-{                                                                                      \
-    return NAME##_ps (pressure, massic_entropy);                                       \
+#define ISTO_IAPWS_R7_GEN_PS(NAME)                           \
+    constexpr auto                                           \
+NAME##_ps (auto const& pressure, auto const& massic_entropy) \
+{                                                            \
+    return NAME##_pt (                                       \
+          pressure                                           \
+        , temperature_ps (pressure, massic_entropy)          \
+    );                                                       \
+}                                                            \
+    constexpr auto                                           \
+NAME##_sp (auto const& massic_entropy, auto const& pressure) \
+{                                                            \
+    return NAME##_ps (pressure, massic_entropy);             \
 }
 ISTO_IAPWS_R7_GEN_PS(density)
 ISTO_IAPWS_R7_GEN_PS(massic_internal_energy)
@@ -9899,7 +9416,7 @@ ISTO_IAPWS_R7_GEN_PS(massic_isobaric_heat_capacity)
 ISTO_IAPWS_R7_GEN_PS(speed_of_sound)
 #undef ISTO_IAPWS_R7_GEN_PS
     constexpr auto
-massic_volume_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy)
+massic_volume_ps (auto const& pressure, auto const& massic_entropy)
 {
     if (region_ps (pressure, massic_entropy) == 3) return r3::massic_volume_ps (pressure, massic_entropy);
     return massic_volume_pt (
@@ -9908,32 +9425,10 @@ massic_volume_ps (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& ma
     );
 }
     constexpr auto
-massic_volume_sp (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_P auto const& pressure)
+massic_volume_sp (auto const& massic_entropy, auto const& pressure)
 {
     return massic_volume_ps (pressure, massic_entropy);
 }
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-#define ISTO_IAPWS_R7_GEN_PS(NAME)                                                \
-    constexpr auto                                                                \
-NAME (ISTO_IAPWS_P auto const& pressure, ISTO_IAPWS_S auto const& massic_entropy) \
-{                                                                                 \
-    return NAME##_ps (pressure, massic_entropy);                                  \
-}                                                                                 \
-    constexpr auto                                                                \
-NAME (ISTO_IAPWS_S auto const& massic_entropy, ISTO_IAPWS_P auto const& pressure) \
-{                                                                                 \
-    return NAME##_sp (massic_entropy, pressure);                                  \
-}
-ISTO_IAPWS_R7_GEN_PS(temperature)
-ISTO_IAPWS_R7_GEN_PS(massic_volume)
-ISTO_IAPWS_R7_GEN_PS(density)
-ISTO_IAPWS_R7_GEN_PS(massic_enthalpy)
-ISTO_IAPWS_R7_GEN_PS(massic_internal_energy)
-ISTO_IAPWS_R7_GEN_PS(massic_isobaric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PS(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R7_GEN_PS(speed_of_sound)
-#undef ISTO_IAPWS_R7_GEN_PS
-#endif
 
 } // inline namespace r7_97_2012
 } // namespace isto::iapws::r7

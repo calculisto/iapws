@@ -1,13 +1,12 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r6_inverse.hpp"
     using namespace isto::iapws::r6_inverse;
 #include "../include/isto/iapws/detail/data_for_the_tests.hpp"
     using namespace isto::iapws::r6::r6_95_2016::detail;
 
-TEST_CASE("r6_inverse.hpp (relaxed)")
+TEST_CASE("r6_inverse.hpp")
 {
         using namespace isto::iapws;
     for(const auto& e: table_7)
@@ -64,4 +63,4 @@ TEST_CASE("r6_inverse.hpp (relaxed)")
         CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
 
     }
-} // TEST_CASE("r6_inverse.hpp (relaxed)")
+} // TEST_CASE("r6_inverse.hpp")

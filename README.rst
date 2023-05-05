@@ -66,45 +66,6 @@ Installation
 This is a headers-only library. Just put it where your compiler can find it.
 
 
-Flavors
--------
-
-This library comes in two "flavors". The *constrained* flavor enforces physical
-dimension correctness, the *relaxed* flavor does not.
-
-If the header ``isto/units/units.hpp`` is found and the macro
-``ISTO_IAPWS_FORCE_RELAXED`` is not defined when including any header of this
-library, then the flavor is *constrained*.
-
-
-If the header ``isto/units/units.hpp`` is not found or the macro
-``ISTO_IAPWS_FORCE_RELAXED`` is defined when including any header of this
-library, then the flavor is *relaxed*.
-
-In the *constrained* flavor, the function templates arguments and return values 
-have a physical dimension, as provided by the ``isto::units`` library. A typical
-signature for a function template is::
-
-        constexpr auto
-    pressure (Density auto const& density, Temperature auto const& temperature)
-
-where ``Density`` and ``Temperature`` are concepts defined in the namespace 
-``isto::units`` that constrain the parameters into having the correct physical 
-dimension. The return value of this function will satisfy the constaint
-``Pressure``.
-
-In the *relaxed* flavor, the template functions arguments and return types can
-be anything for which the computation makes sense (e.g. a `double`).
-A typical signature looks like::
-
-        constexpr auto
-    pressure_dt (auto const& density, auto const& temperature)
-
-Note the ``_dt`` suffix which indicates that this function expects a density and
-a temperature (in that order) as parameters. (But the compiler will not be able
-to enforce it.)
-
-
 Functions summary
 -----------------
 
@@ -192,9 +153,6 @@ To execute the tests run
     $ make check
 
 in the root directory of the project.
-
-The tests require the `isto::units` library to test the constrained flavor of
-the library.
 
 
 License

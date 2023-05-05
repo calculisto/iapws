@@ -1,11 +1,10 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#define ISTO_IAPWS_FORCE_RELAXED 1
 #include "../include/isto/iapws/r10.hpp"
     using namespace isto::iapws::r10;
 
-TEST_CASE("r10.hpp (relaxed)")
+TEST_CASE("r10.hpp")
 {
 SUBCASE("base functions")
 {
@@ -93,4 +92,4 @@ SUBCASE("main API")
     CHECK(isothermal_compressibility_tp    (100.,         100e6) == Approx {  0.886880048115e-10 } .scale (1e-10).epsilon (1e-8));
     CHECK(isentropic_compressibility_tp    (100.,         100e6) == Approx {  0.886060982687e-10 } .scale (1e-10).epsilon (1e-8));
 } // SUBCASE("main API")
-} // TEST_CASE("r10.hpp (relaxed)")
+} // TEST_CASE("r10.hpp")
