@@ -233,7 +233,8 @@ massic_internal_energy_pt (auto const& pressure, auto const& temperature)
     pi = pressure / (16.53 * 1e6);
         auto const
     tau = 1386. * (1) / temperature;
-    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
+    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) 
+        * massic_gas_constant * temperature;
 }
     constexpr auto
 massic_entropy_pt (auto const& pressure, auto const& temperature)
@@ -260,7 +261,8 @@ massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature
     pi = pressure / (16.53 * 1e6);
         auto const
     tau = 1386. * (1) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) 
+        - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
 speed_of_sound_pt (auto const& pressure, auto const& temperature)
@@ -307,12 +309,29 @@ isothermal_compressibility_pt (auto const& pressure, auto const& temperature)
     constexpr auto
 relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 {
-    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) 
+        / pressure / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
 isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
-    return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
+    return 1. / pressure / massic_volume_pt (pressure, temperature) 
+        / isothermal_compressibility_pt (pressure, temperature);
+}
+    constexpr auto
+massic_gibbs_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+        auto const
+    pi = pressure / (16.53 * 1e6);
+        auto const
+    tau = (1386. * (1)) / temperature;
+    return gamma (pi, tau) * massic_gas_constant * temperature;
+}
+    constexpr auto
+massic_helmholtz_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature) 
+        - temperature * massic_entropy_pt(pressure, temperature);
 }
     constexpr auto
 temperature_ph (auto const& pressure, auto const& enthalpy)
@@ -901,7 +920,8 @@ massic_internal_energy_pt (auto const& pressure, auto const& temperature)
     pi = pressure / 1e6;
         auto const
     tau = 540 * (1) / temperature;
-    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) * massic_gas_constant * temperature;
+    return (tau * gamma_t (pi, tau) - pi * gamma_p (pi, tau)) 
+        * massic_gas_constant * temperature;
 }
     constexpr auto
 massic_entropy_pt (auto const& pressure, auto const& temperature)
@@ -928,7 +948,8 @@ massic_isochoric_heat_capacity_pt (auto const& pressure, auto const& temperature
     pi = pressure / 1e6;
         auto const
     tau = 540 * (1) / temperature;
-    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
+    return (- tau * tau * gamma_tt (pi, tau) + pow <2> (gamma_p (pi, tau) 
+        - tau * gamma_pt (pi, tau)) / gamma_pp (pi, tau)) * massic_gas_constant;
 }
     constexpr auto
 speed_of_sound_pt (auto const& pressure, auto const& temperature)
@@ -975,12 +996,29 @@ isothermal_compressibility_pt (auto const& pressure, auto const& temperature)
     constexpr auto
 relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 {
-    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) / pressure / isothermal_compressibility_pt (pressure, temperature);
+    return isobaric_cubic_expansion_coefficient_pt (pressure, temperature) 
+        / pressure / isothermal_compressibility_pt (pressure, temperature);
 }
     constexpr auto
 isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
-    return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
+    return 1. / pressure / massic_volume_pt (pressure, temperature) 
+        / isothermal_compressibility_pt (pressure, temperature);
+}
+    constexpr auto
+massic_gibbs_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+        auto const
+    pi = pressure / 1e6;
+        auto const
+    tau = (540.) / temperature;
+    return gamma (pi, tau) * massic_gas_constant * temperature;
+}
+    constexpr auto
+massic_helmholtz_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature) 
+        - temperature * massic_entropy_pt(pressure, temperature);
 }
     constexpr auto
 b2bc_h (auto const& massic_enthalpy)
@@ -2487,6 +2525,15 @@ speed_of_sound_pt (auto const& pressure, auto const& temperature)
         * massic_gas_constant * temperature
     );
 }
+    constexpr auto
+massic_gibbs_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+        auto const
+    pi = pressure / 1e6;
+        auto const
+    tau = 540 * (1) / temperature;
+    return gamma (pi, tau) * massic_gas_constant * temperature;
+}
 } // namespace r2_metastable_vapor
 
 // Saturated region
@@ -3142,6 +3189,21 @@ isothermal_stress_coefficient_dt (auto const& density, auto const& temperature)
         auto const
     tau = critical_temperature / temperature;
     return (2. + delta * phi_dd (delta, tau) / phi_d (delta, tau)) * density;
+}
+    constexpr auto
+massic_helmholtz_free_energy_dt (auto const& density, auto const& temperature)
+{
+        auto const
+    delta = density / critical_density;
+        auto const
+    tau = critical_temperature / temperature;
+    return phi (delta, tau) * massic_gas_constant * temperature;
+}
+    constexpr auto
+massic_gibbs_free_energy_dt (auto const& density, auto const& temperature)
+{
+    return massic_helmholtz_free_energy_dt (density, temperature) 
+        - temperature * massic_entropy_dt(density, temperature);
 }
     constexpr auto
 b3ab_p (auto const& pressure)
@@ -8052,6 +8114,16 @@ relative_pressure_coefficient_pt (auto const& pressure, auto const& temperature)
 isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)                      \
 {                                                                                                     \
     return isothermal_stress_coefficient_dt (density_pt (pressure, temperature), temperature);        \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_helmholtz_free_energy_pt (auto const& pressure, auto const& temperature)                       \
+{                                                                                                     \
+    return massic_helmholtz_free_energy_dt (density_pt (pressure, temperature), temperature);         \
+}                                                                                                     \
+    constexpr auto                                                                                    \
+massic_gibbs_free_energy_pt (auto const& pressure, auto const& temperature)                           \
+{                                                                                                     \
+    return massic_gibbs_free_energy_dt (density_pt (pressure, temperature), temperature);             \
 }
 
 #define ISTO_IAPWS_GEN_R3_FUNC(X)     \
@@ -8440,7 +8512,21 @@ isothermal_stress_coefficient_pt (auto const& pressure, auto const& temperature)
 {
     return 1. / pressure / massic_volume_pt (pressure, temperature) / isothermal_compressibility_pt (pressure, temperature);
 }
-
+    constexpr auto
+massic_gibbs_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+        auto const
+    pi = pressure / (16.53 * 1e6);
+        auto const
+    tau = (1386. * (1)) / temperature;
+    return gamma (pi, tau) * massic_gas_constant * temperature;
+}
+    constexpr auto
+massic_helmholtz_free_energy_pt (auto const& pressure, auto const& temperature)
+{
+    return massic_internal_energy_pt (pressure, temperature) 
+        - temperature * massic_entropy_pt(pressure, temperature);
+}
 } // namespace r5
 
 // §4 Auxiliary Equation for the Boundary between Regions 2 and 3.
@@ -9261,6 +9347,8 @@ ISTO_IAPWS_R7_GEN_PT(isobaric_cubic_expansion_coefficient)
 ISTO_IAPWS_R7_GEN_PT(isothermal_compressibility)
 ISTO_IAPWS_R7_GEN_PT(relative_pressure_coefficient)
 ISTO_IAPWS_R7_GEN_PT(isothermal_stress_coefficient)
+ISTO_IAPWS_R7_GEN_PT(massic_gibbs_free_energy)
+ISTO_IAPWS_R7_GEN_PT(massic_helmholtz_free_energy)
 #undef ISTO_IAPWS_R7_GEN_PT
 
 // H-S
