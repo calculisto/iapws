@@ -301,8 +301,8 @@ isothermal_compressibility_tp (auto const& temperature, auto const& pressure)
     constexpr auto
 isentropic_compressibility_pt (auto const& pressure, auto const& temperature)
 {
-        using isto::template_pow::pow;
-    return (pow <2> (g_tp (pressure, temperature)) - g_tt (pressure, temperature) * g_pp (pressure, temperature)) / (g_p (pressure, temperature) * g_tt (pressure, temperature));
+        using std::pow;
+    return (pow (g_tp (pressure, temperature), 2) - g_tt (pressure, temperature) * g_pp (pressure, temperature)) / (g_p (pressure, temperature) * g_tt (pressure, temperature));
 }
     constexpr auto
 isentropic_compressibility_tp (auto const& temperature, auto const& pressure)
