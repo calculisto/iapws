@@ -41,7 +41,8 @@ density_pt (
         using namespace r6::detail;
         auto
     tau = critical_temperature / temperature;
-    return newton (
+    // This name is qualified to avoid an ambiguity with isto::units::newton
+    return root_finding::newton (
           [=](auto density){ return r6::pressure_dt (density, temperature) - pressure; }
         , [=](auto density)
           {
