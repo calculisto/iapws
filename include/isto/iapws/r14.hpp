@@ -1,5 +1,5 @@
 #pragma once
-#include "detail/common.hpp"
+#include <cmath>
 
     namespace 
 isto::iapws::r14

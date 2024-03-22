@@ -1,7 +1,5 @@
 #pragma once
 #include "detail/common.hpp"
-#include "detail/template_pow.hpp"
-    using isto::template_pow::pow;
 
     namespace 
 isto::iapws::r6
