@@ -28,7 +28,8 @@ detail
         : r7::density_pt (pressure, temperature)
     ;
     }
-}
+} // namespace detail
+
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto
 density_pt (

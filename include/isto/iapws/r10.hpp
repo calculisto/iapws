@@ -190,7 +190,9 @@ g_pp (auto const& pressure, auto const& temperature)
     );
 }
 } // namespace detail
+
     using namespace detail;
+
     constexpr auto
 massic_volume_pt (auto const& pressure, auto const& temperature)
 {
