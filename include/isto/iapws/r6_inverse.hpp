@@ -43,7 +43,10 @@ density_pt (
         auto
     tau = critical_temperature / temperature;
     return newton (
-          [=](auto density){ return r6::pressure_dt (density, temperature) - pressure; }
+          [=](auto density)
+          { 
+            return r6::pressure_dt (density, temperature) - pressure; 
+          }
         , [=](auto density)
           {
                 using namespace detail;
@@ -52,7 +55,12 @@ density_pt (
             return (1 + 2 * delta * phi_r_d (delta, tau) + delta * delta * phi_r_dd (delta, tau)) * massic_gas_constant * temperature;
           }
         , initial_guess
-        , { .converged = [](auto curr, auto prev, auto f){ return fabs (f) < 1e-8 || fabs ((curr - prev)/curr) < 1e-8; } } // options
+        , { 
+            .converged = [](auto curr, auto prev, auto f)
+            { 
+                return fabs (f) < 1e-8 || fabs ((curr - prev)/curr) < 1e-8; 
+            } 
+          } // options
         , info
     );
 }

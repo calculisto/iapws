@@ -6,6 +6,18 @@
     namespace
 isto::iapws::r10_inverse
 {
+    namespace
+detail
+{
+    template <class T>
+    constexpr auto
+initial_pressure_vt (
+      [[maybe_unused]] T const& massic_volume
+    , [[maybe_unused]] T const& temperature
+){
+    return T { 1e5 };
+}
+} // namespace detail
     inline namespace
 r10_06_2009
 {
@@ -43,14 +55,24 @@ pressure_vt (
     , auto const& temperature
     , info_t <InfoTag> info = info::none
 ){
-    return pressure_vt (massic_volume, temperature, 1000., info);
+    return pressure_vt (
+          massic_volume
+        , temperature
+        , detail::initial_pressure_vt (massic_volume, temperature)
+        , info
+    );
 }
     constexpr auto
 pressure_vt (
       auto const& massic_volume
     , auto const& temperature
 ){
-    return pressure_vt (massic_volume, temperature, 1000., info::none);
+    return pressure_vt (
+          massic_volume
+        , temperature
+        , detail::initial_pressure_vt (massic_volume, temperature)
+        , info::none
+    );
 }
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto
@@ -69,14 +91,14 @@ pressure_dt (
     , auto const& temperature
     , info_t <InfoTag> info = info::none
 ){
-    return pressure_dt (density, temperature, 1000., info);
+    return pressure_vt (1. / density, temperature, info);
 }
     constexpr auto
 pressure_dt (
       auto const& density
     , auto const& temperature
 ){
-    return pressure_dt (density, temperature, 1000., info::none);
+    return pressure_vt (1. / density, temperature);
 }
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto
@@ -95,14 +117,14 @@ pressure_tv (
     , auto const& massic_volume
     , info_t <InfoTag> info = info::none
 ){
-    return pressure_tv (temperature, massic_volume, 1000., info);
+    return pressure_vt (massic_volume, temperature, info);
 }
     constexpr auto
 pressure_tv (
       auto const& temperature
     , auto const& massic_volume
 ){
-    return pressure_vt (temperature, massic_volume, 1000., info::none);
+    return pressure_vt (massic_volume, temperature);
 }
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto
@@ -121,14 +143,14 @@ pressure_td (
     , auto const& density
     , info_t <InfoTag> info = info::none
 ){
-    return pressure_td (temperature, density, 1000., info);
+    return pressure_dt (density, temperature, info);
 }
     constexpr auto
 pressure_td (
       auto const& temperature
     , auto const& density
 ){
-    return pressure_td (temperature, density, 1000., info::none);
+    return pressure_dt (density, temperature);
 }
 
 
@@ -159,14 +181,19 @@ NAME##_vt (                                                                     
     , auto const& temperature                                                    \
     , info_t <InfoTag> info = info::none                                         \
 ){                                                                               \
-    return NAME##_vt (massic_volume, temperature, 1000., info);                  \
+    return NAME##_vt (                                                           \
+          massic_volume                                                          \
+        , temperature                                                            \
+        , detail::initial_pressure_vt (massic_volume, temperature)               \
+        , info                                                                   \
+    );                                                                           \
 }                                                                                \
     constexpr auto                                                               \
 NAME##_vt (                                                                      \
       auto const& massic_volume                                                  \
     , auto const& temperature                                                    \
 ){                                                                               \
-    return NAME##_vt (massic_volume, temperature, 1000., info::none);            \
+    return NAME##_vt (massic_volume, temperature, info::none);                   \
 }                                                                                \
     template <info_tag_t InfoTag = info::tag::none>                              \
     constexpr auto                                                               \
@@ -185,14 +212,14 @@ NAME##_dt (                                                                     
     , auto const& temperature                                                    \
     , info_t <InfoTag> info = info::none                                         \
 ){                                                                               \
-    return NAME##_dt (density, temperature, 1000., info);                        \
+    return NAME##_vt (1. / density, temperature, info);                          \
 }                                                                                \
     constexpr auto                                                               \
 NAME##_dt (                                                                      \
       auto const& density                                                        \
     , auto const& temperature                                                    \
 ){                                                                               \
-    return NAME##_dt (density, temperature, 1000., info::none);                  \
+    return NAME##_dt (density, temperature, info::none);                         \
 }                                                                                \
     template <info_tag_t InfoTag = info::tag::none>                              \
     constexpr auto                                                               \
@@ -211,14 +238,14 @@ NAME##_tv (                                                                     
     , auto const& massic_volume                                                  \
     , info_t <InfoTag> info = info::none                                         \
 ){                                                                               \
-    return NAME##_tv (temperature, massic_volume, 1000., info);                  \
+    return NAME##_vt (massic_volume, temperature, info);                         \
 }                                                                                \
     constexpr auto                                                               \
 NAME##_tv (                                                                      \
       auto const& temperature                                                    \
     , auto const& massic_volume                                                  \
 ){                                                                               \
-    return pressure_vt (temperature, massic_volume, 1000., info::none);          \
+    return pressure_vt (massic_volume, temperature);                             \
 }                                                                                \
     template <info_tag_t InfoTag = info::tag::none>                              \
     constexpr auto                                                               \
@@ -237,14 +264,14 @@ NAME##_td (                                                                     
     , auto const& density                                                        \
     , info_t <InfoTag> info = info::none                                         \
 ){                                                                               \
-    return NAME##_td (temperature, density, 1000., info);                        \
+    return NAME##_dt (density, temperature, info);                               \
 }                                                                                \
     constexpr auto                                                               \
 NAME##_td (                                                                      \
       auto const& temperature                                                    \
     , auto const& density                                                        \
 ){                                                                               \
-    return NAME##_td (temperature, density, 1000., info::none);                  \
+    return NAME##_dt (density, temperature);                                     \
 }                                                                                \
 
 ISTO_IAPWS_R10_INVERSE_GEN(massic_entropy)
