@@ -354,6 +354,13 @@ massic_volume_tp (
         + Psi_r_p (tau, pi)
     ) / rho_0;
 }
+    constexpr auto
+massic_volume_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return massic_volume_tp (temperature, pressure);
+}
 
     constexpr auto
 density_tp (
@@ -361,6 +368,13 @@ density_tp (
     , auto const& pressure
 ){
     return 1. / massic_volume_tp (temperature, pressure);
+}
+    constexpr auto
+density_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return density_tp (temperature, pressure);
 }
 
     constexpr auto
@@ -383,6 +397,13 @@ massic_entropy_tp (
         + (1. - x) * log (1. - x) 
         + omega (pi) * x * (1. - x)
     ) + Psi_r_t (tau, pi));
+}
+    constexpr auto
+massic_entropy_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return massic_entropy_tp (temperature, pressure);
 }
 
     constexpr auto
@@ -408,7 +429,13 @@ isothermal_compressibility_tp (
         ) 
     - Psi_r_pp (tau, pi));
 }
-
+    constexpr auto
+isothermal_compressibility_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return isothermal_compressibility_tp (temperature, pressure);
+}
     constexpr auto
 thermal_expansion_coefficient_tp (
       auto const& temperature
@@ -431,6 +458,13 @@ thermal_expansion_coefficient_tp (
         - (tau + 1.) * L_t (tau, pi) / 2. * chi * (L_p (tau, pi) - omega_0 * phi)
         + Psi_r_tp (tau, pi)
     );
+}
+    constexpr auto
+thermal_expansion_coefficient_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return thermal_expansion_coefficient_tp (temperature, pressure);
 }
 
     constexpr auto
@@ -455,7 +489,13 @@ massic_isobaric_heat_capacity_tp (
         + Psi_r_tt (tau, pi)
     );
 }
-
+    constexpr auto
+massic_isobaric_heat_capacity_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return massic_isobaric_heat_capacity_tp (temperature, pressure);
+}
     constexpr auto
 massic_isochoric_heat_capacity_tp (
       auto const& temperature
@@ -467,6 +507,13 @@ massic_isochoric_heat_capacity_tp (
         / density_tp (temperature, pressure) 
         / isothermal_compressibility_tp (temperature, pressure)
     ;
+}
+    constexpr auto
+massic_isochoric_heat_capacity_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return massic_isochoric_heat_capacity_tp (temperature, pressure);
 }
 
     constexpr auto
@@ -481,6 +528,13 @@ speed_of_sound_tp (
         * massic_isochoric_heat_capacity_tp (temperature, pressure) 
         / massic_isobaric_heat_capacity_tp (temperature, pressure)
     );
+}
+    constexpr auto
+speed_of_sound_pt (
+      auto const& pressure
+    , auto const& temperature
+){
+    return speed_of_sound_tp (temperature, pressure);
 }
 
     constexpr auto

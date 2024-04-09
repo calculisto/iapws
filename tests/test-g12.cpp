@@ -43,6 +43,32 @@ TEST_CASE("g12.hpp")
     CHECK(speed_of_sound_tp                ( 200    , 400e6)      == Approx {  1899.3294  }.scale (1e4).epsilon (1e-6));
     CHECK(speed_of_sound_tp                ( 250    , 400e6)      == Approx {  2015.8782  }.scale (1e4).epsilon (1e-6));
 
+    CHECK(density_pt                       ( 0.101325e6, 273.15 ) == Approx {  999.84229 }.scale (1e4).epsilon (1e-6));
+    CHECK(density_pt                       ( 0.101325e6, 235.15 ) == Approx {  968.09999 }.scale (1e4).epsilon (1e-6));
+    CHECK(density_pt                       ( 200e6     , 250    ) == Approx {  1090.45677 }.scale (1e4).epsilon (1e-6));
+    CHECK(density_pt                       ( 400e6     , 200    ) == Approx {  1185.02800 }.scale (1e4).epsilon (1e-6));
+    CHECK(density_pt                       ( 400e6     , 250    ) == Approx {  1151.71517 }.scale (1e4).epsilon (1e-6));
+    CHECK(thermal_expansion_coefficient_pt ( 0.101325e6, 273.15 ) == Approx {  -0.683042e-4 }.scale (1e-5).epsilon (1e-6));
+    CHECK(thermal_expansion_coefficient_pt ( 0.101325e6, 235.15 ) == Approx {  -29.63381e-4 }.scale (1e-2).epsilon (1e-6));
+    CHECK(thermal_expansion_coefficient_pt ( 200e6     , 250    ) == Approx {  3.267768e-4  }.scale (1e-4).epsilon (1e-6));
+    CHECK(thermal_expansion_coefficient_pt ( 400e6     , 200    ) == Approx {  6.716009e-4  }.scale (1e-4).epsilon (1e-6));
+    CHECK(thermal_expansion_coefficient_pt ( 400e6     , 250    ) == Approx {  4.929927e-4  }.scale (1e-4).epsilon (1e-6));
+    CHECK(isothermal_compressibility_pt    ( 0.101325e6, 273.15 ) == Approx {  5.088499e-10  }.scale (1e-10).epsilon (1e-6));
+    CHECK(isothermal_compressibility_pt    ( 0.101325e6, 235.15 ) == Approx {  11.580785e-10 }.scale (1e-9).epsilon (1e-6));
+    CHECK(isothermal_compressibility_pt    ( 200e6     , 250    ) == Approx {  3.361311e-10  }.scale (1e-10).epsilon (1e-6));
+    CHECK(isothermal_compressibility_pt    ( 400e6     , 200    ) == Approx {  2.567237e-10  }.scale (1e-10).epsilon (1e-6));
+    CHECK(isothermal_compressibility_pt    ( 400e6     , 250    ) == Approx {  2.277029e-10  }.scale (1e-10).epsilon (1e-6));
+    CHECK(massic_isobaric_heat_capacity_pt ( 0.101325e6, 273.15 ) == Approx {  4218.3002  }.scale (1e4).epsilon (1e-6));
+    CHECK(massic_isobaric_heat_capacity_pt ( 0.101325e6, 235.15 ) == Approx {  5997.5632  }.scale (1e4).epsilon (1e-6));
+    CHECK(massic_isobaric_heat_capacity_pt ( 200e6     , 250    ) == Approx {  3708.3902  }.scale (1e4).epsilon (1e-6));
+    CHECK(massic_isobaric_heat_capacity_pt ( 400e6     , 200    ) == Approx {  3338.5250  }.scale (1e4).epsilon (1e-6));
+    CHECK(massic_isobaric_heat_capacity_pt ( 400e6     , 250    ) == Approx {  3757.2144  }.scale (1e4).epsilon (1e-6));
+    CHECK(speed_of_sound_pt                ( 0.101325e6, 273.15 ) == Approx {  1402.3886  }.scale (1e4).epsilon (1e-6));
+    CHECK(speed_of_sound_pt                ( 0.101325e6, 235.15 ) == Approx {  1134.5855  }.scale (1e4).epsilon (1e-6));
+    CHECK(speed_of_sound_pt                ( 200e6     , 250    ) == Approx {  1668.2020  }.scale (1e4).epsilon (1e-6));
+    CHECK(speed_of_sound_pt                ( 400e6     , 200    ) == Approx {  1899.3294  }.scale (1e4).epsilon (1e-6));
+    CHECK(speed_of_sound_pt                ( 400e6     , 250    ) == Approx {  2015.8782  }.scale (1e4).epsilon (1e-6));
+
     MESSAGE(homogeneous_ice_nucleation_limit_temperature_p (10e6));
     MESSAGE(homogeneous_ice_nucleation_limit_temperature_p (100e6));
     MESSAGE(homogeneous_ice_nucleation_limit_temperature_p (200e6));
