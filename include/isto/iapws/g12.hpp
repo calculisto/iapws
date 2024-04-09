@@ -2,9 +2,6 @@
 #include "detail/common.hpp"
 #include <isto/root_finding/root_finding.hpp>
     using namespace isto::root_finding;
-// #include <isto/template_pow/template_pow.hpp>
-#include "detail/template_pow.hpp"
-    using isto::template_pow::pow;
 
     namespace 
 isto::iapws::g12
@@ -286,7 +283,7 @@ detail
         else
         {
             low = 0.99 * exp (-(50. / 49.) * _L - _omega);
-            hig = min (1.1 * exp (-_L - _omega), 0.0101);
+            hig = fmin (1.1 * exp (-_L - _omega), 0.0101);
         }
         return zhang (f, low, hig, { .converged = [](T a, T b, T fa, T fb)
         {
@@ -503,7 +500,7 @@ massic_isochoric_heat_capacity_tp (
 ){
     return massic_isobaric_heat_capacity_tp (temperature, pressure)
         - temperature
-        * pow <2> (thermal_expansion_coefficient_tp (temperature, pressure)) 
+        * pow (thermal_expansion_coefficient_tp (temperature, pressure), 2) 
         / density_tp (temperature, pressure) 
         / isothermal_compressibility_tp (temperature, pressure)
     ;
@@ -522,11 +519,12 @@ speed_of_sound_tp (
     , auto const& pressure
 ){
         using std::sqrt;
-    return pow <-0.5> (
+    return pow (
           density_tp  (temperature, pressure) 
         * isothermal_compressibility_tp (temperature, pressure) 
         * massic_isochoric_heat_capacity_tp (temperature, pressure) 
         / massic_isobaric_heat_capacity_tp (temperature, pressure)
+        , - 0.5
     );
 }
     constexpr auto
