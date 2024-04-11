@@ -536,6 +536,17 @@ speed_of_sound_pt (
 }
 
     constexpr auto
+homogeneous_ice_nucleation_limit_temperature_high_p (auto const& pressure)
+{
+    return detail::T_H (pressure);
+}
+    constexpr auto
+homogeneous_ice_nucleation_limit_temperature_low_t (auto const& temperature)
+{
+    return detail::p_H (temperature);
+}
+
+    constexpr auto
 homogeneous_ice_nucleation_limit_temperature_p (auto const& pressure)
 {
         using namespace detail;

@@ -118,7 +118,7 @@ main ()
         toc += "<li><a href='#" + topic.name + "'>" + topic.title + "</a></li>\n";
         for (auto&& graph: topic.graphs)
         {
-            content += format (
+            content += fmt::format (
                   "<h3>{} ({}, {})</h3>\n<div class='thumb-container'>\n"
                 , quantities.at (graph.ztag).label
                 , quantities.at (graph.xtag).label
@@ -128,7 +128,7 @@ main ()
             {
                     const auto
                 base = graph.ztag + '_' + topic.name + '_' + range.name;
-                content += format (
+                content += fmt::format (
                       "<div class='thumb'><a href='{}_zlin.png'><img src='{}_zlin-thumb.png'/><div>"
                     , base
                     , base
@@ -137,7 +137,7 @@ main ()
                 if (range.logscale.second) content += "logarithmic in " + quantities.at (graph.ytag).label + ", ";
                 content += "linear in " + quantities.at (graph.ztag).label + "</div></a></div>\n";
                 if (graph.skip_zlog) continue;
-                content += format (
+                content += fmt::format (
                       "<div class='thumb'><a href='{}_zlog.png'><img src='{}_zlog-thumb.png'/><div>"
                     , base
                     , base
@@ -156,7 +156,7 @@ main ()
         toc += "<li><a href='#" + topic.name + "'>" + topic.title + "</a></li>\n";
         for (auto&& graph: topic.graphs)
         {
-            content += format (
+            content += fmt::format (
                   "<h3>{} ({}, {})</h3>\n<div class='thumb-container'>\n"
                 , quantities.at (graph.ztag).label
                 , quantities.at (graph.xtag).label
@@ -166,7 +166,7 @@ main ()
             {
                     const auto
                 base = graph.ztag + '_' + topic.name + '_' + range.name;
-                content += format (
+                content += fmt::format (
                       "<div class='thumb'><a href='{}_zlin.png'><img src='{}_zlin-thumb.png'/><div>"
                     , base
                     , base
@@ -175,7 +175,7 @@ main ()
                 if (range.logscale.second) content += "logarithmic in " + quantities.at (graph.ytag).label + ", ";
                 content += "linear in " + quantities.at (graph.ztag).label + "</div></a></div>\n";
                 if (graph.skip_zlog) continue;
-                content += format (
+                content += fmt::format (
                       "<div class='thumb'><a href='{}_zlog.png'><img src='{}_zlog-thumb.png'/><div>"
                     , base
                     , base
@@ -219,7 +219,7 @@ It so happens that there are two solutions on this side, although the second one
 )";
     o 
         << content 
-        << "<p>Updated " + format ("{:%Y-%m-%d}", std::chrono::system_clock::now ()) + "</p>"
+        << "<p>Updated " + fmt::format ("{:%Y-%m-%d}", std::chrono::system_clock::now ()) + "</p>"
         << "</body></html>"
     ;
 }

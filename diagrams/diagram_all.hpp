@@ -9,6 +9,7 @@
 #include "diagram_r10.hpp"
 #include "diagram_r12_pt.hpp"
 #include "diagram_r12.hpp"
+#include "diagram_g12.hpp"
 
     const auto
 topics = std::vector
@@ -22,6 +23,7 @@ topics = std::vector
     , topic_r10
     , topic_r12
     , topic_r12_pt
+    , topic_g12
 };
 //topic_r7_vs_r6_inverse
 

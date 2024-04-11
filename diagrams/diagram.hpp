@@ -10,6 +10,7 @@
 #include "../include/isto/iapws/r7.hpp"
 #include "../include/isto/iapws/r6_inverse.hpp"
 #include "../include/isto/iapws/r14.hpp"
+#include "../include/isto/iapws/g12.hpp"
     using namespace isto::iapws;
 
     struct
@@ -37,6 +38,7 @@ quantities = std::unordered_map
     , { "massic_isochoric_heat_capacity",             { "Massic isochoric heat capacity",                                        "kJ/kg/K",   1e3, }}
     , { "speed_of_sound",                             { "Speed of sound",                                                        "m/s",       1.,  }}
     , { "isobaric_cubic_expansion_coefficient",       { "Isobaric cubic expansion coefficient",                                  "K^{ -1}",   1.,  }}
+    , { "thermal_expansion_coefficient",              { "Thermal expansion coefficient",                                         "K^{ -1}",   1.,  }}
     , { "isothermal_compressibility",                 { "Isothermal compressibility",                                            "MPa^{ -1}", 1e6, }}
     , { "isothermal_stress_coefficient",              { "Isothermal stress coefficient",                                         "kg/m^3",    1.,  }}
     , { "relative_pressure_coefficient",              { "Relative pressure coefficient",                                         "K^{ -1}",   1.,  }}
@@ -116,7 +118,7 @@ public:
         return (t <= 273.16) || (t < 647.096 && d > d_sat_g && d < d_sat_l);
     };
 };
-    auto
+    inline auto
 exclusion_dt = exclusion_dt_t {};
 
     class
@@ -130,7 +132,7 @@ public:
         return t > 1074.15 && p > 50e6; 
     };
 };
-    auto
+    inline auto
 exclusion_tp_r7 = exclusion_tp_r7_t {};
 
     class
@@ -174,7 +176,7 @@ public:
         ;
     };
 };
-    auto
+    inline auto
 exclusion_tp_fluid = exclusion_tp_fluid_t {};
     class
 exclusion_tp_ice_t
@@ -192,7 +194,7 @@ public:
         return !exclusion_tp_fluid_t::operator () (t, p);
     }
 };
-    auto
+    inline auto
 exclusion_tp_ice = exclusion_tp_ice_t {};
     class
 exclusion_tp_r12_t
@@ -215,7 +217,7 @@ public:
         ;
     }
 };
-    auto
+    inline auto
 exclusion_tp_r12 = exclusion_tp_r12_t {};
     struct
 range_t
@@ -233,6 +235,57 @@ range_t
         std::pair <int, int>
     values_count = { 501, 501 };
 };
+
+    class
+exclusion_tp_supercooled_t
+    : public exclusion_base_t
+{
+        double
+    pmih;
+        double
+    pmiii;
+        double
+    pmv;
+        double
+    pmvi;
+        double
+    pmvii;
+        double
+    ps;
+        double
+    p_hin;
+public:
+        void
+    init (double t) override
+    {
+        pmih  = r14::ih::melting_pressure_t  (t);
+        pmiii = r14::iii::melting_pressure_t (t);
+        pmv   = r14::v::melting_pressure_t   (t);
+        pmvi  = r14::vi::melting_pressure_t  (t);
+        pmvii = r14::vii::melting_pressure_t (t);
+        ps    = r14::sublimation_pressure_t  (t);
+        p_hin = g12::homogeneous_ice_nucleation_limit_temperature_low_t (t);
+    };
+        bool
+    operator () (double t, double p) const override
+    {
+            const auto
+        t_hin = g12::homogeneous_ice_nucleation_limit_temperature_high_p (p) ;
+        return 
+               (t < 181.4)
+            || (t < 235.159 && p < 198.9e6 && p < p_hin)
+            || (p > 198.9e6 && t < t_hin)
+        /* TODO
+            || (p < 611657  && t <= 273.16 && p > ps)
+            || (p >= 611.657   && p <  208.566e6 && t < 273.15  && p > pmih)
+            || (p >= 208.566e6 && p <  350.1e6   && t < 256.164 && p < pmiii)
+            || (p >= 350.1e6   && p <  632.4e6   && t < 273.31  && p < pmv)
+        */
+        ;
+    };
+};
+    inline auto
+exclusion_tp_supercooled = exclusion_tp_supercooled_t {};
 
     template <class F>
     struct
