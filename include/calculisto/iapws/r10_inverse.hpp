@@ -1,10 +1,10 @@
 #pragma once
 #include "r10.hpp"
-#include <isto/root_finding/root_finding.hpp>
-    using namespace isto::root_finding;
+#include <calculisto/root_finding/root_finding.hpp>
+    using namespace calculisto::root_finding;
 
     namespace
-isto::iapws::r10_inverse
+calculisto::iapws::r10_inverse
 {
     namespace
 detail
@@ -284,4 +284,4 @@ ISTO_IAPWS_R10_INVERSE_GEN(pressure_coefficient)
 ISTO_IAPWS_R10_INVERSE_GEN(isothermal_compressibility)
 ISTO_IAPWS_R10_INVERSE_GEN(isentropic_compressibility)
 } // inline namespace r10_06_2009
-} // namespace isto::iapws::r10_inverse
+} // namespace calculisto::iapws::r10_inverse

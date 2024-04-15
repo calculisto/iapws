@@ -1,6 +1,6 @@
 #include "diagram.hpp"
-#include "../include/isto/iapws/r12.hpp"
-    using namespace isto::iapws;
+#include "../include/calculisto/iapws/r12.hpp"
+    using namespace calculisto::iapws;
     const auto
 topic_r12 = topic_t <double (double, double)>
 {

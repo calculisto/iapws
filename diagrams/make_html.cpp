@@ -93,10 +93,10 @@ main ()
         </ul>
 
         The implementation of the IAPWS models used to compute the data is 
-        <a href="https://github.com/le-migou/iapws">isto/iapws</a>.
+        <a href="https://github.com/le-migou/iapws">calculisto/iapws</a>.
 
         When needed, the inversions were performed using the 
-        <a href="https://github.com/le-migou/root_finding">isto/root_finding</a> 
+        <a href="https://github.com/le-migou/root_finding">calculisto/root_finding</a> 
         library.
 
         The plots were rendered using <a href="http://www.gnuplot.info/">Gnuplot</a>.

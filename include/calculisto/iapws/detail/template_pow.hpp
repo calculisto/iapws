@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-    namespace isto::template_pow
+    namespace calculisto::template_pow
 {
         template <auto EXPONENT>
         constexpr auto
@@ -9,4 +9,4 @@
             using std::pow;
         return pow (value, EXPONENT);
     }
-} // namespace isto::template_pow
+} // namespace calculisto::template_pow

@@ -2,7 +2,7 @@
 #include <cmath>
 
     namespace 
-isto::iapws::r14
+calculisto::iapws::r14
 {
     inline namespace 
 r14_08_2011
@@ -132,7 +132,7 @@ sublimation_pressure_t (auto const& temperature)
 }
 
 } // namespace r14_08_2011
-} // namespace isto::iapws::r14
+} // namespace calculisto::iapws::r14
 
 /*
 Triple points:

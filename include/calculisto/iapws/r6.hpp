@@ -2,7 +2,7 @@
 #include "detail/common.hpp"
 
     namespace 
-isto::iapws::r6
+calculisto::iapws::r6
 {
     inline namespace 
 r6_95_2016
@@ -898,10 +898,10 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
-} // namespace isto::iapws::r6
+} // namespace calculisto::iapws::r6
 
     namespace
-isto::iapws::r6_gas
+calculisto::iapws::r6_gas
 {
     inline namespace 
 r6_95_2016
@@ -1031,5 +1031,5 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * 
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
-} // namespace isto::iapws::r6_gas
+} // namespace calculisto::iapws::r6_gas
 // vim: foldmethod=marker

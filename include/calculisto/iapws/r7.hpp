@@ -1,12 +1,12 @@
 #pragma once
 #include "detail/common.hpp"
 #include "detail/template_pow.hpp"
-    using isto::template_pow::pow;
+    using calculisto::template_pow::pow;
 
 // TODO long double coeffs ?
 
     namespace
-isto::iapws::r7
+calculisto::iapws::r7
 {
     inline namespace
 r7_97_2012
@@ -9519,5 +9519,5 @@ massic_volume_sp (auto const& massic_entropy, auto const& pressure)
 }
 
 } // inline namespace r7_97_2012
-} // namespace isto::iapws::r7
+} // namespace calculisto::iapws::r7
 // vim: foldmethod=marker

@@ -1,11 +1,11 @@
 #pragma once
 #include "r6.hpp"
 #include "r7.hpp"
-#include <isto/root_finding/root_finding.hpp>
-    using namespace isto::root_finding;
+#include <calculisto/root_finding/root_finding.hpp>
+    using namespace calculisto::root_finding;
 
     namespace
-isto::iapws::r6_inverse
+calculisto::iapws::r6_inverse
 {
     inline namespace
 r6_95_2016
@@ -307,4 +307,4 @@ ISTO_IAPWS_R6_INVERSE_GEN(relative_pressure_coefficient)
 #undef ISTO_IAPWS_R6_INVERSE_GEN
 #endif
 } // inline namespace r6_95_2016
-} // namespace isto::iapws::r6_inverse
+} // namespace calculisto::iapws::r6_inverse

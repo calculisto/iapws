@@ -1,13 +1,13 @@
 #define ISTO_IAPWS_FORCE_RELAXED 1
-#include "../include/isto/iapws/r6.hpp"
-    using namespace isto::iapws;
-#include <isto/root_finding/root_finding.hpp>
-    using namespace isto::root_finding;
+#include "../include/calculisto/iapws/r6.hpp"
+    using namespace calculisto::iapws;
+#include <calculisto/root_finding/root_finding.hpp>
+    using namespace calculisto::root_finding;
 #include <fmt/format.h>
     using fmt::print, fmt::format;
 #include <fstream>
-#include "../include/isto/iapws/r7.hpp" 
-#include "../include/isto/iapws/r6_inverse.hpp" 
+#include "../include/calculisto/iapws/r7.hpp" 
+#include "../include/calculisto/iapws/r6_inverse.hpp" 
 
     auto
 saturation_density_gaz_t (double temperature)

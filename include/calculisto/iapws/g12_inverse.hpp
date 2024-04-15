@@ -1,10 +1,10 @@
 #pragma once
 #include "g12.hpp"
-#include <isto/root_finding/root_finding.hpp>
-    using namespace isto::root_finding;
+#include <calculisto/root_finding/root_finding.hpp>
+    using namespace calculisto::root_finding;
 
     namespace
-isto::iapws::g12_inverse
+calculisto::iapws::g12_inverse
 {
     namespace
 detail
@@ -308,4 +308,4 @@ ISTO_IAPWS_G12_INVERSE_GEN(massic_isobaric_heat_capacity)
 ISTO_IAPWS_G12_INVERSE_GEN(massic_isochoric_heat_capacity)
 ISTO_IAPWS_G12_INVERSE_GEN(speed_of_sound)
 } // inline namespace g12_15
-} // namespace isto::iapws::g12_inverse
+} // namespace calculisto::iapws::g12_inverse

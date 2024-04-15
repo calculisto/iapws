@@ -1,9 +1,9 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#include "../include/isto/iapws/r7.hpp"
-    using namespace isto::iapws::r7;
-#include "../include/isto/iapws/detail/data_for_the_tests.hpp"
+#include "../include/calculisto/iapws/r7.hpp"
+    using namespace calculisto::iapws::r7;
+#include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
 
     constexpr auto
 eps = 1e-8;

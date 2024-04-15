@@ -1,8 +1,8 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#include "../include/isto/iapws/r10.hpp"
-    using namespace isto::iapws::r10;
+#include "../include/calculisto/iapws/r10.hpp"
+    using namespace calculisto::iapws::r10;
 
 TEST_CASE("r10.hpp")
 {

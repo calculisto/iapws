@@ -1,7 +1,7 @@
 #pragma once
 #include <array>
     namespace
-isto::iapws::r7
+calculisto::iapws::r7
 {
     inline namespace 
 r7_97_2012
@@ -300,9 +300,9 @@ detail
      }};
 } // namespace detail
 } // namespace r7_97_2012 }}}
-} // namespace isto::iapws::r7
+} // namespace calculisto::iapws::r7
     namespace
-isto::iapws::r6
+calculisto::iapws::r6
 {
     inline namespace 
 r6_95_2016
@@ -2542,6 +2542,6 @@ table_7
     , { 900.0 , 0.5261500e2 , 0.200000690e2 * 1e6  , 0.193510526e1 * 1e3 , 0.698445674e3 , 0.659070225e1 * 1e3 }
     , { 900.0 , 0.8707690e3 , 0.700000006e3 * 1e6  , 0.266422350e1 * 1e3 , 0.201933608e4 , 0.417223802e1 * 1e3 }
 }};
-} // isto::iapws::r6
+} // calculisto::iapws::r6
 } // r6_95_2016
 } // detail

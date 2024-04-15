@@ -1,8 +1,8 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#include "../include/isto/iapws/r10_inverse.hpp"
-    using namespace isto::iapws::r10_inverse;
+#include "../include/calculisto/iapws/r10_inverse.hpp"
+    using namespace calculisto::iapws::r10_inverse;
 
 TEST_CASE("r10_inverse.hpp")
 {

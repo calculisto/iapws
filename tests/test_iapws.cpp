@@ -1,6 +1,6 @@
 #include <doctest/doctest.h>
-#include "../include/isto/iapws/iapws.hpp"
-    using namespace isto::iapws;
+#include "../include/calculisto/iapws/iapws.hpp"
+    using namespace calculisto::iapws;
 
 TEST_CASE("iapws.hpp")
 {

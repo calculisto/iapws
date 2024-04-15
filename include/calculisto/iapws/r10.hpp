@@ -2,7 +2,7 @@
 #include <complex>
 
     namespace 
-isto::iapws::r10
+calculisto::iapws::r10
 {
     inline namespace 
 r10_06_2009
@@ -310,4 +310,4 @@ isentropic_compressibility_tp (auto const& temperature, auto const& pressure)
     return isentropic_compressibility_pt (pressure, temperature);
 }
 } // namespace r10_06_2009
-} // namespace isto::iapws::r10
+} // namespace calculisto::iapws::r10

@@ -1,10 +1,10 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#include "../include/isto/iapws/r6.hpp"
-    using namespace isto::iapws;
-    using namespace isto::iapws::r6;
-#include "../include/isto/iapws/detail/data_for_the_tests.hpp"
+#include "../include/calculisto/iapws/r6.hpp"
+    using namespace calculisto::iapws;
+    using namespace calculisto::iapws::r6;
+#include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
 
 TEST_CASE("r6.hpp")
 {
@@ -109,7 +109,7 @@ SUBCASE("phi_r_ddd")
 */
 SUBCASE("main API")
 {
-    for(const auto& e: isto::iapws::r6::detail::table_7)
+    for(const auto& e: calculisto::iapws::r6::detail::table_7)
     {
         CHECK(pressure_dt (e.D, e.T) == Approx { e.P }.epsilon (1e-8));
         CHECK(massic_isochoric_heat_capacity_dt (e.D, e.T) == Approx { e.Cv }.epsilon (1e-8));
@@ -124,7 +124,7 @@ SUBCASE("mixed arguments")
 #if 0
 SUBCASE("expansion, compressibility, etc.")
 {
-        using namespace isto::iapws::r7::detail;
+        using namespace calculisto::iapws::r7::detail;
     for (auto it = 1u; it != T.size (); ++it)
     {
             auto const

@@ -1,6 +1,6 @@
 #include "diagram.hpp"
 #include <optional>
-#include "../include/isto/iapws/r6.hpp"
+#include "../include/calculisto/iapws/r6.hpp"
     const auto
 topic_r6 = topic_t <double (double, double)>
 {

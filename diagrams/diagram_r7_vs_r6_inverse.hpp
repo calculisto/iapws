@@ -1,6 +1,6 @@
 #include "diagram.hpp"
-#include "../include/isto/iapws/r6_inverse.hpp"
-    using namespace isto::iapws;
+#include "../include/calculisto/iapws/r6_inverse.hpp"
+    using namespace calculisto::iapws;
 
     double
 ident1 (double d, double)

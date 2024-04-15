@@ -1,6 +1,6 @@
 DEPENDENCIES_HEADERS=                       \
-	 ../../external/isto/array/include        \
-	 ../../external/isto/root_finding/include \
+	 ../../external/calculisto/array/include        \
+	 ../../external/calculisto/root_finding/include \
 
 PROJECT=iapws
 LINK.o=${LINK.cc}

@@ -1,7 +1,7 @@
 #pragma once
 #include "diagram.hpp"
-#include "../include/isto/iapws/r12.hpp"
-    using namespace isto::iapws;
+#include "../include/calculisto/iapws/r12.hpp"
+    using namespace calculisto::iapws;
     const auto
 topic_r12_pt = topic_t <double (double, double)>
 {

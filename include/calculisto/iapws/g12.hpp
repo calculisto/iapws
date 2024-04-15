@@ -1,10 +1,10 @@
 #pragma once
 #include "detail/common.hpp"
-#include <isto/root_finding/root_finding.hpp>
-    using namespace isto::root_finding;
+#include <calculisto/root_finding/root_finding.hpp>
+    using namespace calculisto::root_finding;
 
     namespace 
-isto::iapws::g12
+calculisto::iapws::g12
 {
     inline namespace 
 g12_15
@@ -576,4 +576,4 @@ homogeneous_ice_nucleation_limit_temperature_p (auto const& pressure)
 }
 
 } // namespace g12_15
-} // namespace isto::iapws::g12
+} // namespace calculisto::iapws::g12

@@ -1,5 +1,5 @@
 include ../config.mk
-CXXFLAGS+=-I../../../external/isto/root_finding/include    \
+CXXFLAGS+=-I../../../external/calculisto/root_finding/include    \
 		  -O3 -g
 
 include make_vars.mk

@@ -7,11 +7,11 @@
 #include <fmt/format.h>
     using fmt::print, fmt::format;
     using namespace std::literals;
-#include "../include/isto/iapws/r7.hpp"
-#include "../include/isto/iapws/r6_inverse.hpp"
-#include "../include/isto/iapws/r14.hpp"
-#include "../include/isto/iapws/g12.hpp"
-    using namespace isto::iapws;
+#include "../include/calculisto/iapws/r7.hpp"
+#include "../include/calculisto/iapws/r6_inverse.hpp"
+#include "../include/calculisto/iapws/r14.hpp"
+#include "../include/calculisto/iapws/g12.hpp"
+    using namespace calculisto::iapws;
 
     struct
 quantity_t

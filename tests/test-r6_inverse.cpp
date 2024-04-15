@@ -1,14 +1,14 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "test.hpp"
-#include "../include/isto/iapws/r6_inverse.hpp"
-    using namespace isto::iapws::r6_inverse;
-#include "../include/isto/iapws/detail/data_for_the_tests.hpp"
-    using namespace isto::iapws::r6::r6_95_2016::detail;
+#include "../include/calculisto/iapws/r6_inverse.hpp"
+    using namespace calculisto::iapws::r6_inverse;
+#include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
+    using namespace calculisto::iapws::r6::r6_95_2016::detail;
 
 TEST_CASE("r6_inverse.hpp")
 {
-        using namespace isto::iapws;
+        using namespace calculisto::iapws;
     for(const auto& e: table_7)
     {
         INFO ("P= ", e.P, ", T= ", e.T);
