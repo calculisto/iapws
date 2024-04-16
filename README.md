@@ -80,7 +80,7 @@ a joint laboratory of the University of Orléans (https://www.univ-orleans.fr),
 the french National Center For Scientific Research (https://www.cnrs.fr) and 
 the french Geological Survey (https://www.brgm.fr).
 
-![logo ISTO](https://calcul-isto.cnrs-orleans.fr/logos/isto-156.png) &emsp;
-![logo CNRS](https://calcul-isto.cnrs-orleans.fr/logos/cnrs-128.png) &emsp;
-![logo UO](https://calcul-isto.cnrs-orleans.fr/logos/uo-180.png) &emsp;
-![logo BRGM](https://calcul-isto.cnrs-orleans.fr/logos/brgm-256.png)
+[![logo ISTO](https://calcul-isto.cnrs-orleans.fr/logos/isto-156.png)](https://www.isto-orleans.fr) &emsp;
+[![logo CNRS](https://calcul-isto.cnrs-orleans.fr/logos/cnrs-128.png)](https://www.cnrs.fr) &emsp;
+[![logo UO](https://calcul-isto.cnrs-orleans.fr/logos/uo-128.png)](https://www.univ-orleans.fr) &emsp;
+[![logo BRGM](https://calcul-isto.cnrs-orleans.fr/logos/brgm-256.png)](https://www.brgm.fr)
