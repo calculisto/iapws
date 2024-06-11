@@ -22,6 +22,7 @@ tests: tests.o $(OBJ) \
 	test-g12.o          \
 	test-r10_inverse.o  \
 	test-g12_inverse.o  \
+	test-r8.o           \
 
 SEPARATOR=+
 NAMES = $(subst test_,,$(basename $(SRC)))
@@ -37,6 +38,7 @@ test-r12.o:         test-r12.cpp         ../include/calculisto/iapws/r12.hpp    
 test-g12.o:         test-g12.cpp         ../include/calculisto/iapws/g12.hpp         ../include/calculisto/iapws/detail/common.hpp
 test-r10_inverse.o: test-r10_inverse.cpp ../include/calculisto/iapws/r10_inverse.hpp ../include/calculisto/iapws/detail/common.hpp
 test-g12_inverse.o: test-g12_inverse.cpp ../include/calculisto/iapws/g12_inverse.hpp ../include/calculisto/iapws/detail/common.hpp
+test-r8.o:          test-r8.cpp          ../include/calculisto/iapws/r8.hpp          ../include/calculisto/iapws/detail/common.hpp ../include/calculisto/iapws/r6_inverse.hpp
 
 clean: 
 	rm -f tests *.o 
