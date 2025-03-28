@@ -94,7 +94,7 @@ detail
         , 800.
         , 1000.
     };
-    // isobaric_cubic_expansion_coefficient
+    // isobaric_cubic_expansion_coefficient (alpha_v)
     // 1e-6 K-1
         constexpr auto
     table_9 = std::array <std::array <double, 30>, 44>
@@ -145,8 +145,8 @@ detail
         , { 931.84  , 931.84  , 931.92  , 932.69  , 933.54  , 935.24  , 936.95  , 938.67  , 940.38  , 949.02  , 966.57  , 984.45  , 1002.6  , 1021.1  , 1039.8  , 1058.7  , 1077.9  , 1097.2  , 1116.7 , 1136.3 , 1155.9 , 1175.7 , 1195.5 , 1215.3 , 1313.7 , 1408.3 , 1495.9 , 1573.2 , 1637.2 , 1716.4 }
      }};
 
-    // isothermal_compressibility
-    // 1e-6 kPa-1 (1e-9 Pa-1)
+    // isothermal_compressibility (kappa_T)
+    // 1e-6 kPa-1 (1e-3 Pa-1)
         constexpr auto
     table_10 = std::array <std::array <double, 30>, 44>
     {{
@@ -196,7 +196,7 @@ detail
         , { 1636093 , 1000002 , 100002  , 10002   , 5001.8  , 2501.8  , 1668.5  , 1251.8  , 1001.8  , 501.84  , 251.84  , 168.51  , 126.85  , 101.85  , 85.181  , 73.274  , 64.341  , 57.390  , 51.827  , 47.272  , 43.473  , 40.254  , 37.492  , 35.095  , 26.651  , 21.494  , 17.961  , 15.342  , 13.291  , 10.265 }
      }};
 
-    // relative_pressure_coefficient
+    // relative_pressure_coefficient (alpha_p)
     // 1e-3 K-1
         constexpr auto
     table_19 = std::array <std::array <double, 30>, 44>
@@ -247,7 +247,7 @@ detail
         , { 0.93184 , 0.93184 , 0.93190 , 0.93252 , 0.93320 , 0.93456 , 0.93592 , 0.93729 , 0.93866 , 0.94555 , 0.95950 , 0.97366 , 0.9880  , 1.0025  , 1.0172  , 1.0321  , 1.0470  , 1.0621   , 1.0773  , 1.0926  , 1.1079 , 1.1233 , 1.1388 , 1.1543 , 1.2323 , 1.3104 , 1.3881 , 1.4649 , 1.5397 , 1.6721 }
      }};
 
-    // isothermal_stress_coefficient
+    // isothermal_stress_coefficient (beta_p)
     // kg.m-3
         constexpr auto
     table_20 = std::array <std::array <double, 30>, 44>

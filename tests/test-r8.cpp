@@ -35,6 +35,7 @@ SUBCASE ("main API")
     CHECK (relative_permittivity_dt (density_pt ( 100e6       , 870.), 870.) == Approx {   4.98281 }.scale (1e0).epsilon (1e-6));
     CHECK (relative_permittivity_dt (density_pt ( 500e6       , 870.), 870.) == Approx {  15.09746 }.scale (1e1).epsilon (1e-7));
 } // SUBCASE ("main API")
+    //
 SUBCASE ("Derivatives")
 {
         struct
@@ -115,7 +116,7 @@ SUBCASE ("Derivatives")
         CHECK (d_relative_permittivity_d_p_dt (d, T) == Approx { dedp }.scale (fabs (dedp)).epsilon (1e-5));
         CHECK (d_relative_permittivity_d_t_dt (d, T) == Approx { dedt }.scale (fabs (dedt)).epsilon (1e-5));
         // The values in the reference are wrong, see below.
-        // CHECK (d_relative_permittivity_dtt_dt (density_pt (p, T), T) == Approx { dedtt }.scale (fabs (dedtt)).epsilon (1e-5));
+        // CHECK (d_relative_permittivity_d_tt_dt (density_pt (p, T), T) == Approx { dedtt }.scale (fabs (dedtt)).epsilon (1e-5));
     }
     SUBCASE ("Our derivatives w.r.t. temperature and density are good")
     {

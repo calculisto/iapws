@@ -580,9 +580,11 @@ detail
             const auto
         dGdr = dgdr (molar_density, temperature);
             const auto
+        dGdrr = dgdrr (molar_density, temperature);
+            const auto
         dAdr = dadr (molar_density, temperature, G, dGdr);
             const auto
-        dAdrr = dadrr (molar_density, temperature, dgdr, dgdrr);
+        dAdrr = dadrr (molar_density, temperature, dGdr, dGdrr);
             const auto
         dBdr = dbdr ();
             const auto
@@ -616,10 +618,9 @@ d_relative_permittivity_d_p_dt (auto const& density, auto const& temperature)
     rho = density / molar_mass_of_water;
         using namespace calculisto::iapws::r6;
     return 
-          dedr (rho, temperature) 
-        * molar_mass_of_water * rho * rho 
-        / pressure_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
+          rho
+        * isothermal_compressibility_dt (density, temperature)
+        * dedr (rho, temperature)
     ;
 }
 
@@ -632,24 +633,36 @@ d_relative_permittivity_d_t_dt (auto const& density, auto const& temperature)
     return 
           dedt (rho, temperature)
         - dedr (rho, temperature)
-        * molar_mass_of_water * rho * rho
-        * relative_pressure_coefficient_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
+        * rho
+        * isobaric_cubic_expansion_coefficient_dt (density, temperature)
     ;
-}    constexpr auto
-
+}
+    constexpr auto
 d_relative_permittivity_d_tt_dt (auto const& density, auto const& temperature)
 {
         const auto
     rho = density / molar_mass_of_water;
+        const auto
+    alpha_v = r6::isobaric_cubic_expansion_coefficient_dt (density, temperature);
         using namespace calculisto::iapws::r6;
     return 
           dedtt (rho, temperature)
-        - dedtr (rho, temperature)
+        - 2 * rho * alpha_v * dedtr (rho, temperature)
+        + rho * rho * alpha_v * alpha_v * dedrr (rho, temperature)
+        + rho * dedr (rho, temperature) * (
+              alpha_v * alpha_v
+            //- d_isobaric_cubic_expansion_coefficient_d_t_dt  (rho, temperature)
+            + rho * alpha_v 
+            // * d_isobaric_cubic_expansion_coefficient_d_t_dr  (rho, temperature)
+        )
+    ;
+
+    /*
         * molar_mass_of_water * rho * rho
         * relative_pressure_coefficient_dt (density, temperature)
         / isothermal_stress_coefficient_dt (density, temperature)
     ;
+    */
 }
     namespace
 born

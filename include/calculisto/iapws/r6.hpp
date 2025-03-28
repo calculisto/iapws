@@ -401,20 +401,140 @@ phi_0_tt (auto const& /*delta*/, auto const& tau)
     constexpr auto
 Theta (auto const& delta, auto const& tau)
 {
-    return (1. - tau) + A * pow (pow (delta - 1., 2.), 1. / (2. * beta_2));
+    // This (as written in the IAPWS document)
+    //   return (1. - tau) + A * pow (pow (delta - 1., 2.), 1. / (2. * beta_2));
+    // is not equivalent to this
+    //   return (1. - tau) + A * pow (delta - 1., 1. / beta_2);
+    // The latter brings you into complex territory.
+    // You need to do that
+        using std::abs;
+    return (1. - tau) + A * pow (abs (delta - 1.), 1. / beta_2);
+}
+    constexpr auto
+Theta_d (auto const& delta, auto const&)
+{
+        using std::abs;
+    return A / beta_2 * pow (abs (delta - 1.), 1 / beta_2) / (delta - 1);
+}
+    constexpr auto
+Theta_dd (auto const& delta, auto const&)
+{
+        using std::abs;
+    return - A / beta_2 / beta_2 * (beta_2 - 1) 
+        * pow (abs (delta - 1.), 1 / beta_2) / (delta - 1) / (delta - 1);
+}
+    constexpr auto
+Theta_ddd (auto const& delta, auto const&)
+{
+        using std::abs;
+    return A / pow (beta_2, 3) * (beta_2 - 1) * (2 * beta_2 - 1)
+        * pow (abs (delta - 1.), 1 / beta_2) / pow ((delta - 1), 3);
 }
     constexpr auto
 Delta (auto const& delta, auto const& tau)
 {
+        using std::fabs;
     return 
-          pow (Theta (delta, tau), 2.)
-        + B * pow (pow (delta - 1., 2.), a);
+          pow (Theta (delta, tau), 2)
+        + B * pow (fabs (delta - 1), 2 * a);
     ;
+}
+    constexpr auto
+Delta_d (auto const& delta, auto const& tau)
+{
+        using std::fabs;
+    return 
+          2 * Theta (delta, tau) * Theta_d (delta, tau)
+        + 2 * B * a * pow (fabs (delta - 1), 2 * a) / (delta - 1);
+    ;
+}
+    constexpr auto
+Delta_t (auto const& delta, auto const& tau)
+{
+    return - 2 * Theta (delta, tau);
+}
+    constexpr auto
+Delta_dd (auto const& delta, auto const& tau)
+{
+        using std::fabs;
+    return 
+          2 * Theta (delta, tau) * Theta_dd (delta, tau)
+        + 2 * Theta_d (delta, tau) * Theta_d (delta, tau)
+        + 2 * B * a * (2 * a - 1) * pow (fabs (delta - 1), 2 * a)
+            / (delta - 1) / (delta - 1)
+    ;
+}
+    constexpr auto
+Delta_ddd (auto const& delta, auto const& tau)
+{
+        using std::fabs;
+    return 
+          2 * Theta (delta, tau) * Theta_ddd (delta, tau)
+        + 6 * Theta_d (delta, tau) * Theta_dd (delta, tau)
+        + 2 * B * a * (2 * a - 1) * (2 * a - 2) 
+            * pow (fabs (delta - 1), 2 * a)
+            / pow (delta - 1, 3)
+    ;
+}
+    constexpr auto
+Delta_dt (auto const& delta, auto const& tau)
+{
+    return - 2 * Theta_d (delta, tau);
+}
+    constexpr auto
+Delta_ddt (auto const& delta, auto const& tau)
+{
+    return - 2 * Theta_dd (delta, tau);
 }
     constexpr auto
 Psi (auto const& delta, auto const& tau)
 {
-    return exp (-C * pow (delta - 1, 2.) - D * pow (tau - 1, 2.));
+    return exp (-C * pow (delta - 1, 2) - D * pow (tau - 1, 2));
+}
+    constexpr auto
+Psi_d (auto const& delta, auto const& tau)
+{
+    return -2 * C * (delta - 1) * Psi (delta, tau);
+}
+    constexpr auto
+Psi_t (auto const& delta, auto const& tau)
+{
+    return -2 * D * (tau - 1) * Psi (delta, tau);
+}
+    constexpr auto
+Psi_dd (auto const& delta, auto const& tau)
+{
+    return 2 * C * (
+          2 * delta * delta * C
+        - 4 * delta * C 
+        + 2 * C
+        - 1
+    ) * Psi (delta, tau);
+}
+    constexpr auto
+Psi_ddd (auto const& delta, auto const& tau)
+{
+    return - 4 * C * C * (
+          2 * delta * delta * C
+        - 4 * delta * C 
+        + 2 * C
+        - 3
+    ) * (delta - 1) * Psi (delta, tau);
+}
+    constexpr auto
+Psi_dt (auto const& delta, auto const& tau)
+{
+    return 4 * C * D * (tau - 1) * (delta - 1) * Psi (delta, tau);
+}
+    constexpr auto
+Psi_ddt (auto const& delta, auto const& tau)
+{
+    return - 4 * C * D * (tau - 1) * (
+          2 * delta * delta * C
+        - 4 * delta * C 
+        + 2 * C
+        - 1
+    ) * Psi (delta, tau);
 }
     constexpr auto
 phi_r (auto const& delta, auto const& tau)
@@ -427,55 +547,6 @@ phi_r (auto const& delta, auto const& tau)
                 - beta_1 * pow (tau - gamma, 2.0)
           ))
         + sum (n_4 * pow (Delta (delta, tau), b) * delta * Psi (delta, tau))
-    ;
-}
-
-    constexpr auto
-Delta_d (auto const& delta, auto const& tau)
-{
-    return (delta - 1.) * (
-          A * Theta (delta, tau) * 2 / beta_2 
-        * pow (pow (delta - 1, 2.), (0.5 / beta_2 - 1)) 
-        + 2 * B * a * pow (pow (delta - 1, 2.), (a - 1))
-    );
-
-}
-    constexpr auto
-Delta_dd (auto /*const&*/ delta, auto const& tau)
-{
-    // TODO: there's probably a way to rewrite this math
-    // without a singularity.
-
-    // Here we get rid of the singularity shown below.
-    // Ideally we should use std::nextafter but it will not generalize easily
-    // (e.g. what if auto has an uncertainty?).
-    if (delta == 1) delta += std::numeric_limits <double>::epsilon ();
-    // Here be the singularity (when delta = 1)!
-    //        |
-    //        v
-    return
-          1 / (delta - 1) * Delta_d (delta, tau) 
-    //    ~~~~~~~~~~~~~~~
-        + pow (delta - 1, 2) * ( 4 * B * a * (a - 1) 
-            * pow (pow (delta - 1, 2), a - 2) 
-        + 2 * pow (A, 2) * pow (beta_2, -2) 
-            * pow ( pow (pow (delta - 1, 2), 0.5 / beta_2 - 1) , 2) 
-        + A * Theta (delta, tau) * 4 / beta_2 * (0.5 / beta_2 - 1) 
-            * pow (pow (delta - 1, 2), 0.5 / beta_2 - 2)
-    );
-}
-/* This wil NaN for delta < 1 (i.e. density below the critical density). */
-    constexpr auto
-Delta_ddd (auto const& delta, auto const& tau)
-{
-    return 
-          2 * Theta (delta, tau) * A / beta_2 * (1 / beta_2 - 1) 
-            * (1 / beta_2 - 2) * pow (delta - 1, 1 / beta_2 - 3)
-    //                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        + 6 * pow (A, 2) / pow (beta_2, 2) * (1 / beta_2 - 1) * pow (delta - 1, 2 / beta_2 - 3)
-    //                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        + 2 * B * a * (2 * a - 1) * (2 * a - 2) * pow (delta - 1, 2 * a - 3)
-    //                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~
     ;
 }
     constexpr auto
@@ -500,22 +571,6 @@ Delta_b_ddd (auto const& delta, auto const& tau)
         + 3 * (b - 1) * Delta (delta, tau) * Delta_d (delta, tau) * Delta_dd (delta, tau)
         + (b - 1) * (b - 2) * pow (Delta_d (delta, tau), 3)
     );
-}
-    constexpr auto
-Psi_d (auto const& delta, auto const& tau)
-{
-    return -2 * C * (delta - 1) * Psi (delta, tau);
-}
-    constexpr auto
-Psi_dd (auto const& delta, auto const& tau)
-{
-    return 2 * C * Psi (delta, tau) * (2 * C * pow (delta - 1, 2) - 1);
-}
-    constexpr auto
-Psi_ddd (auto const& delta, auto const& tau)
-{
-    return 4 * (delta - 1) * (3 - 2 * pow (delta - 1, 2) * C) * 
-        C * C * Psi (delta, tau);
 }
     constexpr auto
 phi_r_d (auto const& delta, auto const& tau)
@@ -634,7 +689,6 @@ s4_dd (auto const& delta, auto const& tau)
     ;
 }
 */
-/* This wil NaN for delta < 1 (i.e. density below the critical density). */
     constexpr auto
 phi_r_ddd (auto const& delta, auto const& tau)
 {
@@ -740,6 +794,117 @@ s4_ddd (auto const& delta, auto const& tau)
 }
 */
     constexpr auto
+f (auto const& delta, auto const& tau)
+{
+    return - alpha * pow (delta - epsilon, 2) - beta_1 * pow (tau - gamma, 2);
+}
+    constexpr auto
+f_d (auto const& delta, auto const&)
+{
+    return - 2 * alpha * (delta - epsilon);
+}
+    constexpr auto
+f_dd (auto const&, auto const&)
+{
+    return - 2 * alpha;
+}
+    constexpr auto
+f_t (auto const&, auto const& tau)
+{
+    return - 2 * beta_1 * (tau - gamma);
+}
+    constexpr auto
+phi_r_ddt (auto const& delta, auto const& tau)
+{
+        const auto
+    fd = f_d (delta, tau);
+        const auto
+    fdd = f_dd (delta, tau);
+        const auto
+    ft = f_t (delta, tau);
+        const auto
+    D = Delta (delta, tau);
+        const auto
+    Dd = Delta_d (delta, tau);
+        const auto
+    Ddd = Delta_dd (delta, tau);
+        const auto
+    Dddt = Delta_ddt (delta, tau);
+        const auto
+    Dt = Delta_t (delta, tau);
+        const auto
+    Ddt = Delta_dt (delta, tau);
+        const auto
+    P = Psi (delta, tau);
+        const auto
+    Pd = Psi_d (delta, tau);
+        const auto
+    Pdd = Psi_dd (delta, tau);
+        const auto
+    Pddt = Psi_ddt (delta, tau);
+        const auto
+    Pt = Psi_t (delta, tau);
+        const auto
+    Pdt = Psi_dt (delta, tau);
+    return
+          sum (
+              n_1 * d_1 * (d_1 - 1) * t_1
+            * pow (delta, d_1 - 2) * pow (tau, t_1 - 1)
+          )
+        + sum (
+              n_2 * t_2 * exp (-pow (delta, c_2)) 
+            * pow (tau, t_2 - 1) * pow (delta, d_2 - 2) 
+            * (
+                  d_2 * d_2
+                - d_2
+                + pow (delta, c_2) * c_2 * (1 - c_2 - 2 * d_2)
+                + pow (delta, 2 * c_2) * c_2 * c_2
+              )
+          )
+        + sum (
+              n_3 * pow (delta, d_3 - 2) * pow (tau, t_3 - 1)
+            * exp (f (delta, tau))
+            * (
+                  ft * d_3 * d_3 * tau
+                + 2 * delta * fd * ft * d_3 * tau
+                - ft * d_3 * tau
+                + delta * delta * fdd * ft * tau
+                + delta * delta * fd * fd * ft * tau
+                + d_3 * d_3 * t_3
+                + 2 * delta * fd * d_3 * t_3
+                - d_3 * t_3
+                + delta * delta * fdd * t_3
+                + delta * delta * fd * fd * t_3
+              )
+          )
+        + sum (n_4 * pow (D, b - 3) * (
+              Dd * Dd * Dt * P * delta * b * b * b
+            + D * Dd * Dd * Pt * delta * b * b
+            + 2 * D * Dd * Dt * Pd * delta * b * b
+            + D * Ddd * Dt * P * delta * b * b
+            - 3 * Dd * Dd * Dt * P * delta * b * b
+            + 2 * D * Dd * Ddt * P * delta * b * b
+            + 2 * D * Dd * Dt * P * b * b
+            + D * D * Ddd * Pt * delta * b
+            - D * Dd * Dd * Pt * delta * b
+            + D * D * Dt * Pdd * delta * b
+            + 2 * D * D * Dd * Pdt * delta * b
+            - 2 * D * Dd * Dt * Pd * delta * b
+            + 2 * D * D * Ddt * Pd * delta * b
+            - D * Ddd * Dt * P * delta * b
+            + 2 * Dd * Dd * Dt * P * delta * b
+            + D * D * Dddt * P * delta * b
+            - 2 * D * Dd * Ddt * P * delta * b
+            + 2 * D * D * Dd * Pt * b
+            + 2 * D * D * Dt * Pd * b
+            - 2 * D * Dd * Dt * P * b
+            + 2 * D * D * Ddt * P * b
+            + D * D * D * Pddt * delta
+            + 2 * D * D * D * Pdt
+          ))
+        ;
+}
+    constexpr auto
 Delta_b_t (auto const& delta, auto const& tau)
 {
     return -2. * Theta (delta, tau) * b * pow (Delta (delta, tau), b - 1.);
@@ -752,11 +917,6 @@ Delta_b_tt (auto const& delta, auto const& tau)
         + 4. * pow (Theta (delta, tau), 2.) * b * (b - 1.) 
             * pow (Delta (delta, tau), b - 2.)
     ;
-}
-    constexpr auto
-Psi_t (auto const& delta, auto const& tau)
-{
-    return -2 * D * (tau - 1) * Psi (delta, tau);
 }
     constexpr auto
 Psi_tt (auto const& delta, auto const& tau)
@@ -815,12 +975,6 @@ Delta_b_dt (auto const& delta, auto const& tau)
             * Delta_d (delta, tau)
     ;
 }
-    constexpr auto
-Psi_dt (auto const& delta, auto const& tau)
-{
-    return 4 * C * D * (delta - 1) * (tau - 1) * Psi (delta, tau);
-}
-
     constexpr auto
 phi_r_dt (auto const& delta, auto const& tau)
 {
@@ -890,11 +1044,19 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_isobaric_heat_capacity,  (-tau * tau * (
 //ISTO_IAPWS_R6_GENERATE_FUNCTIONS(joule_thompson_coefficient, (- (delta * phi_r_d (delta, tau) + delta * delta * phi_r_dd (delta, tau) + delta * tau * phi_r_dt (delta, tau)) / (pow (1. + delta * phi_r_d (delta, tau) - delta * tau * phi_r_dt (delta, tau), 2.) - tau * tau * (phi_0_tt (delta, tau) + phi_r_tt (delta, tau)) * (1. + 2. * delta * phi_r_d (delta, tau) + delta * delta * phi_r_dd (delta, tau)))) / density / massic_gas_constant)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(massic_gibbs_free_energy, (1. + detail::phi_0 (delta, tau) + detail::phi_r (delta, tau) + delta * detail::phi_r_d (delta, tau)) * massic_gas_constant * temperature)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(speed_of_sound, (pow ((1 + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau) - pow (1. + delta * detail::phi_r_d (delta, tau) - delta * tau * detail::phi_r_dt (delta, tau), 2) / (tau * tau * (detail::phi_0_tt (delta, tau) + detail::phi_r_tt (delta, tau)))) * massic_gas_constant * temperature, 0.5)))
-// AN3, no tests for these
+// AN3, tested against R7
+// beta_p
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_stress_coefficient, (1. + ((delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau)) / (1. + delta * detail::phi_r_d (delta, tau)))) * density)
+// alpha_p
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * tau * detail::phi_r_dt (delta, tau)) / (1. + delta * detail::phi_r_d (delta, tau)))) / temperature)
+// alpha_v
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isobaric_cubic_expansion_coefficient, ((1. + delta * detail::phi_r_d (delta, tau) - delta * tau * detail::phi_r_dt (delta, tau)) / (1. + 2 * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / temperature)
-//ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
+// kappa_t 
+ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
+
+// Derivatives of the isobaric cubic expansion coefficient
+ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_isobaric_cubic_expansion_coefficient_d_t, )
+
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
@@ -1027,7 +1189,7 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(speed_of_sound, (pow ((1 + 2. * delta * detail:
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_stress_coefficient, (1. + ((delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau)) / (1. + delta * detail::phi_r_d (delta, tau)))) * density)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(relative_pressure_coefficient, (1. - ((delta * tau * detail::phi_r_dt (delta, tau)) / (1. + delta * detail::phi_r_d (delta, tau)))) / temperature)
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isobaric_cubic_expansion_coefficient, ((1. + delta * detail::phi_r_d (delta, tau) - delta * tau * detail::phi_r_dt (delta, tau)) / (1. + 2 * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / temperature)
-//ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
+ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau))) / density / massic_gas_constant / temperature)
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
