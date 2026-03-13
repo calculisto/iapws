@@ -42,12 +42,132 @@ SUBCASE("Third-order derivatives")
     // The analytical expressions were established by us. We test them against
     // finite difference.
         auto
+    fd_t = [](auto f, double delta, double tau, double d = 1e-6)
+    {
+        return (
+            - 0.5 * f (delta, tau - d)
+            + 0.5 * f (delta, tau + d)
+        ) / d;
+    };
+        auto
+    fd_d = [](auto f, double delta, double tau, double d = 1e-6)
+    {
+        return (
+            - 0.5 * f (delta - d, tau)
+            + 0.5 * f (delta + d, tau)
+        ) / d;
+    };
+        auto
+    fd_tt = [](auto f, double delta, double tau, double d = 1e-4)
+    {
+        return (
+                  f (delta, tau - d)
+            - 2 * f (delta, tau)
+            +     f (delta, tau + d)
+        ) / d / d;
+    };
+        auto
+    fd_dd = [](auto f, double delta, double tau, double d = 1e-4)
+    {
+        return (
+                  f (delta - d, tau)
+            - 2 * f (delta, tau)
+            +     f (delta + d, tau)
+        ) / d / d;
+    };
+        auto
+    fd_dt = [](auto f, double delta, double tau, double d = 1e-4)
+    {
+        return (
+              f (delta - d, tau - d)
+            - f (delta - d, tau + d)
+            - f (delta + d, tau - d)
+            + f (delta + d, tau + d)
+        ) / 4 / d / d;
+    };
+        auto
+    fd_ddd = [](auto f, double delta, double tau, double d = 1e-3)
+    {
+        return (
+            - 0.5 * f (delta - d - d, tau)
+            +       f (delta - d, tau)
+            -       f (delta + d, tau)
+            + 0.5 * f (delta + d + d, tau)
+        ) / d / d / d;
+    };
+        auto
+    fd_ttt = [](auto f, double delta, double tau, double d = 1e-3)
+    {
+        return (
+            - 0.5 * f (delta, tau - d - d)
+            +       f (delta, tau - d)
+            -       f (delta, tau + d)
+            + 0.5 * f (delta, tau + d + d)
+        ) / d / d / d;
+    };
+        auto
+    fd_ddt = [](auto f, double delta, double tau, double d = 1e-3)
+    {
+        return (
+            - 0.5 * f (delta - d, tau - d)
+            +       f (delta, tau - d)
+            - 0.5 * f (delta + d, tau - d)
+            + 0.5 * f (delta - d, tau + d)
+            -       f (delta, tau + d)
+            + 0.5 * f (delta + d, tau + d)
+        ) / d / d / d;
+    };
+        auto
+    fd_dtt = [](auto f, double delta, double tau, double d = 1e-3)
+    {
+        return (
+            - 0.5 * f (delta - d, tau - d)
+            +       f (delta - d, tau)
+            - 0.5 * f (delta - d, tau + d)
+            + 0.5 * f (delta + d, tau - d)
+            -       f (delta + d, tau)
+            + 0.5 * f (delta + d, tau + d)
+        ) / d / d / d;
+    };
+
+        const auto
+    d_and_t = std::vector
+    {
+            std::pair
+          { 838.025 / 322., 647.096 / 500. }
+        , { 358.000 / 322., 647.096 / 647. }
+    };
+
+    for (auto [d, t]: d_and_t)
+    {
+        INFO("d= ", d, ", t= ", t);
+        CHECK(detail::phi_r_d (d, t)   == Approx { fd_d   (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_d (d, t)  )).epsilon (1e-5));
+        CHECK(detail::phi_r_t (d, t)   == Approx { fd_t   (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_t (d, t)  )).epsilon (1e-5));
+        CHECK(detail::phi_r_dd (d, t)  == Approx { fd_dd  (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dd (d, t) )).epsilon (1e-5));
+        CHECK(detail::phi_r_tt (d, t)  == Approx { fd_tt  (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_tt (d, t) )).epsilon (1e-5));
+        CHECK(detail::phi_r_ddd (d, t) == Approx { fd_ddd (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_ddd (d, t))).epsilon (1e-5));
+
+        CHECK(detail::phi_r_dt (d, t) == Approx { fd_dt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
+        CHECK(detail::phi_r_ddt (d, t) == Approx { fd_ddt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
+        CHECK(detail::phi_r_dtt (d, t) == Approx { fd_dtt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
+    }
+
+/*
+    CHECK(detail::phi_r_ddd (838.025 / 322., 647.096 / 500.) == Approx { fd_ddd (&detail::phi_r <double, double>, 838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
+    CHECK(detail::phi_r_ddd (358.000 / 322., 647.096 / 647.) == Approx { fd_ddd (&detail::phi_r <double, double>, 358.000 / 322., 647.096 / 647.) }.epsilon (1e-6));
+    CHECK(detail::phi_r_ddt (838.025 / 322., 647.096 / 500.) == Approx { fd_ddt (&detail::phi_r <double, double>, 838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
+    CHECK(detail::phi_r_ddt (358.000 / 322., 647.096 / 647.) == Approx { fd_ddt (&detail::phi_r <double, double>, 358.000 / 322., 647.096 / 647.) }.epsilon (1e-5));
+    CHECK(detail::phi_r_dtt (838.025 / 322., 647.096 / 500.) == Approx { fd_dtt (&detail::phi_r <double, double>, 838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
+    CHECK(detail::phi_r_dtt (358.000 / 322., 647.096 / 647.) == Approx { fd_dtt (&detail::phi_r <double, double>, 358.000 / 322., 647.096 / 647.) }.epsilon (1e-5));
+    */
+    /*
+        auto
     d = 1e-6;
         auto
     p_ddd = [d](auto delta, auto tau)
     {
         return (
-              detail::phi_r_dd (delta + d, tau) 
+              detail::phi_r_dd (delta + d, tau)
             - detail::phi_r_dd (delta - d, tau)
         ) / 2 / d;
     };
@@ -55,14 +175,57 @@ SUBCASE("Third-order derivatives")
     p_ddt = [d](auto delta, auto tau)
     {
         return (
-              detail::phi_r_dd (delta, tau + d) 
+              detail::phi_r_dd (delta, tau + d)
             - detail::phi_r_dd (delta, tau - d)
+        ) / 2 / d;
+    };
+        auto
+    p_dtt = [d](auto delta, auto tau)
+    {
+        return (
+              detail::phi_r_dt (delta, tau + d)
+            - detail::phi_r_dt (delta, tau - d)
         ) / 2 / d;
     };
     CHECK(detail::phi_r_ddd (838.025 / 322., 647.096 / 500.) == Approx { p_ddd (838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
     CHECK(detail::phi_r_ddd (358.000 / 322., 647.096 / 647.) == Approx { p_ddd (358.000 / 322., 647.096 / 647.) }.epsilon (1e-6));
     CHECK(detail::phi_r_ddt (838.025 / 322., 647.096 / 500.) == Approx { p_ddt (838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
     CHECK(detail::phi_r_ddt (358.000 / 322., 647.096 / 647.) == Approx { p_ddt (358.000 / 322., 647.096 / 647.) }.epsilon (1e-5));
+    CHECK(detail::phi_r_dtt (838.025 / 322., 647.096 / 500.) == Approx { p_dtt (838.025 / 322., 647.096 / 500.) }.epsilon (1e-6));
+    CHECK(detail::phi_r_dtt (358.000 / 322., 647.096 / 647.) == Approx { p_dtt (358.000 / 322., 647.096 / 647.) }.epsilon (1e-5));
+    */
+}
+SUBCASE("Derivatives of the isobaric_cubic_expansion_coefficient")
+{
+        using namespace detail;
+        /*
+        auto
+    d_alpha_v_d_tau = [](auto delta, auto tau)
+    { return
+        -delta * tau * phi_r_dtt (delta, tau) * tau / critical_temperature
+            / (1 + 2 * delta * phi_r_d (delta, tau) + delta * delta * phi_r_dd (delta, tau))
+        + isobaric_cubic_expansion_coefficient_dt (delta * critical_density, critical_temperature / tau)
+        * (1 / tau - (2 * delta * phi_r_dt (delta, tau) + delta * delta *
+                    * phi_r_ddt (delta, tau)) / (1 + 2 * delta * phi_r_d
+           * (delta, tau) + delta * delta * phi_r_dd (delta, tau)));
+    };
+    */
+        const auto
+    d = 1e-6;
+        auto
+    d_a_v_d_t = [d](auto density, auto temperature)
+    {
+        return (
+              isobaric_cubic_expansion_coefficient_dt (density, temperature + d)
+            - isobaric_cubic_expansion_coefficient_dt (density, temperature - d)
+        ) / 2 / d;
+    };
+        /*
+    CHECK(detail::d_alpha_v_d_tau (838.025 / 322., 647.096 / 500.) == Approx { d_a_v_d_t (838.025, 500.) }.epsilon (1e-6));
+    CHECK(detail::d_alpha_v_d_tau (358.000 / 322., 647.096 / 647.) == Approx { d_a_v_d_t (358.000, 647.) }.epsilon (1e-6));
+    CHECK(detail::d_alpha_v_d_tau (838.025 / 322., 647.096 / 500.) == Approx { d_a_v_d_t (838.025, 500.) }.epsilon (1e-6));
+    CHECK(detail::d_alpha_v_d_tau (358.000 / 322., 647.096 / 647.) == Approx { d_a_v_d_t (358.000, 647.) }.epsilon (1e-5));
+    */
 }
 /*
 SUBCASE("WIP")
@@ -80,7 +243,7 @@ SUBCASE("WIP")
         + sum (
               n_2 * exp (-pow (delta, c_2)) * (
               pow (delta, d_2 - 2) * pow (tau, t_2) * (
-                  (d_2 - c_2 * pow (delta, c_2)) 
+                  (d_2 - c_2 * pow (delta, c_2))
                 * (d_2 - 1 - c_2 * pow (delta, c_2))
                 - pow (c_2, 2) * pow (delta, c_2)
               ))
@@ -92,15 +255,15 @@ SUBCASE("WIP")
     {
         return
         + sum (
-              n_3 * pow (tau, t_3) 
+              n_3 * pow (tau, t_3)
             * exp(
-                  -alpha * pow (delta - epsilon, 2) 
+                  -alpha * pow (delta - epsilon, 2)
                 - beta_1 * pow (tau - detail::gamma, 2)
               ) * (
-                  -2 * alpha * pow (delta, d_3) 
-                + 4 * pow (alpha, 2) * pow (delta, d_3) 
-                    * pow (delta - epsilon, 2) 
-                - 4 * d_3 * alpha * pow (delta, d_3 - 1) * (delta - epsilon) 
+                  -2 * alpha * pow (delta, d_3)
+                + 4 * pow (alpha, 2) * pow (delta, d_3)
+                    * pow (delta - epsilon, 2)
+                - 4 * d_3 * alpha * pow (delta, d_3 - 1) * (delta - epsilon)
                 + d_3 * (d_3 - 1) * pow (delta, d_3 - 2)
               )
           )
@@ -112,13 +275,13 @@ SUBCASE("WIP")
         return
         + sum (
               n_4 * (pow (Delta(delta, tau), b) * (
-                  2 * Psi_d (delta, tau) 
+                  2 * Psi_d (delta, tau)
                 + delta * Psi_dd (delta, tau)
-              ) 
+              )
             + 2 * Delta_b_d (delta, tau) * (
-                  Psi (delta, tau) 
+                  Psi (delta, tau)
                 + delta * Psi_d (delta, tau)
-              ) 
+              )
             + Delta_b_dd (delta, tau) * delta * Psi (delta, tau))
           )
         ;
@@ -138,8 +301,8 @@ SUBCASE("WIP")
     {
         return
         + sum (
-              n_2 * t_2 * exp (-pow (delta, c_2)) 
-            * pow (tau, t_2 - 1) * pow (delta, d_2 - 2) 
+              n_2 * t_2 * exp (-pow (delta, c_2))
+            * pow (tau, t_2 - 1) * pow (delta, d_2 - 2)
             * (
                   d_2 * d_2
                 - d_2
