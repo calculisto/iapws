@@ -1,0 +1,6 @@
+[submodule "git_submodules/calculisto/array"]
+	path = git_submodules/calculisto/array
+	url = https://github.com/calculisto/array
+[submodule "git_submodules/calculisto/root_finding"]
+	path = git_submodules/calculisto/root_finding
+	url = https://github.com/calculisto/root_finding

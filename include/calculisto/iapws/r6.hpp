@@ -407,28 +407,28 @@ Theta (auto const& delta, auto const& tau)
     //   return (1. - tau) + A * pow (delta - 1., 1. / beta_2);
     // The latter brings you into complex territory.
     // You need to do that
-        using std::abs;
-    return (1. - tau) + A * pow (abs (delta - 1.), 1. / beta_2);
+        using std::fabs;
+    return (1. - tau) + A * pow (fabs (delta - 1.), 1. / beta_2);
 }
     constexpr auto
 Theta_d (auto const& delta, auto const&)
 {
-        using std::abs;
-    return A / beta_2 * pow (abs (delta - 1.), 1 / beta_2) / (delta - 1);
+        using std::fabs;
+    return A / beta_2 * pow (fabs (delta - 1.), 1 / beta_2) / (delta - 1);
 }
     constexpr auto
 Theta_dd (auto const& delta, auto const&)
 {
-        using std::abs;
+        using std::fabs;
     return - A / beta_2 / beta_2 * (beta_2 - 1)
-        * pow (abs (delta - 1.), 1 / beta_2) / (delta - 1) / (delta - 1);
+        * pow (fabs (delta - 1.), 1 / beta_2) / (delta - 1) / (delta - 1);
 }
     constexpr auto
 Theta_ddd (auto const& delta, auto const&)
 {
-        using std::abs;
+        using std::fabs;
     return A / pow (beta_2, 3) * (beta_2 - 1) * (2 * beta_2 - 1)
-        * pow (abs (delta - 1.), 1 / beta_2) / pow ((delta - 1), 3);
+        * pow (fabs (delta - 1.), 1 / beta_2) / pow ((delta - 1), 3);
 }
     constexpr auto
 Delta (auto const& delta, auto const& tau)

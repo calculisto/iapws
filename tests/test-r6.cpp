@@ -95,6 +95,7 @@ SUBCASE("Third-order derivatives")
             + 0.5 * f (delta + d + d, tau)
         ) / d / d / d;
     };
+    /*
         auto
     fd_ttt = [](auto f, double delta, double tau, double d = 1e-3)
     {
@@ -105,6 +106,7 @@ SUBCASE("Third-order derivatives")
             + 0.5 * f (delta, tau + d + d)
         ) / d / d / d;
     };
+    */
         auto
     fd_ddt = [](auto f, double delta, double tau, double d = 1e-3)
     {
@@ -209,7 +211,6 @@ SUBCASE("Derivatives of the isobaric_cubic_expansion_coefficient")
                     * phi_r_ddt (delta, tau)) / (1 + 2 * delta * phi_r_d
            * (delta, tau) + delta * delta * phi_r_dd (delta, tau)));
     };
-    */
         const auto
     d = 1e-6;
         auto
@@ -220,6 +221,7 @@ SUBCASE("Derivatives of the isobaric_cubic_expansion_coefficient")
             - isobaric_cubic_expansion_coefficient_dt (density, temperature - d)
         ) / 2 / d;
     };
+    */
         /*
     CHECK(detail::d_alpha_v_d_tau (838.025 / 322., 647.096 / 500.) == Approx { d_a_v_d_t (838.025, 500.) }.epsilon (1e-6));
     CHECK(detail::d_alpha_v_d_tau (358.000 / 322., 647.096 / 647.) == Approx { d_a_v_d_t (358.000, 647.) }.epsilon (1e-6));
