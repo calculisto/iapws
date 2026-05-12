@@ -302,5 +302,20 @@ ISTO_IAPWS_R6_INVERSE_GEN(relative_pressure_coefficient)
 //ISTO_IAPWS_R6_INVERSE_GEN(isothermal_compressibility)
 #undef ISTO_IAPWS_R6_INVERSE_GEN
 #endif
+
+// Saturation line
+    auto
+saturation_pressure_t (auto const& temperature)
+{
+    // FIXME:
+    throw not_yet_implemented_e {};
+}
+
+    constexpr auto
+saturation_temperature_p (auto const& pressure)
+{
+    // FIXME:
+    throw not_yet_implemented_e {};
+}
 } // inline namespace r6_95_2016
 } // namespace calculisto::iapws::r6_inverse
