@@ -1,5 +1,6 @@
 #pragma once
 #include "detail/common.hpp"
+#include "detail/disambiguate.hpp"
 
     namespace
 calculisto::iapws::r6
@@ -723,7 +724,7 @@ phi_r_ddt (auto const& delta, auto const& tau)
         const auto
     ft = f_t (delta, tau);
         const auto
-    D = Delta (delta, tau);
+    D_ = Delta (delta, tau);
         const auto
     Dd = Delta_d (delta, tau);
         const auto
@@ -777,30 +778,30 @@ phi_r_ddt (auto const& delta, auto const& tau)
                 + delta * delta * fd * fd * t_3
               )
           )
-        + sum (n_4 * pow (D, b - 3) * (
+        + sum (n_4 * pow (D_, b - 3) * (
               Dd * Dd * Dt * P * delta * b * b * b
-            + D * Dd * Dd * Pt * delta * b * b
-            + 2 * D * Dd * Dt * Pd * delta * b * b
-            + D * Ddd * Dt * P * delta * b * b
+            + D_ * Dd * Dd * Pt * delta * b * b
+            + 2 * D_ * Dd * Dt * Pd * delta * b * b
+            + D_ * Ddd * Dt * P * delta * b * b
             - 3 * Dd * Dd * Dt * P * delta * b * b
-            + 2 * D * Dd * Ddt * P * delta * b * b
-            + 2 * D * Dd * Dt * P * b * b
-            + D * D * Ddd * Pt * delta * b
-            - D * Dd * Dd * Pt * delta * b
-            + D * D * Dt * Pdd * delta * b
-            + 2 * D * D * Dd * Pdt * delta * b
-            - 2 * D * Dd * Dt * Pd * delta * b
-            + 2 * D * D * Ddt * Pd * delta * b
-            - D * Ddd * Dt * P * delta * b
+            + 2 * D_ * Dd * Ddt * P * delta * b * b
+            + 2 * D_ * Dd * Dt * P * b * b
+            + D_ * D_ * Ddd * Pt * delta * b
+            - D_ * Dd * Dd * Pt * delta * b
+            + D_ * D_ * Dt * Pdd * delta * b
+            + 2 * D_ * D_ * Dd * Pdt * delta * b
+            - 2 * D_ * Dd * Dt * Pd * delta * b
+            + 2 * D_ * D_ * Ddt * Pd * delta * b
+            - D_ * Ddd * Dt * P * delta * b
             + 2 * Dd * Dd * Dt * P * delta * b
-            + D * D * Dddt * P * delta * b
-            - 2 * D * Dd * Ddt * P * delta * b
-            + 2 * D * D * Dd * Pt * b
-            + 2 * D * D * Dt * Pd * b
-            - 2 * D * Dd * Dt * P * b
-            + 2 * D * D * Ddt * P * b
-            + D * D * D * Pddt * delta
-            + 2 * D * D * D * Pdt
+            + D_ * D_ * Dddt * P * delta * b
+            - 2 * D_ * Dd * Ddt * P * delta * b
+            + 2 * D_ * D_ * Dd * Pt * b
+            + 2 * D_ * D_ * Dt * Pd * b
+            - 2 * D_ * Dd * Dt * P * b
+            + 2 * D_ * D_ * Ddt * P * b
+            + D_ * D_ * D_ * Pddt * delta
+            + 2 * D_ * D_ * D_ * Pdt
           ))
         ;
 }
@@ -814,7 +815,7 @@ phi_r_dtt (auto const& delta, auto const& tau)
         const auto
     ftt = f_tt (delta, tau);
         const auto
-    D = Delta (delta, tau);
+    D_ = Delta (delta, tau);
         const auto
     Dd = Delta_d (delta, tau);
         const auto
@@ -862,32 +863,32 @@ phi_r_dtt (auto const& delta, auto const& tau)
                 - delta * fd * t_3
               )
           )
-        + sum (n_4 * pow (D, b - 3) * (
+        + sum (n_4 * pow (D_, b - 3) * (
               Dd * Dt * Dt * P * delta * b * b * b
-            + 2 * D * Dd * Dt * Pt  * delta * b * b
-            + D * Dt * Dt * Pd * delta * b * b
-            + D * Dd * Dtt * P * delta * b * b
+            + 2 * D_ * Dd * Dt * Pt  * delta * b * b
+            + D_ * Dt * Dt * Pd * delta * b * b
+            + D_ * Dd * Dtt * P * delta * b * b
 
             - 3 * Dd * Dt * Dt * P * delta * b * b
-            + 2 * D * Ddt * Dt * P * delta * b * b
-            + D * Dt * Dt * P * b * b
-            + D * D * Dd * Ptt * delta * b
+            + 2 * D_ * Ddt * Dt * P * delta * b * b
+            + D_ * Dt * Dt * P * b * b
+            + D_ * D_ * Dd * Ptt * delta * b
 
-            - 2 * D * Dd * Dt * Pt * delta * b
-            + 2 * D * D * Ddt * Pt * delta * b
-            + 2 * D * D * Dt * Pdt * delta * b
-            + D * D * Dtt * Pd * delta * b
+            - 2 * D_ * Dd * Dt * Pt * delta * b
+            + 2 * D_ * D_ * Ddt * Pt * delta * b
+            + 2 * D_ * D_ * Dt * Pdt * delta * b
+            + D_ * D_ * Dtt * Pd * delta * b
 
-            - D * Dt * Dt * Pd * delta * b
-            - D * Dd * Dtt * P * delta * b
+            - D_ * Dt * Dt * Pd * delta * b
+            - D_ * Dd * Dtt * P * delta * b
             + 2 * Dd * Dt * Dt * P * delta * b
-            - 2 * D * Ddt * Dt * P * delta * b
+            - 2 * D_ * Ddt * Dt * P * delta * b
 
-            + 2 * D * D * Dt * Pt * b
-            + D * D * Dtt * P * b
-            - D * Dt * Dt * P * b
-            + D * D * D * Pdtt * delta
-            + D * D * D * Ptt
+            + 2 * D_ * D_ * Dt * Pt * b
+            + D_ * D_ * Dtt * P * b
+            - D_ * Dt * Dt * P * b
+            + D_ * D_ * D_ * Pdtt * delta
+            + D_ * D_ * D_ * Ptt
           ))
         ;
 }

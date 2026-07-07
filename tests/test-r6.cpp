@@ -11,30 +11,31 @@ TEST_CASE("r6.hpp")
 {
 SUBCASE("base functions")
 {
-    CHECK(detail::phi_0    (838.025 / 322., 647.096 / 500.) == Approx {  0.204797734e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r    (838.025 / 322., 647.096 / 500.) == Approx { -0.342693206e1 }.epsilon (1e-8));
-    CHECK(detail::phi_0_d  (838.025 / 322., 647.096 / 500.) == Approx {  0.384236747   }.epsilon (1e-8));
-    CHECK(detail::phi_r_d  (838.025 / 322., 647.096 / 500.) == Approx { -0.364366650   }.epsilon (1e-8));
-    CHECK(detail::phi_0_dd (838.025 / 322., 647.096 / 500.) == Approx { -0.147637878   }.epsilon (1e-8));
-    CHECK(detail::phi_r_dd (838.025 / 322., 647.096 / 500.) == Approx {  0.856063701   }.epsilon (1e-8));
-    CHECK(detail::phi_0_t  (838.025 / 322., 647.096 / 500.) == Approx {  0.904611106e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r_t  (838.025 / 322., 647.096 / 500.) == Approx { -0.581403435e1 }.epsilon (1e-8));
-    CHECK(detail::phi_0_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.193249185e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.223440737e1 }.epsilon (1e-8));
-    //CHECK(detail::phi_0_dt (838.025 / 322., 647.096 / 500.) == Approx {  0.            }.epsilon (1e-8));
-    CHECK(detail::phi_r_dt (838.025 / 322., 647.096 / 500.) == Approx { -0.112176915e1 }.epsilon (1e-8));
-    CHECK(detail::phi_0    (358.000 / 322., 647.096 / 647.) == Approx { -0.156319605e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r    (358.000 / 322., 647.096 / 647.) == Approx { -0.121202657e1 }.epsilon (1e-8));
-    CHECK(detail::phi_0_d  (358.000 / 322., 647.096 / 647.) == Approx {  0.899441341   }.epsilon (1e-8));
-    CHECK(detail::phi_r_d  (358.000 / 322., 647.096 / 647.) == Approx { -0.714012024   }.epsilon (1e-8));
-    CHECK(detail::phi_0_dd (358.000 / 322., 647.096 / 647.) == Approx { -0.808994726   }.epsilon (1e-8));
-    CHECK(detail::phi_r_dd (358.000 / 322., 647.096 / 647.) == Approx {  0.475730696   }.epsilon (1e-8));
-    CHECK(detail::phi_0_t  (358.000 / 322., 647.096 / 647.) == Approx {  0.980343918e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r_t  (358.000 / 322., 647.096 / 647.) == Approx { -0.321722501e1 }.epsilon (1e-8));
-    CHECK(detail::phi_0_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.343316334e1 }.epsilon (1e-8));
-    CHECK(detail::phi_r_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.996029507e1 }.epsilon (1e-8));
-    //CHECK(detail::phi_0_dt (358.000 / 322., 647.096 / 647.) == Approx {  0.            }.epsilon (1e-8));
-    CHECK(detail::phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 }.epsilon (1e-8));
+            using namespace r6::detail;
+    CHECK(phi_0    (838.025 / 322., 647.096 / 500.) == Approx {  0.204797734e1 }.epsilon (1e-8));
+    CHECK(phi_r    (838.025 / 322., 647.096 / 500.) == Approx { -0.342693206e1 }.epsilon (1e-8));
+    CHECK(phi_0_d  (838.025 / 322., 647.096 / 500.) == Approx {  0.384236747   }.epsilon (1e-8));
+    CHECK(phi_r_d  (838.025 / 322., 647.096 / 500.) == Approx { -0.364366650   }.epsilon (1e-8));
+    CHECK(phi_0_dd (838.025 / 322., 647.096 / 500.) == Approx { -0.147637878   }.epsilon (1e-8));
+    CHECK(phi_r_dd (838.025 / 322., 647.096 / 500.) == Approx {  0.856063701   }.epsilon (1e-8));
+    CHECK(phi_0_t  (838.025 / 322., 647.096 / 500.) == Approx {  0.904611106e1 }.epsilon (1e-8));
+    CHECK(phi_r_t  (838.025 / 322., 647.096 / 500.) == Approx { -0.581403435e1 }.epsilon (1e-8));
+    CHECK(phi_0_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.193249185e1 }.epsilon (1e-8));
+    CHECK(phi_r_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.223440737e1 }.epsilon (1e-8));
+    //CHECK(phi_0_dt (838.025 / 322., 647.096 / 500.) == Approx {  0.            }.epsilon (1e-8));
+    CHECK(phi_r_dt (838.025 / 322., 647.096 / 500.) == Approx { -0.112176915e1 }.epsilon (1e-8));
+    CHECK(phi_0    (358.000 / 322., 647.096 / 647.) == Approx { -0.156319605e1 }.epsilon (1e-8));
+    CHECK(phi_r    (358.000 / 322., 647.096 / 647.) == Approx { -0.121202657e1 }.epsilon (1e-8));
+    CHECK(phi_0_d  (358.000 / 322., 647.096 / 647.) == Approx {  0.899441341   }.epsilon (1e-8));
+    CHECK(phi_r_d  (358.000 / 322., 647.096 / 647.) == Approx { -0.714012024   }.epsilon (1e-8));
+    CHECK(phi_0_dd (358.000 / 322., 647.096 / 647.) == Approx { -0.808994726   }.epsilon (1e-8));
+    CHECK(phi_r_dd (358.000 / 322., 647.096 / 647.) == Approx {  0.475730696   }.epsilon (1e-8));
+    CHECK(phi_0_t  (358.000 / 322., 647.096 / 647.) == Approx {  0.980343918e1 }.epsilon (1e-8));
+    CHECK(phi_r_t  (358.000 / 322., 647.096 / 647.) == Approx { -0.321722501e1 }.epsilon (1e-8));
+    CHECK(phi_0_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.343316334e1 }.epsilon (1e-8));
+    CHECK(phi_r_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.996029507e1 }.epsilon (1e-8));
+    //CHECK(phi_0_dt (358.000 / 322., 647.096 / 647.) == Approx {  0.            }.epsilon (1e-8));
+    CHECK(phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 }.epsilon (1e-8));
 
 } // SUBCASE("base functions")
 SUBCASE("Third-order derivatives")
@@ -142,16 +143,17 @@ SUBCASE("Third-order derivatives")
 
     for (auto [d, t]: d_and_t)
     {
+            using namespace r6::detail;
         INFO("d= ", d, ", t= ", t);
-        CHECK(detail::phi_r_d (d, t)   == Approx { fd_d   (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_d (d, t)  )).epsilon (1e-5));
-        CHECK(detail::phi_r_t (d, t)   == Approx { fd_t   (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_t (d, t)  )).epsilon (1e-5));
-        CHECK(detail::phi_r_dd (d, t)  == Approx { fd_dd  (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dd (d, t) )).epsilon (1e-5));
-        CHECK(detail::phi_r_tt (d, t)  == Approx { fd_tt  (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_tt (d, t) )).epsilon (1e-5));
-        CHECK(detail::phi_r_ddd (d, t) == Approx { fd_ddd (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_ddd (d, t))).epsilon (1e-5));
+        CHECK(phi_r_d (d, t)   == Approx { fd_d   (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_d (d, t)  )).epsilon (1e-5));
+        CHECK(phi_r_t (d, t)   == Approx { fd_t   (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_t (d, t)  )).epsilon (1e-5));
+        CHECK(phi_r_dd (d, t)  == Approx { fd_dd  (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dd (d, t) )).epsilon (1e-5));
+        CHECK(phi_r_tt (d, t)  == Approx { fd_tt  (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_tt (d, t) )).epsilon (1e-5));
+        CHECK(phi_r_ddd (d, t) == Approx { fd_ddd (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_ddd (d, t))).epsilon (1e-5));
 
-        CHECK(detail::phi_r_dt (d, t) == Approx { fd_dt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
-        CHECK(detail::phi_r_ddt (d, t) == Approx { fd_ddt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
-        CHECK(detail::phi_r_dtt (d, t) == Approx { fd_dtt (&detail::phi_r <double, double>, d, t) }.scale (fabs (detail::phi_r_dt (d, t))).epsilon (1e-5));
+        CHECK(phi_r_dt (d, t) == Approx { fd_dt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
+        CHECK(phi_r_ddt (d, t) == Approx { fd_ddt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
+        CHECK(phi_r_dtt (d, t) == Approx { fd_dtt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
     }
 
 /*
@@ -199,7 +201,7 @@ SUBCASE("Third-order derivatives")
 }
 SUBCASE("Derivatives of the isobaric_cubic_expansion_coefficient")
 {
-        using namespace detail;
+        using namespace r6::detail;
         /*
         auto
     d_alpha_v_d_tau = [](auto delta, auto tau)

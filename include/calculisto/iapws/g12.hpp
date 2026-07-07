@@ -258,36 +258,36 @@ detail
             ;
         };
             const auto
-        _L = L (tau, pi);
+        L_ = L (tau, pi);
             const auto
-        _omega = omega (pi);
+        omega_ = omega (pi);
             T
         low;
             T
         hig;
             using std::log, std::exp, std::min;
             const auto
-        a = (10. / 9.) * (log (19.) - _L);
+        a_ = (10. / 9.) * (log (19.) - L_);
             const auto
-        b = (50. / 49.) * (log (99.) - _L);
-        if (_omega < a)
+        b_ = (50. / 49.) * (log (99.) - L_);
+        if (omega_ < a_)
         {
             low = 0.049;
             hig = 0.5;
         }
-        else if (a <= _omega && _omega < b)
+        else if (a_ <= omega_ && omega_ < b_)
         {
             low = 0.0099;
             hig = 0.051;
         }
         else
         {
-            low = 0.99 * exp (-(50. / 49.) * _L - _omega);
-            hig = fmin (1.1 * exp (-_L - _omega), 0.0101);
+            low = 0.99 * exp (-(50. / 49.) * L_ - omega_);
+            hig = fmin (1.1 * exp (-L_ - omega_), 0.0101);
         }
-        return zhang (f, low, hig, { .converged = [](T a, T b, T fa, T fb)
+        return zhang (f, low, hig, { .converged = [](T x, T y, T fx, T fy)
         {
-            return fa == 0 || fb == 0 || fabs (a - b) < 1e-8;
+            return fx == 0 || fy == 0 || fabs (x - y) < 1e-8;
         }});
     }
 
