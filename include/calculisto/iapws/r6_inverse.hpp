@@ -12,7 +12,7 @@ r6_95_2016
 {
     constexpr auto
 initial_density (
-        auto const& pressure
+      auto const& pressure
     , auto const& temperature
 ){
     return (
@@ -208,107 +208,156 @@ ISTO_IAPWS_R6_INVERSE_GEN(relative_pressure_coefficient)
 //ISTO_IAPWS_R6_INVERSE_GEN(isothermal_compressibility)
 #undef ISTO_IAPWS_R6_INVERSE_GEN
 
-#ifdef ISTO_IAPWS_FLAVOR_CONSTRAINED
-    template <info_tag_t InfoTag = info::tag::none>
-    constexpr auto
-density (
-      auto const& pressure
-    , auto const& temperature
-    , auto const& initial_guess
-    , info_t <InfoTag> info = info::none
-){
-    return density_pt (pressure, temperature, initial_guess, info);
-}
-    template <info_tag_t InfoTag = info::tag::none>
-    constexpr auto
-density (
-      auto const& pressure
-    , auto const& temperature
-    , info_t <InfoTag> info = info::none
-){
-    return density_pt (pressure, temperature, info);
-}
-    template <info_tag_t InfoTag = info::tag::none>
-    constexpr auto
-density (
-      auto const& temperature
-    , auto const& pressure
-    , auto const& initial_guess
-    , info_t <InfoTag> info = info::none
-){
-    return density_tp (temperature, pressure, initial_guess, info);
-}
-    template <info_tag_t InfoTag = info::tag::none>
-    constexpr auto
-density (
-      auto const& temperature
-    , auto const& pressure
-    , info_t <InfoTag> info = info::none
-){
-    return density_tp (temperature, pressure, info);
-}
-
-#define ISTO_IAPWS_R6_INVERSE_GEN(NAME)                            \
-    template <info_tag_t InfoTag = info::tag::none>                \
-    constexpr auto                                                 \
-NAME (                                                             \
-      auto const& pressure                                         \
-    , auto const& temperature                                      \
-    , auto const& initial_guess                                    \
-    , info_t <InfoTag> info = info::none                           \
-){                                                                 \
-    return NAME##_pt (pressure, temperature, initial_guess, info); \
-}                                                                  \
-    template <info_tag_t InfoTag = info::tag::none>                \
-    constexpr auto                                                 \
-NAME (                                                             \
-      auto const& pressure                                         \
-    , auto const& temperature                                      \
-    , info_t <InfoTag> info = info::none                           \
-){                                                                 \
-    return NAME##_pt (pressure, temperature, info);                \
-}                                                                  \
-    template <info_tag_t InfoTag = info::tag::none>                \
-    constexpr auto                                                 \
-NAME (                                                             \
-      auto const& temperature                                      \
-    , auto const& pressure                                         \
-    , auto const& initial_guess                                    \
-    , info_t <InfoTag> info = info::none                           \
-){                                                                 \
-    return NAME##_tp (temperature, pressure, initial_guess, info); \
-}                                                                  \
-    template <info_tag_t InfoTag = info::tag::none>                \
-    constexpr auto                                                 \
-NAME (                                                             \
-      auto const& temperature                                      \
-    , auto const& pressure                                         \
-    , info_t <InfoTag> info = info::none                           \
-){                                                                 \
-    return NAME##_tp (temperature, pressure, info);                \
-}
-
-ISTO_IAPWS_R6_INVERSE_GEN(massic_internal_energy)
-ISTO_IAPWS_R6_INVERSE_GEN(massic_entropy)
-ISTO_IAPWS_R6_INVERSE_GEN(massic_enthalpy)
-ISTO_IAPWS_R6_INVERSE_GEN(massic_isochoric_heat_capacity)
-ISTO_IAPWS_R6_INVERSE_GEN(massic_isobaric_heat_capacity)
-//ISTO_IAPWS_R6_INVERSE_GEN(joule_thompson_coefficient)
-ISTO_IAPWS_R6_INVERSE_GEN(massic_gibbs_free_energy)
-ISTO_IAPWS_R6_INVERSE_GEN(speed_of_sound)
-ISTO_IAPWS_R6_INVERSE_GEN(isothermal_stress_coefficient)
-ISTO_IAPWS_R6_INVERSE_GEN(relative_pressure_coefficient)
-//ISTO_IAPWS_R6_INVERSE_GEN(isobaric_cubic_expansion_coefficient)
-//ISTO_IAPWS_R6_INVERSE_GEN(isothermal_compressibility)
-#undef ISTO_IAPWS_R6_INVERSE_GEN
-#endif
-
 // Saturation line
-    auto
-saturation_pressure_t (auto const& temperature)
+    namespace
+detail
 {
-    // FIXME:
-    throw not_yet_implemented_e {};
+        template <class T>
+        auto
+    f_saturation (Eigen::Matrix <T, 3, 1> const& x, auto const tau)
+    {
+            using namespace r6::detail;
+            auto
+        r = Eigen::Matrix <T, 3, 1> {};
+            const auto&
+        pi = x[0];
+            const auto&
+        delta_p = x[1];
+            const auto&
+        delta_pp = x[2];
+        r[0] = delta_p * (1 + delta_p * phi_r_d (delta_p, tau)) - pi;
+        r[1] = delta_pp * (1 + delta_pp * phi_r_d (delta_pp, tau)) - pi;
+        r[2] = 
+              phi_r (delta_p, tau) 
+            - phi_r (delta_pp, tau) 
+            - pi * (1 / delta_pp - 1 / delta_p)
+            + log (delta_p / delta_pp)
+        ;
+        return r;
+    }
+} // namespace detail
+
+    template <
+          class T
+        , info_tag_t InfoTag
+        , class Range = Eigen::Matrix <T, 3, 1>
+    >
+    auto
+saturation_pressure_t (
+      T const& temperature
+    , T const& pressure_initial_guess
+    , T const& density_liquid_initial_guess
+    , T const& density_gas_initial_guess
+    , multidimensional_newton_options_t <3, Range, Range, Range> const& options
+    , info_t <InfoTag> info
+){
+        const auto
+    pi_0 = pressure_initial_guess / r6::massic_gas_constant / temperature / r6::critical_density;
+        const auto
+    delta_p_0 = density_liquid_initial_guess / r6::critical_density;
+        const auto
+    delta_pp_0 = density_gas_initial_guess / r6::critical_density;
+        const auto
+    x_0 = Eigen::Matrix <T, 3, 1> {
+          pi_0
+        , delta_p_0
+        , delta_pp_0
+    };
+        const auto
+    tau = r6::critical_temperature / temperature;
+        const auto
+    f = [tau](auto const& x){ return detail::f_saturation (x, tau); };
+    if constexpr (InfoTag == info::tag::none)
+    {
+            const auto
+        r = newton <3> (
+              f
+            , x_0
+            , options
+            , info
+        );
+        return std::tuple {
+              r[0] * r6::massic_gas_constant * temperature * r6::critical_density
+            , r[1] * r6::critical_density
+            , r[2] * r6::critical_density
+        };
+    }
+    else
+    {
+            const auto
+        [r, info_data] = newton <3> (
+              f
+            , x_0
+            , options
+            , info
+        );
+        return std::tuple {
+              r[0] * r6::massic_gas_constant * temperature * r6::critical_density
+            , r[1] * r6::critical_density
+            , r[2] * r6::critical_density
+            , info_data
+        };
+    }
+}
+    template <
+          class T
+        , info_tag_t InfoTag
+        , class Range = Eigen::Matrix <T, 3, 1>
+    >
+    auto
+saturation_pressure_t (
+      T const& temperature
+    , multidimensional_newton_options_t <3, Range, Range, Range> const& options
+    , info_t <InfoTag> info
+){
+        const auto
+    pressure_inital_guess = r7::saturation_pressure_t (temperature);
+    return saturation_pressure_t (
+          temperature
+        , pressure_inital_guess
+        , r7::r1::density_pt (pressure_inital_guess, temperature)
+        , r7::r2::density_pt (pressure_inital_guess, temperature)
+        , options
+        , info
+    );
+}
+    template <
+          class T
+        , info_tag_t InfoTag = info::tag::none
+        , class Range = Eigen::Matrix <T, 3, 1>
+    >
+    auto
+saturation_pressure_t (
+      T const& temperature
+    , T const& relative_tolerance = 1e-8
+    , T const& absolute_tolerance = 0.
+    , int max_iter = 100
+    , info_t <InfoTag> info = info::none
+){
+        const auto
+    pressure_inital_guess = r7::saturation_pressure_t (temperature);
+    return saturation_pressure_t (
+          temperature
+        , pressure_inital_guess
+        , r7::r1::density_pt (pressure_inital_guess, temperature)
+        , r7::r2::density_pt (pressure_inital_guess, temperature)
+        , {
+              .max_iter = max_iter
+            , .converged = [&](
+                  Eigen::Matrix <T, 3, 1> const& current
+                , Eigen::Matrix <T, 3, 1> const& past
+                , Eigen::Matrix <T, 3, 1> const& result
+              ){
+                return
+                       (past - current).norm () / current.norm ()
+                       <
+                       relative_tolerance
+                    || result.squaredNorm () == absolute_tolerance
+                ;
+              }
+          }
+        , info
+    );
 }
 
     constexpr auto
