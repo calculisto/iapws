@@ -388,14 +388,16 @@ SUBCASE ("Derivatives")
                 const auto
             d_relative_permittivity_d2_temperature_at_pressure = d_relative_permittivity_d2_temperature_at_pressure_dt (density, temperature, d_density_d_temperature);
                 const auto
-            d_relative_permittivity_d2_temperature_at_pressure_fd = central_finite_difference <1, 2> (
+            d_relative_permittivity_d2_temperature_at_pressure_fd = central_finite_difference <1> (
                 [=](auto p, auto t)
                 {
                         const auto
                     d = r6_inverse::density_pt (p, t);
-                    return relative_permittivity_dt (d, t);
+                        const auto
+                    dDdT = r6::d_density_d_temperature_dt (d, t);
+                    return d_relative_permittivity_d_temperature_at_pressure_dt (d, t, dDdT);
                 }
-                , 1e-3
+                , 1e-6
                 , pressure
                 , temperature
             );
