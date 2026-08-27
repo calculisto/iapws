@@ -4,22 +4,38 @@
 #include "../include/calculisto/iapws/r6_inverse.hpp"
     using namespace calculisto::iapws::r6_inverse;
 #include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
-    using namespace calculisto::iapws::r6::r6_95_2016::detail;
+    using namespace calculisto::iapws::r6;
+#include <calculisto/finite_difference/finite_difference.hpp>
+    using calculisto::finite_difference::central_finite_difference;
 
 TEST_CASE("r6_inverse.hpp")
 {
         using namespace calculisto::iapws;
-    for(const auto& e: table_7)
+    for(const auto& e: r6::detail::table_7)
     {
-        INFO ("P= ", e.P, ", T= ", e.T);
-        CHECK (density_pt (e.P, e.T) == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        CHECK (density_tp (e.T, e.P) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        INFO ("P= ", e.P, ", T= ", e.T, ", D= ", e.D);
+
+        // Density
+            const auto
+        D_pt = density_pt (e.P, e.T);
+            const auto
+        D_tp = density_tp (e.T, e.P);
+        CHECK (D_tp == Approx { D_pt });
+        CHECK (D_tp == Approx { e.D });
         // With initial guess
-        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.D });
+        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.D });
         // And info
-        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
-        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D }.scale (1e3).epsilon (1e-6));
+        CHECK (density_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D });
+        CHECK (density_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.D });
+
+        // Temperature
+            const auto
+        T_pd = temperature_pd (e.P, e.D);
+            const auto
+        T_dp = temperature_dp (e.D, e.P);
+        CHECK (T_dp == Approx { T_pd });
+        CHECK (T_dp == Approx { e.T });
     }
     {
             const auto
@@ -32,39 +48,41 @@ TEST_CASE("r6_inverse.hpp")
         }
         */
     }
-    for(const auto& e: table_7)
+    for(const auto& e: r6::detail::table_7)
     {
         INFO ("P= ", e.P, ", T= ", e.T);
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv });
+        CHECK (massic_isochoric_heat_capacity_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.Cv });
 
-        CHECK (speed_of_sound_pt (e.P, e.T) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
-        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W }.scale (1e3).epsilon (1e-6));
+        CHECK (speed_of_sound_pt (e.P, e.T) == Approx { e.W });
+        CHECK (speed_of_sound_tp (e.T, e.P) == Approx { e.W });
+        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W });
+        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W });
+        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.W });
+        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.W });
+        CHECK (speed_of_sound_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W });
+        CHECK (speed_of_sound_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.W });
 
-        CHECK (massic_entropy_pt (e.P, e.T) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
-        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S }.scale (1e3).epsilon (1e-6));
+        CHECK (massic_entropy_pt (e.P, e.T) == Approx { e.S });
+        CHECK (massic_entropy_tp (e.T, e.P) == Approx { e.S });
+        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S });
+        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S });
+        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T)) == Approx { e.S });
+        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T)) == Approx { e.S });
+        CHECK (massic_entropy_pt (e.P, e.T, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S });
+        CHECK (massic_entropy_tp (e.T, e.P, r7::density_pt (e.P, e.T), info::iterations).first == Approx { e.S });
 
     }
     SUBCASE ("Saturation")
     {
+        // FIXME: we need to test this against table 13.1 of Wagner et Pruss,
+        // 2002 instead.
         for (auto const& entry: r7::detail::table_1)
         {
                 const auto
@@ -148,6 +166,24 @@ TEST_CASE("r6_inverse.hpp")
             {
                 MESSAGE("Exception at T = ", temperature);
             }
+        }
+    }
+    SUBCASE("R6: Derivative of density w.r.t. temperature")
+    {
+        // This is here because we need r6_inverse to test that
+        for(const auto& e: r6::detail::table_7)
+        {
+            INFO("D= ", e.D, ", T= ", e.T, ", P= ", e.P);
+                const auto
+            d_D_d_T = d_density_d_temperature_dt (e.D, e.T);
+                const auto
+            d_D_d_T_fd = central_finite_difference <0> (
+                  r6_inverse::density_tp <double, double>
+                , 1e-5
+                , e.T
+                , e.P
+            );
+            CHECK(d_D_d_T == Approx { d_D_d_T_fd }.scale (fabs (d_D_d_T_fd)).epsilon (1e-4));
         }
     }
 } // TEST_CASE("r6_inverse.hpp")

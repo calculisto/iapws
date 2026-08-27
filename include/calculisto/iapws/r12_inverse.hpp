@@ -47,7 +47,7 @@ viscosity_pt (
     return viscosity_pt (
           pressure
         , temperature
-        , r6_inverse::initial_density (pressure, temperature)
+        , r6_inverse::initial_density_pt (pressure, temperature)
         , info
     );
 }
