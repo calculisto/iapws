@@ -11,18 +11,6 @@ calculisto::thermodynamics::iapws::r7
     inline namespace
 r7_97_2012
 {
-    constexpr auto
-massic_gas_constant = 0.461526e3;
-
-    constexpr auto
-critical_temperature = 647.096;
-
-    constexpr auto
-critical_pressure = 22.064e6;
-
-    constexpr auto
-critical_density = 322.0;
-
 // §5  Equations for Region 1.
     namespace
 r1

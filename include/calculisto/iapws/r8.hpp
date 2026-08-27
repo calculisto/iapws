@@ -76,21 +76,6 @@ detail
     molecular_dipole_moment = 6.138e-30;
 
         constexpr auto
-    boltzmann_constant = 1.380658e-23;
-
-        constexpr auto
-    avogadro_number = 6.0221367e23;
-
-        constexpr auto
-    molar_mass = 0.018015268;
-    
-        constexpr auto
-    critical_molar_density = 322 / molar_mass;
-
-        constexpr auto
-    critical_temperature = 647.096;
-
-        constexpr auto
     g (auto const& molar_density, auto const& temperature)
     {
             using std::pow;
@@ -609,7 +594,7 @@ detail
 relative_permittivity_dt (auto const& density, auto const& temperature)
 {
         const auto
-    molar_density = density / detail::molar_mass;
+    molar_density = density / molar_mass;
     return detail::e (molar_density, temperature);
 }
 
@@ -619,8 +604,8 @@ d_relative_permittivity_d_density_at_temperature_dt (
     , auto const& temperature
 ){
         const auto
-    molar_density = density / detail::molar_mass;
-    return detail::dedr (molar_density, temperature) / detail::molar_mass;
+    molar_density = density / molar_mass;
+    return detail::dedr (molar_density, temperature) / molar_mass;
 }
     auto
 d_relative_permittivity_d_temperature_at_density_dt (
@@ -628,7 +613,7 @@ d_relative_permittivity_d_temperature_at_density_dt (
     , auto const& temperature
 ){
         const auto
-    molar_density = density / detail::molar_mass;
+    molar_density = density / molar_mass;
     return detail::dedt (molar_density, temperature);
 }
     constexpr auto

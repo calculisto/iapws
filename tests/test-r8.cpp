@@ -4,7 +4,6 @@
 #include "../include/calculisto/iapws/r6_inverse.hpp"
     using namespace calculisto::thermodynamics::iapws;
     using namespace calculisto::thermodynamics::iapws::r8;
-    using r8::detail::molar_mass;
 #include <calculisto/finite_difference/finite_difference.hpp>
     using calculisto::finite_difference::central_finite_difference;
 

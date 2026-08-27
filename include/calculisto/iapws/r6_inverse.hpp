@@ -252,11 +252,11 @@ saturation_pressure_t (
     , info_t <InfoTag> info
 ){
         const auto
-    pi_0 = pressure_initial_guess / r6::massic_gas_constant / temperature / r6::critical_density;
+    pi_0 = pressure_initial_guess / massic_gas_constant / temperature / critical_density;
         const auto
-    delta_p_0 = density_liquid_initial_guess / r6::critical_density;
+    delta_p_0 = density_liquid_initial_guess / critical_density;
         const auto
-    delta_pp_0 = density_gas_initial_guess / r6::critical_density;
+    delta_pp_0 = density_gas_initial_guess / critical_density;
         const auto
     x_0 = Eigen::Matrix <T, 3, 1> {
           pi_0
@@ -264,7 +264,7 @@ saturation_pressure_t (
         , delta_pp_0
     };
         const auto
-    tau = r6::critical_temperature / temperature;
+    tau = critical_temperature / temperature;
         const auto
     f = [tau](auto const& x){ return detail::f_saturation (x, tau); };
     if constexpr (InfoTag == info::tag::none)
@@ -277,9 +277,9 @@ saturation_pressure_t (
             , info
         );
         return std::tuple {
-              r[0] * r6::massic_gas_constant * temperature * r6::critical_density
-            , r[1] * r6::critical_density
-            , r[2] * r6::critical_density
+              r[0] * massic_gas_constant * temperature * critical_density
+            , r[1] * critical_density
+            , r[2] * critical_density
         };
     }
     else
@@ -292,9 +292,9 @@ saturation_pressure_t (
             , info
         );
         return std::tuple {
-              r[0] * r6::massic_gas_constant * temperature * r6::critical_density
-            , r[1] * r6::critical_density
-            , r[2] * r6::critical_density
+              r[0] * massic_gas_constant * temperature * critical_density
+            , r[1] * critical_density
+            , r[2] * critical_density
             , info_data
         };
     }
@@ -373,7 +373,7 @@ initial_temperature_pd (
       auto const& pressure [[maybe_unused]]
     , auto const& density  [[maybe_unused]]
 ){
-    return r6::critical_temperature;
+    return critical_temperature;
 }
     template <info_tag_t InfoTag = info::tag::none>
     constexpr auto

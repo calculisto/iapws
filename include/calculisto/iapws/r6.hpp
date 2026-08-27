@@ -984,23 +984,6 @@ phi_r_dt (auto const& delta, auto const& tau)
 }
 
 } // }}} namespace detail
-    constexpr auto
-massic_gas_constant = 0.46151805e3;
-
-    constexpr auto
-critical_temperature = 647.096;
-
-    constexpr auto
-critical_pressure = 22.064e6;
-
-    constexpr auto
-critical_density = 322.0;
-
-    constexpr auto
-triple_point_temperature = 273.16;
-
-    constexpr auto
-triple_point_pressure = 611.657;
 
 #define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)  \
     constexpr auto                                       \
@@ -1131,23 +1114,6 @@ phi_r_dt (auto const& delta, auto const& tau)
     return sum (n * d * t * pow (delta, d - 1) * pow (tau, t - 1));
 }
 } // namespace detail }}}
-    constexpr auto
-massic_gas_constant = 0.46151805e3;
-
-    constexpr auto
-critical_temperature = 647.096;
-
-    constexpr auto
-critical_pressure = 22.064e6;
-
-    constexpr auto
-critical_density = 322.0;
-
-    constexpr auto
-triple_point_temperature = 273.16;
-
-    constexpr auto
-triple_point_pressure = 611.657;
 
 #define ISTO_IAPWS_R6_GENERATE_FUNCTIONS(NAME, FORMULA)  \
     constexpr auto                                       \
