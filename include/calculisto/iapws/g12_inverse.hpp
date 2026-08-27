@@ -4,7 +4,7 @@
     using namespace calculisto::root_finding;
 
     namespace
-calculisto::iapws::g12_inverse
+calculisto::thermodynamics::iapws::g12_inverse
 {
     namespace
 detail
@@ -308,4 +308,4 @@ ISTO_IAPWS_G12_INVERSE_GEN(massic_isobaric_heat_capacity)
 ISTO_IAPWS_G12_INVERSE_GEN(massic_isochoric_heat_capacity)
 ISTO_IAPWS_G12_INVERSE_GEN(speed_of_sound)
 } // inline namespace g12_15
-} // namespace calculisto::iapws::g12_inverse
+} // namespace calculisto::thermodynamics::iapws::g12_inverse

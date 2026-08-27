@@ -1,8 +1,8 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
 #include "../include/calculisto/iapws/r12_inverse.hpp"
-    using namespace calculisto::iapws::r12_inverse;
-    using namespace calculisto::iapws::r6;
+    using namespace calculisto::thermodynamics::iapws::r12_inverse;
+    using namespace calculisto::thermodynamics::iapws::r6;
 
 TEST_CASE("r12_inverse.hpp")
 {

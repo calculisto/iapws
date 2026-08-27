@@ -1,4 +1,4 @@
 #pragma once
-    namespace calculisto::iapws
+    namespace calculisto::thermodynamics::iapws
 {
-} // namespace calculisto::iapws
+} // namespace calculisto::thermodynamics::iapws

@@ -4,7 +4,7 @@
 #include <fmt/format.h>
 
     namespace 
-calculisto::iapws::r12
+calculisto::thermodynamics::iapws::r12
 {
     inline namespace 
 r12_08_2008
@@ -156,4 +156,4 @@ viscosity_dt (auto const& density, auto const& temperature)
     return viscosity_td (temperature, density);
 }
 } // namespace r12_08_2008
-} // namespace calculisto::iapws::r12
+} // namespace calculisto::thermodynamics::iapws::r12

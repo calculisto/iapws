@@ -2,15 +2,15 @@
     using doctest::Approx;
 #include "test.hpp"
 #include "../include/calculisto/iapws/r6_inverse.hpp"
-    using namespace calculisto::iapws::r6_inverse;
+    using namespace calculisto::thermodynamics::iapws::r6_inverse;
 #include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
-    using namespace calculisto::iapws::r6;
+    using namespace calculisto::thermodynamics::iapws::r6;
 #include <calculisto/finite_difference/finite_difference.hpp>
     using calculisto::finite_difference::central_finite_difference;
 
 TEST_CASE("r6_inverse.hpp")
 {
-        using namespace calculisto::iapws;
+        using namespace calculisto::thermodynamics::iapws;
     for(const auto& e: r6::detail::table_7)
     {
         INFO ("P= ", e.P, ", T= ", e.T, ", D= ", e.D);

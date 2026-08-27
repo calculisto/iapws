@@ -3,8 +3,8 @@
 #include "test.hpp"
 #include "../include/calculisto/iapws/r6.hpp"
 #include "../include/calculisto/iapws/r6_inverse.hpp"
-    using namespace calculisto::iapws;
-    using namespace calculisto::iapws::r6;
+    using namespace calculisto::thermodynamics::iapws;
+    using namespace calculisto::thermodynamics::iapws::r6;
 #include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
 #include <calculisto/finite_difference/finite_difference.hpp>
     using calculisto::finite_difference::central_finite_difference;
@@ -551,7 +551,7 @@ SUBCASE("Derivatives needed by the Born functions")
 #if 0
 SUBCASE("expansion, compressibility, etc.")
 {
-        using namespace calculisto::iapws::r7::detail;
+        using namespace calculisto::thermodynamics::iapws::r7::detail;
     for (auto it = 1u; it != T.size (); ++it)
     {
             auto const

@@ -3,7 +3,7 @@
 #include "detail/disambiguate.hpp"
 
     namespace
-calculisto::iapws::r6
+calculisto::thermodynamics::iapws::r6
 {
     inline namespace
 r6_95_2016
@@ -1048,10 +1048,10 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_density_d_temperature, critical_temperature *
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
-} // namespace calculisto::iapws::r6
+} // namespace calculisto::thermodynamics::iapws::r6
 
     namespace
-calculisto::iapws::r6_gas
+calculisto::thermodynamics::iapws::r6_gas
 {
     inline namespace
 r6_95_2016
@@ -1181,5 +1181,5 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(isothermal_compressibility, (1. / (1. + 2. * de
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016
-} // namespace calculisto::iapws::r6_gas
+} // namespace calculisto::thermodynamics::iapws::r6_gas
 // vim: foldmethod=marker

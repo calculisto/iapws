@@ -2,7 +2,7 @@
     using doctest::Approx;
 #include "test.hpp"
 #include "../include/calculisto/iapws/r7.hpp"
-    using namespace calculisto::iapws::r7;
+    using namespace calculisto::thermodynamics::iapws::r7;
 #include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
 
     constexpr auto

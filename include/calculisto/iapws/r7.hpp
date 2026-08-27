@@ -6,7 +6,7 @@
 // TODO long double coeffs ?
 
     namespace
-calculisto::iapws::r7
+calculisto::thermodynamics::iapws::r7
 {
     inline namespace
 r7_97_2012
@@ -9519,5 +9519,5 @@ massic_volume_sp (auto const& massic_entropy, auto const& pressure)
 }
 
 } // inline namespace r7_97_2012
-} // namespace calculisto::iapws::r7
+} // namespace calculisto::thermodynamics::iapws::r7
 // vim: foldmethod=marker

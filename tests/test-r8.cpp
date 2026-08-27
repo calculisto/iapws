@@ -2,8 +2,8 @@
     using doctest::Approx;
 #include "../include/calculisto/iapws/r8.hpp"
 #include "../include/calculisto/iapws/r6_inverse.hpp"
-    using namespace calculisto::iapws;
-    using namespace calculisto::iapws::r8;
+    using namespace calculisto::thermodynamics::iapws;
+    using namespace calculisto::thermodynamics::iapws::r8;
     using r8::detail::molar_mass;
 #include <calculisto/finite_difference/finite_difference.hpp>
     using calculisto::finite_difference::central_finite_difference;
@@ -12,7 +12,7 @@ TEST_CASE("r8.hpp")
 {
 SUBCASE ("details")
 {
-        using calculisto::iapws::r6_inverse::density_pt;
+        using calculisto::thermodynamics::iapws::r6_inverse::density_pt;
     CHECK (density_pt (   0.101325e6, 240.) == Approx { 54.33701e3 * molar_mass });
     CHECK (density_pt (   0.101325e6, 300.) == Approx { 55.31735e3 * molar_mass });
     CHECK (density_pt (  10e6       , 300.) == Approx { 55.56148e3 * molar_mass });
@@ -26,7 +26,7 @@ SUBCASE ("details")
 }
 SUBCASE ("main API")
 {
-        using calculisto::iapws::r6_inverse::density_pt;
+        using calculisto::thermodynamics::iapws::r6_inverse::density_pt;
     CHECK (relative_permittivity_dt (density_pt (   0.101325e6, 240.), 240.) == Approx { 104.34982 }.scale (1e2).epsilon (1e-7));
     CHECK (relative_permittivity_dt (density_pt (   0.101325e6, 300.), 300.) == Approx {  77.74735 }.scale (1e1).epsilon (1e-7));
     CHECK (relative_permittivity_dt (density_pt (  10e6       , 300.), 300.) == Approx {  78.11269 }.scale (1e1).epsilon (1e-7));

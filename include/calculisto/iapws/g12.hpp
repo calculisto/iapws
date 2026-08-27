@@ -4,7 +4,7 @@
     using namespace calculisto::root_finding;
 
     namespace 
-calculisto::iapws::g12
+calculisto::thermodynamics::iapws::g12
 {
     inline namespace 
 g12_15
@@ -576,4 +576,4 @@ homogeneous_ice_nucleation_limit_temperature_p (auto const& pressure)
 }
 
 } // namespace g12_15
-} // namespace calculisto::iapws::g12
+} // namespace calculisto::thermodynamics::iapws::g12

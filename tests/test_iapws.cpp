@@ -1,6 +1,6 @@
 #include <doctest/doctest.h>
 #include "../include/calculisto/iapws/iapws.hpp"
-    using namespace calculisto::iapws;
+    using namespace calculisto::thermodynamics::iapws;
 
 TEST_CASE("iapws.hpp")
 {

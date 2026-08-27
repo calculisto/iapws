@@ -5,7 +5,7 @@
 
 
     namespace 
-calculisto::iapws::r12_inverse
+calculisto::thermodynamics::iapws::r12_inverse
 {
     inline namespace 
 r12_08_2008
@@ -82,4 +82,4 @@ viscosity_tp (auto const& temperature, auto const& pressure)
     return viscosity_pt (pressure, temperature, info::none);
 }
 } // namespace r12_08_2008
-} // namespace calculisto::iapws::r12_inverse
+} // namespace calculisto::thermodynamics::iapws::r12_inverse

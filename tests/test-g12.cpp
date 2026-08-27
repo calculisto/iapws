@@ -2,11 +2,11 @@
     using doctest::Approx;
 #include "test.hpp"
 #include "../include/calculisto/iapws/g12.hpp"
-    using namespace calculisto::iapws::g12;
+    using namespace calculisto::thermodynamics::iapws::g12;
 
 TEST_CASE("g12.hpp")
 {
-        using namespace calculisto::iapws::g12::detail;
+        using namespace calculisto::thermodynamics::iapws::g12::detail;
     CHECK(L     (273.15 / T_LL - 1. , 0.101325e6 / rho_0 / R / T_LL) == Approx { 0.62120474 } );
     CHECK(L     (235.15 / T_LL - 1. , 0.101325e6 / rho_0 / R / T_LL) == Approx { 0.09176368 } );
     CHECK(L     (250.   / T_LL - 1.   , 200e6    / rho_0 / R / T_LL) == Approx { 0.72377081 } );

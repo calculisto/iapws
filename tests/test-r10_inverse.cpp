@@ -2,7 +2,7 @@
     using doctest::Approx;
 #include "test.hpp"
 #include "../include/calculisto/iapws/r10_inverse.hpp"
-    using namespace calculisto::iapws::r10_inverse;
+    using namespace calculisto::thermodynamics::iapws::r10_inverse;
 
 TEST_CASE("r10_inverse.hpp")
 {

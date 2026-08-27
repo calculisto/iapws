@@ -4,7 +4,7 @@
     using namespace calculisto::root_finding;
 
     namespace
-calculisto::iapws::r10_inverse
+calculisto::thermodynamics::iapws::r10_inverse
 {
     namespace
 detail
@@ -284,4 +284,4 @@ ISTO_IAPWS_R10_INVERSE_GEN(pressure_coefficient)
 ISTO_IAPWS_R10_INVERSE_GEN(isothermal_compressibility)
 ISTO_IAPWS_R10_INVERSE_GEN(isentropic_compressibility)
 } // inline namespace r10_06_2009
-} // namespace calculisto::iapws::r10_inverse
+} // namespace calculisto::thermodynamics::iapws::r10_inverse

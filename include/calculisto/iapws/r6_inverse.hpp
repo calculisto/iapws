@@ -5,7 +5,7 @@
     using namespace calculisto::root_finding;
 
     namespace
-calculisto::iapws::r6_inverse
+calculisto::thermodynamics::iapws::r6_inverse
 {
     inline namespace
 r6_95_2016
@@ -558,4 +558,4 @@ ISTO_IAPWS_R6_INVERSE_GEN(relative_pressure_coefficient)
 #undef ISTO_IAPWS_R6_INVERSE_GEN
 
 } // inline namespace r6_95_2016
-} // namespace calculisto::iapws::r6_inverse
+} // namespace calculisto::thermodynamics::iapws::r6_inverse

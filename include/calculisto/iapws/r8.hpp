@@ -6,7 +6,7 @@
     using calculisto::auto_diff::dual_t;
 
     namespace
-calculisto::iapws::r8
+calculisto::thermodynamics::iapws::r8
 {
     inline namespace
 r8_09_1997
@@ -728,4 +728,4 @@ x (
 } // namespace born
 */
 } // namespace r8_09_1997
-} // namespace calculisto::iapws::r8
+} // namespace calculisto::thermodynamics::iapws::r8

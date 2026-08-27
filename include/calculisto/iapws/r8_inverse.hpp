@@ -6,7 +6,7 @@
 
 
     namespace 
-calculisto::iapws::r8_inverse
+calculisto::thermodynamics::iapws::r8_inverse
 {
     inline namespace 
 r8_08_2008
@@ -83,4 +83,4 @@ relative_permittivity_tp (auto const& temperature, auto const& pressure)
     return relative_permittivity_pt (pressure, temperature, info::none);
 }
 } // namespace r8_08_2008
-} // namespace calculisto::iapws::r8_inverse
+} // namespace calculisto::thermodynamics::iapws::r8_inverse
