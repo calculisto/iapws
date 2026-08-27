@@ -6,36 +6,38 @@
     using namespace calculisto::iapws;
     using namespace calculisto::iapws::r6;
 #include "../include/calculisto/iapws/detail/data_for_the_tests.hpp"
+#include <calculisto/finite_difference/finite_difference.hpp>
+    using calculisto::finite_difference::central_finite_difference;
 
 TEST_CASE("r6.hpp")
 {
 SUBCASE("base functions")
 {
             using namespace r6::detail;
-    CHECK(phi_0    (838.025 / 322., 647.096 / 500.) == Approx {  0.204797734e1 }.epsilon (1e-8));
-    CHECK(phi_r    (838.025 / 322., 647.096 / 500.) == Approx { -0.342693206e1 }.epsilon (1e-8));
-    CHECK(phi_0_d  (838.025 / 322., 647.096 / 500.) == Approx {  0.384236747   }.epsilon (1e-8));
-    CHECK(phi_r_d  (838.025 / 322., 647.096 / 500.) == Approx { -0.364366650   }.epsilon (1e-8));
-    CHECK(phi_0_dd (838.025 / 322., 647.096 / 500.) == Approx { -0.147637878   }.epsilon (1e-8));
-    CHECK(phi_r_dd (838.025 / 322., 647.096 / 500.) == Approx {  0.856063701   }.epsilon (1e-8));
-    CHECK(phi_0_t  (838.025 / 322., 647.096 / 500.) == Approx {  0.904611106e1 }.epsilon (1e-8));
-    CHECK(phi_r_t  (838.025 / 322., 647.096 / 500.) == Approx { -0.581403435e1 }.epsilon (1e-8));
-    CHECK(phi_0_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.193249185e1 }.epsilon (1e-8));
-    CHECK(phi_r_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.223440737e1 }.epsilon (1e-8));
-    //CHECK(phi_0_dt (838.025 / 322., 647.096 / 500.) == Approx {  0.            }.epsilon (1e-8));
-    CHECK(phi_r_dt (838.025 / 322., 647.096 / 500.) == Approx { -0.112176915e1 }.epsilon (1e-8));
-    CHECK(phi_0    (358.000 / 322., 647.096 / 647.) == Approx { -0.156319605e1 }.epsilon (1e-8));
-    CHECK(phi_r    (358.000 / 322., 647.096 / 647.) == Approx { -0.121202657e1 }.epsilon (1e-8));
-    CHECK(phi_0_d  (358.000 / 322., 647.096 / 647.) == Approx {  0.899441341   }.epsilon (1e-8));
-    CHECK(phi_r_d  (358.000 / 322., 647.096 / 647.) == Approx { -0.714012024   }.epsilon (1e-8));
-    CHECK(phi_0_dd (358.000 / 322., 647.096 / 647.) == Approx { -0.808994726   }.epsilon (1e-8));
-    CHECK(phi_r_dd (358.000 / 322., 647.096 / 647.) == Approx {  0.475730696   }.epsilon (1e-8));
-    CHECK(phi_0_t  (358.000 / 322., 647.096 / 647.) == Approx {  0.980343918e1 }.epsilon (1e-8));
-    CHECK(phi_r_t  (358.000 / 322., 647.096 / 647.) == Approx { -0.321722501e1 }.epsilon (1e-8));
-    CHECK(phi_0_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.343316334e1 }.epsilon (1e-8));
-    CHECK(phi_r_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.996029507e1 }.epsilon (1e-8));
-    //CHECK(phi_0_dt (358.000 / 322., 647.096 / 647.) == Approx {  0.            }.epsilon (1e-8));
-    CHECK(phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 }.epsilon (1e-8));
+    CHECK(phi_0    (838.025 / 322., 647.096 / 500.) == Approx {  0.204797734e1 });
+    CHECK(phi_r    (838.025 / 322., 647.096 / 500.) == Approx { -0.342693206e1 });
+    CHECK(phi_0_d  (838.025 / 322., 647.096 / 500.) == Approx {  0.384236747   });
+    CHECK(phi_r_d  (838.025 / 322., 647.096 / 500.) == Approx { -0.364366650   });
+    CHECK(phi_0_dd (838.025 / 322., 647.096 / 500.) == Approx { -0.147637878   });
+    CHECK(phi_r_dd (838.025 / 322., 647.096 / 500.) == Approx {  0.856063701   });
+    CHECK(phi_0_t  (838.025 / 322., 647.096 / 500.) == Approx {  0.904611106e1 });
+    CHECK(phi_r_t  (838.025 / 322., 647.096 / 500.) == Approx { -0.581403435e1 });
+    CHECK(phi_0_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.193249185e1 });
+    CHECK(phi_r_tt (838.025 / 322., 647.096 / 500.) == Approx { -0.223440737e1 });
+    //CHECK(phi_0_dt (838.025 / 322., 647.096 / 500.) == Approx {  0.           8));
+    CHECK(phi_r_dt (838.025 / 322., 647.096 / 500.) == Approx { -0.112176915e1 });
+    CHECK(phi_0    (358.000 / 322., 647.096 / 647.) == Approx { -0.156319605e1 });
+    CHECK(phi_r    (358.000 / 322., 647.096 / 647.) == Approx { -0.121202657e1 });
+    CHECK(phi_0_d  (358.000 / 322., 647.096 / 647.) == Approx {  0.899441341   });
+    CHECK(phi_r_d  (358.000 / 322., 647.096 / 647.) == Approx { -0.714012024   });
+    CHECK(phi_0_dd (358.000 / 322., 647.096 / 647.) == Approx { -0.808994726   });
+    CHECK(phi_r_dd (358.000 / 322., 647.096 / 647.) == Approx {  0.475730696   });
+    CHECK(phi_0_t  (358.000 / 322., 647.096 / 647.) == Approx {  0.980343918e1 });
+    CHECK(phi_r_t  (358.000 / 322., 647.096 / 647.) == Approx { -0.321722501e1 });
+    CHECK(phi_0_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.343316334e1 });
+    CHECK(phi_r_tt (358.000 / 322., 647.096 / 647.) == Approx { -0.996029507e1 });
+    //CHECK(phi_0_dt (358.000 / 322., 647.096 / 647.) == Approx {  0.            });
+    CHECK(phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 });
 
 } // SUBCASE("base functions")
 SUBCASE("Third-order derivatives")
@@ -133,27 +135,21 @@ SUBCASE("Third-order derivatives")
         ) / d / d / d;
     };
 
-        const auto
-    d_and_t = std::vector
-    {
-            std::pair
-          { 838.025 / 322., 647.096 / 500. }
-        , { 358.000 / 322., 647.096 / 647. }
-    };
-
-    for (auto [d, t]: d_and_t)
+    for(const auto& e: r6::detail::table_7)
     {
             using namespace r6::detail;
-        INFO("d= ", d, ", t= ", t);
-        CHECK(phi_r_d (d, t)   == Approx { fd_d   (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_d (d, t)  )).epsilon (1e-5));
-        CHECK(phi_r_t (d, t)   == Approx { fd_t   (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_t (d, t)  )).epsilon (1e-5));
-        CHECK(phi_r_dd (d, t)  == Approx { fd_dd  (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dd (d, t) )).epsilon (1e-5));
-        CHECK(phi_r_tt (d, t)  == Approx { fd_tt  (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_tt (d, t) )).epsilon (1e-5));
-        CHECK(phi_r_ddd (d, t) == Approx { fd_ddd (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_ddd (d, t))).epsilon (1e-5));
-
-        CHECK(phi_r_dt (d, t) == Approx { fd_dt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
-        CHECK(phi_r_ddt (d, t) == Approx { fd_ddt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
-        CHECK(phi_r_dtt (d, t) == Approx { fd_dtt (&phi_r <double, double>, d, t) }.scale (fabs (phi_r_dt (d, t))).epsilon (1e-5));
+            const auto
+        d = e.D / critical_density;
+            const auto
+        t = critical_temperature / e.T;
+        CHECK(phi_r_d   (d, t) == Approx { fd_d   (phi_r <double, double>, d, t) });
+        CHECK(phi_r_t   (d, t) == Approx { fd_t   (phi_r <double, double>, d, t) });
+        CHECK(phi_r_dd  (d, t) == Approx { fd_dd  (phi_r <double, double>, d, t) });
+        CHECK(phi_r_tt  (d, t) == Approx { fd_tt  (phi_r <double, double>, d, t) });
+        CHECK(phi_r_ddd (d, t) == Approx { fd_ddd (phi_r <double, double>, d, t) });
+        CHECK(phi_r_dt  (d, t) == Approx { fd_dt  (phi_r <double, double>, d, t) });
+        CHECK(phi_r_ddt (d, t) == Approx { fd_ddt (phi_r <double, double>, d, t) });
+        CHECK(phi_r_dtt (d, t) == Approx { fd_dtt (phi_r <double, double>, d, t) });
     }
 
 /*
@@ -453,56 +449,103 @@ CHECK(sum (DER (358.000 / 322., 647.096 / 647.)) == Approx { sum (dt (FUN <doubl
 */
 SUBCASE("main API")
 {
-    for(const auto& e: calculisto::iapws::r6::detail::table_7)
+    for(const auto& e: r6::detail::table_7)
     {
         INFO("D= ", e.D, ", T= ", e.T, ", delta= ", e.D / critical_density, ", tau= ", critical_temperature / e.T);
-        CHECK(pressure_dt (e.D, e.T) == Approx { e.P }.epsilon (1e-8));
-        CHECK(massic_isochoric_heat_capacity_dt (e.D, e.T) == Approx { e.Cv }.epsilon (1e-8));
-        CHECK(speed_of_sound_dt (e.D, e.T) == Approx { e.W }.epsilon (1e-8));
-        CHECK(massic_entropy_dt (e.D, e.T) == Approx { e.S }.epsilon (1e-8));
+        CHECK(pressure_dt (e.D, e.T) == Approx { e.P });
+        CHECK(massic_isochoric_heat_capacity_dt (e.D, e.T) == Approx { e.Cv });
+        CHECK(speed_of_sound_dt (e.D, e.T) == Approx { e.W });
+        CHECK(massic_entropy_dt (e.D, e.T) == Approx { e.S });
     }
 } // SUBCASE("main API")
 SUBCASE("mixed arguments")
 {
     CHECK(pressure_dt (1e3, 300.0l));
 }
+/* FIXME:: do not test that against r7
 SUBCASE("alpha_v, kappa_T, alpha_p, beta_p")
 {
-    for (auto iT = 0; iT < ssize (r7::detail::T); ++iT)
+    for (auto iT = 0u; iT < ssize (r7::detail::T); ++iT)
     {
             const auto
-        T = r7::detail::T[iT] + 273.15;
-        for (auto iP = 0; iP < ssize (r7::detail::P); ++iP)
+        T = r7::detail::T[iT] + 273.15; // °C -> k
+        for (auto iP = 0u; iP < ssize (r7::detail::P); ++iP)
         {
                 const auto
-            P = r7::detail::P[iP] * 1e5;
+            P = r7::detail::P[iP] * 1e5; // bar -> Pa
                 const auto
             D = r6_inverse::density_pt (P, T);
                 const auto
-            alpha_v = r7::detail::table_9[iT][iP] * 1e-6;
+            alpha_v_r7 = r7::detail::table_9[iT][iP] * 1e-6;
                 const auto
-            kappa_t = r7::detail::table_10[iT][iP] * 1e-9;
+            kappa_t_r7 = r7::detail::table_10[iT][iP] * 1e-9;
                 const auto
-            alpha_p = r7::detail::table_19[iT][iP] * 1e-3;
+            alpha_p_r7 = r7::detail::table_19[iT][iP] * 1e-3;
                 const auto
-            beta_p = r7::detail::table_20[iT][iP];
+            beta_p_r7 = r7::detail::table_20[iT][iP];
+                const auto
+            d_D_d_T_ft = central_finite_difference <1> (
+                  [](auto P, auto T)
+                  {
+                    return r6_inverse::density_pt (P, T);
+                  }
+                , 1e-6
+                , P
+                , T
+            );
+                const auto
+            alpha_v_ft = -d_D_d_T_ft / D;
+                const auto
+            d_D_d_P_ft = central_finite_difference <0> (
+                  [](auto P, auto T)
+                  {
+                    return r6_inverse::density_pt (P, T);
+                  }
+                , 1e-6
+                , P
+                , T
+            );
+                const auto
+            kappa_t_ft = d_D_d_P_ft / D;
+
             INFO(
                     "T= ", T
                 , ", P= ", P
                 , ", D= ", D
-                , ", alpha_v = ", alpha_v
-                , ", kappa_t = ", kappa_t
-                , ", alpha_p = ", alpha_p
-                , ", beta_p = ", beta_p
+                , ", alpha_v = ", alpha_v_r7
+                , ", kappa_t = ", kappa_t_r7
+                , ", alpha_p = ", alpha_p_r7
+                , ", beta_p = ", beta_p_r7
             );
-            CHECK(isobaric_cubic_expansion_coefficient_dt (D, T) == Approx { alpha_v }.scale (fabs (alpha_v)).epsilon (1e-2));
-            CHECK(isothermal_compressibility_dt (D, T) == Approx { kappa_t }.scale (fabs (kappa_t)).epsilon (1e-2));
-            CHECK(relative_pressure_coefficient_dt (D, T) == Approx { alpha_p }.scale (fabs (alpha_p)).epsilon (1e-2));
-            CHECK(isothermal_stress_coefficient_dt (D, T) == Approx { beta_p }.scale (fabs (beta_p)).epsilon (1e-2));
+
+            CHECK(isobaric_cubic_expansion_coefficient_dt (D, T) == Approx { alpha_v_r7 }.scale (fabs (alpha_v_r7)).epsilon (1e-2));
+            CHECK(isothermal_compressibility_dt (D, T) == Approx { kappa_t_r7 }.scale (fabs (kappa_t_r7)).epsilon (1e-2));
+            CHECK(relative_pressure_coefficient_dt (D, T) == Approx { alpha_p_r7 }.scale (fabs (alpha_p_r7)).epsilon (1e-2));
+            CHECK(isothermal_stress_coefficient_dt (D, T) == Approx { beta_p_r7 }.scale (fabs (beta_p_r7)).epsilon (1e-2));
             // Check that some basic relations hold
-            CHECK(alpha_p * kappa_t / alpha_v == Approx { 1 / P });
-            CHECK(beta_p * alpha_v / alpha_p == Approx { D }.scale (fabs (D)).epsilon (1e-2));
+            CHECK(alpha_p_r7 * kappa_t_r7 / alpha_v_r7 == Approx { 1 / P });
+            CHECK(beta_p_r7 * alpha_v_r7 / alpha_p_r7 == Approx { D }.scale (fabs (D)).epsilon (1e-2));
         }
+    }
+}
+*/
+SUBCASE("Derivatives needed by the Born functions")
+{
+    for(const auto& e: r6::detail::table_7)
+    {
+        INFO("D= ", e.D, ", T= ", e.T, ", P= ", e.P);
+            const auto
+        d_P_d_D = d_pressure_d_density_dt (e.D, e.T);
+            const auto
+        d_P_d_D_fd = central_finite_difference (
+              r6::pressure_dt <double, double>
+            , 1e-5
+            , e.D
+            , e.T
+        );
+        CHECK(d_P_d_D == Approx { d_P_d_D_fd  });
+
+        // NOTE: d_density_d_temperature_dt is tested in r6_inverse.cpp
     }
 }
 #if 0

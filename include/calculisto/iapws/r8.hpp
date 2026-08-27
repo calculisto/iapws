@@ -2,6 +2,8 @@
 #include <numbers>
 #include "detail/common.hpp"
 #include "r6.hpp"
+#include <calculisto/auto_diff/dual.hpp>
+    using calculisto::auto_diff::dual_t;
 
     namespace
 calculisto::iapws::r8
@@ -80,10 +82,10 @@ detail
     avogadro_number = 6.0221367e23;
 
         constexpr auto
-    molar_mass_of_water = 0.018015268;
+    molar_mass = 0.018015268;
     
         constexpr auto
-    critical_molar_density = 322 / molar_mass_of_water;
+    critical_molar_density = 322 / molar_mass;
 
         constexpr auto
     critical_temperature = 647.096;
@@ -603,126 +605,127 @@ detail
     }
 } // namespace detail
 
-    using namespace detail;
-
     constexpr auto
 relative_permittivity_dt (auto const& density, auto const& temperature)
 {
-    return e (density / molar_mass_of_water, temperature);
+        const auto
+    molar_density = density / detail::molar_mass;
+    return detail::e (molar_density, temperature);
 }
 
-    constexpr auto
-d_relative_permittivity_d_p_dt (auto const& density, auto const& temperature)
-{
+    auto
+d_relative_permittivity_d_density_at_temperature_dt (
+      auto const& density
+    , auto const& temperature
+){
         const auto
-    rho = density / molar_mass_of_water;
-        using namespace calculisto::iapws::r6;
-    return 
-          rho
-        * isothermal_compressibility_dt (density, temperature)
-        * dedr (rho, temperature)
-    ;
+    molar_density = density / detail::molar_mass;
+    return detail::dedr (molar_density, temperature) / detail::molar_mass;
 }
-
-    constexpr auto
-d_relative_permittivity_d_t_dt (auto const& density, auto const& temperature)
-{
+    auto
+d_relative_permittivity_d_temperature_at_density_dt (
+      auto const& density
+    , auto const& temperature
+){
         const auto
-    rho = density / molar_mass_of_water;
-        using namespace calculisto::iapws::r6;
-    return 
-          dedt (rho, temperature)
-        - dedr (rho, temperature)
-        * rho
-        * isobaric_cubic_expansion_coefficient_dt (density, temperature)
-    ;
+    molar_density = density / detail::molar_mass;
+    return detail::dedt (molar_density, temperature);
 }
     constexpr auto
-d_relative_permittivity_d_tt_dt (auto const& density, auto const& temperature)
-{
-        const auto
-    rho = density / molar_mass_of_water;
-        const auto
-    alpha_v = r6::isobaric_cubic_expansion_coefficient_dt (density, temperature);
-        using namespace calculisto::iapws::r6;
+d_relative_permittivity_d_pressure_at_temperature_dt (
+      auto const& density
+    , auto const& temperature
+    , auto const& d_density_d_pressure
+){
     return 
-          dedtt (rho, temperature)
-        - 2 * rho * alpha_v * dedtr (rho, temperature)
-        + rho * rho * alpha_v * alpha_v * dedrr (rho, temperature)
-        + rho * dedr (rho, temperature) * (
-              alpha_v * alpha_v
-            //- d_isobaric_cubic_expansion_coefficient_d_t_dt  (rho, temperature)
-            + rho * alpha_v 
-            // * d_isobaric_cubic_expansion_coefficient_d_t_dr  (rho, temperature)
-        )
+          d_density_d_pressure 
+        * d_relative_permittivity_d_density_at_temperature_dt (density, temperature)
     ;
-
-    /*
-        * molar_mass_of_water * rho * rho
-        * relative_pressure_coefficient_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
-    ;
-    */
 }
+    constexpr auto
+d_relative_permittivity_d_temperature_at_pressure_dt (
+      auto const& density
+    , auto const& temperature
+    , auto const& d_density_d_temperature
+){
+    return 
+          d_relative_permittivity_d_temperature_at_density_dt (density, temperature)
+        + d_relative_permittivity_d_density_at_temperature_dt (density, temperature)
+        * d_density_d_temperature
+    ;
+}
+    constexpr auto
+d_relative_permittivity_d2_temperature_at_pressure_dt (
+      auto const& density
+    , auto const& temperature
+    , auto const& d_density_d_temperature
+){
+        using
+    ValueType = std::remove_cvref_t <decltype (temperature)>;
+        auto const
+    dual_value = dual_t <1, ValueType> { temperature, 0 };
+        const auto
+    r = d_relative_permittivity_d_temperature_at_pressure_dt (
+          density
+        , dual_value
+        , d_density_d_temperature
+    );
+    return r.differentials[0];
+}
+/*
     namespace
 born
 {
     constexpr auto
 z (auto const& density, auto const& temperature)
 {
-    return -1 / e (density / molar_mass_of_water, temperature);
+    return -1 / e (density / molar_mass, temperature);
 }
     constexpr auto
-q (auto const& density, auto const& temperature)
-{
-        const auto
-    rho = density / molar_mass_of_water;
-        const auto
-    E = e (rho, temperature);
-        using namespace calculisto::iapws::r6;
+q (
+      auto const& density
+    , auto const& temperature
+    , auto const& relative_permittivity
+    , auto const& d_density_d_pressure
+){
     return 
-          dedr (rho, temperature)
-        * molar_mass_of_water * rho * rho
-        / pressure_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
-        / E / E
+          d_relative_permittivity_d_pressure_at_temperature_dt (density, temperature, d_density_d_pressure) 
+        / relative_permittivity
+        / relative_permittivity
     ;
 }
     constexpr auto
-y (auto const& density, auto const& temperature)
-{
-        const auto
-    rho = density / molar_mass_of_water;
-        const auto
-    E = e (rho, temperature);
-        using namespace calculisto::iapws::r6;
-    return (
-          dedt (rho, temperature)
-        - dedr (rho, temperature)
-        * molar_mass_of_water * rho * rho
-        * relative_pressure_coefficient_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
-    ) / E / E;
+y (
+      auto const& density
+    , auto const& temperature
+    , auto const& relative_permittivity
+    , auto const& d_density_d_temperature
+){
+    return 
+          d_relative_permittivity_d_temperature_at_pressure_dt(density, temperature, d_density_d_temperature)
+        / relative_permittivity
+        / relative_permittivity
+    ;
 }
     constexpr auto
-x (auto const& density, auto const& temperature)
-{
-        const auto
-    rho = density / molar_mass_of_water;
-        const auto
-    E = e (rho, temperature);
-        const auto
-    Y = y (rho, temperature);
-        using namespace calculisto::iapws::r6;
-    return (
-          dedtt (rho, temperature)
-        - dedtr (rho, temperature)
-        * molar_mass_of_water * rho * rho
-        * relative_pressure_coefficient_dt (density, temperature)
-        / isothermal_stress_coefficient_dt (density, temperature)
-    ) / E / E - 2 * E * Y * Y;
+x (
+      auto const& density
+    , auto const& temperature
+    , auto const& relative_permittivity
+    , auto const& d_density_d_temperature
+    , auto const& y
+){
+    return 
+          d_relative_permittivity_d2_temperature_at_pressure_dt(density, temperature, d_density_d_temperature)
+        / relative_permittivity
+        / relative_permittivity
+        - 2
+        * relative_permittivity
+        * y
+        * y
+    ;
 }
-
 } // namespace born
+*/
 } // namespace r8_09_1997
 } // namespace calculisto::iapws::r8

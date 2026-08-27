@@ -1041,6 +1041,10 @@ ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_isobaric_cubic_expansion_coefficient_d_t, /*T
 
 ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_isobaric_cubic_expansion_coefficient_d_d, /*TODO*/)
 
+// Derivatives needed for the Born functions (derivatives of the dielectric constant)
+ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_pressure_d_density, (1 + 2 * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau)) * massic_gas_constant * temperature)
+ISTO_IAPWS_R6_GENERATE_FUNCTIONS(d_density_d_temperature, critical_temperature * density / temperature / temperature * (-1 / tau - delta / tau * detail::phi_r_d (delta, tau) + delta * detail::phi_r_dt (delta, tau)) / (1 + 2 * delta * detail::phi_r_d (delta, tau) + delta * delta * detail::phi_r_dd (delta, tau)))
+
 #undef ISTO_IAPWS_R6_GENERATE_FUNCTIONS
 
 } // inline namespace r6_95_2016

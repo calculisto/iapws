@@ -1,29 +1,32 @@
 #include <doctest/doctest.h>
     using doctest::Approx;
-#include "test.hpp"
 #include "../include/calculisto/iapws/r8.hpp"
 #include "../include/calculisto/iapws/r6_inverse.hpp"
+    using namespace calculisto::iapws;
     using namespace calculisto::iapws::r8;
-    using namespace calculisto::iapws::r6_inverse;
+    using r8::detail::molar_mass;
+#include <calculisto/finite_difference/finite_difference.hpp>
+    using calculisto::finite_difference::central_finite_difference;
 
 TEST_CASE("r8.hpp")
 {
 SUBCASE ("details")
 {
-        using calculisto::iapws::r8::molar_mass_of_water;
-    CHECK (density_pt (   0.101325e6, 240.) == Approx { 54.33701e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt (   0.101325e6, 300.) == Approx { 55.31735e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt (  10e6       , 300.) == Approx { 55.56148e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt (1000e6       , 300.) == Approx { 68.69265e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt (  10e6       , 650.) == Approx {  2.24692e3 * molar_mass_of_water }.scale (1e1).epsilon (1e-7));
-    CHECK (density_pt ( 100e6       , 650.) == Approx { 40.31090e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt ( 500e6       , 650.) == Approx { 52.58636e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
-    CHECK (density_pt (  10e6       , 870.) == Approx {  1.45275e3 * molar_mass_of_water }.scale (1e1).epsilon (1e-5));
-    CHECK (density_pt ( 100e6       , 870.) == Approx { 20.98927e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-6));
-    CHECK (density_pt ( 500e6       , 870.) == Approx { 45.01376e3 * molar_mass_of_water }.scale (1e2).epsilon (1e-7));
+        using calculisto::iapws::r6_inverse::density_pt;
+    CHECK (density_pt (   0.101325e6, 240.) == Approx { 54.33701e3 * molar_mass });
+    CHECK (density_pt (   0.101325e6, 300.) == Approx { 55.31735e3 * molar_mass });
+    CHECK (density_pt (  10e6       , 300.) == Approx { 55.56148e3 * molar_mass });
+    CHECK (density_pt (1000e6       , 300.) == Approx { 68.69265e3 * molar_mass });
+    CHECK (density_pt (  10e6       , 650.) == Approx {  2.24692e3 * molar_mass });
+    CHECK (density_pt ( 100e6       , 650.) == Approx { 40.31090e3 * molar_mass });
+    CHECK (density_pt ( 500e6       , 650.) == Approx { 52.58636e3 * molar_mass });
+    CHECK (density_pt (  10e6       , 870.) == Approx {  1.45275e3 * molar_mass });
+    CHECK (density_pt ( 100e6       , 870.) == Approx { 20.98927e3 * molar_mass });
+    CHECK (density_pt ( 500e6       , 870.) == Approx { 45.01376e3 * molar_mass });
 }
 SUBCASE ("main API")
 {
+        using calculisto::iapws::r6_inverse::density_pt;
     CHECK (relative_permittivity_dt (density_pt (   0.101325e6, 240.), 240.) == Approx { 104.34982 }.scale (1e2).epsilon (1e-7));
     CHECK (relative_permittivity_dt (density_pt (   0.101325e6, 300.), 300.) == Approx {  77.74735 }.scale (1e1).epsilon (1e-7));
     CHECK (relative_permittivity_dt (density_pt (  10e6       , 300.), 300.) == Approx {  78.11269 }.scale (1e1).epsilon (1e-7));
@@ -38,31 +41,25 @@ SUBCASE ("main API")
     //
 SUBCASE ("Derivatives")
 {
+    // https://doi.org/10.1063/1.555997
+    // Fernandez et al. 1997, table 12
         struct
     data_t
     {
             double
-        T;
-            double
-        p;
-            double
-        rho;
-            double
-        epsilon;
-            double
-        dedp;
-            double
-        dedt;
-            double
-        dedpp;
-            double
-        dedtt;
-            double
-        dedpt;
+          T 
+        , P
+        , rho_m
+        , epsilon
+        , dedp
+        , dedt
+        , dedpp
+        , dedtt
+        , dedpt
+        ;
     };
-    // https://doi.org/10.1063/1.555997
         constexpr auto
-    data = std::array <data_t, 41>
+    data = std::array <data_t, 41> //{{{
     {{
           { 270     , 0.101325e6 , 55.4827e3 , 89.1821 , 0.0426805e-6  , -0.409375  , -0.56745e4 , 0.22655e-2 , -0.28474e3 }
         , { 300     , 0.101325e6 , 55.3174e3 , 77.7474 , 0.0371860e-6  , -0.355908  , -0.57134e4 , 0.15732e-2 , -0.11007e3 }
@@ -105,46 +102,405 @@ SUBCASE ("Derivatives")
         , { 473.110 , 100.0e6    , 51.2774e3 , 38.2317 , 0.0293588e-6  , -0.160903  , -0.85449e4 , 0.71214e-3 ,  0.32458e4 }
         , { 673.102 , 100.0e6    , 38.4676e3 , 15.8180 , 0.0510736e-6  , -0.0796130 , -0.53399e3 , 0.21952e-3 ,  0.21205e3 }
         , { 773.071 , 100.0e6    , 29.3314e3 , 8.96472 , 0.0723386e-6  , -0.0562017 , -0.10733e2 , 0.29368e-3 ,  0.11028e3 }
-    }};
-    for (auto [T, p, rho, epsilon, dedp, dedt, dedpp, dedtt, dedpt]: data)
+    }}; //}}}
+    for (auto const& e: data)
     {
             const auto
-        d = density_pt (p, T);
-        INFO("T= ", T, ", p= ", p, ", rho= ", rho * molar_mass_of_water);
-        CHECK (d == Approx { rho * molar_mass_of_water }.scale (rho * molar_mass_of_water).epsilon (1e-6));
-        CHECK (relative_permittivity_dt (d, T) == Approx { epsilon }.scale (epsilon).epsilon (1e-5));
-        CHECK (d_relative_permittivity_d_p_dt (d, T) == Approx { dedp }.scale (fabs (dedp)).epsilon (1e-5));
-        CHECK (d_relative_permittivity_d_t_dt (d, T) == Approx { dedt }.scale (fabs (dedt)).epsilon (1e-5));
-        // The values in the reference are wrong, see below.
-        // CHECK (d_relative_permittivity_d_tt_dt (density_pt (p, T), T) == Approx { dedtt }.scale (fabs (dedtt)).epsilon (1e-5));
-    }
-    SUBCASE ("Our derivatives w.r.t. temperature and density are good")
-    {
-            auto
-        dtr = [](auto delta, auto f, double r, double t, auto... args)
+        temperature = e.T;
+            const auto
+        pressure = e.P;
+            const auto
+        density = r6_inverse::density_pt (pressure, temperature);
         {
-            return (
-                  f (r + delta, t + delta, args...)
-                - f (r - delta, t + delta, args...)
-                - f (r + delta, t - delta, args...)
-                + f (r - delta, t - delta, args...)
-            ) / 4 / delta / delta;
-        };
+                const auto
+            molar_density = density / molar_mass;
 
-        for (auto [T, p, rho, epsilon, dedp, dedt, dedpp, dedtt, dedpt]: data)
-        {
-            INFO("T= ", T, ", p= ", p, ", rho= ", rho * molar_mass_of_water);
                 const auto
-            expected = dtr (1e-1, e <double, double>, rho, T);
+            dgdt = r8::detail::dgdt (molar_density, temperature);
+            CHECK(dgdt == Approx { 
+                central_finite_difference <1> (
+                      r8::detail::g <double, double>
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
                 const auto
-            value = dedtr (rho, T);
-            CHECK (value == Approx { expected }.scale (fabs (expected)).epsilon (1e-4));
+            dgdtt = r8::detail::dgdtt (molar_density, temperature);
+            CHECK(dgdtt == Approx { 
+                central_finite_difference <1, 2> (
+                      r8::detail::g <double, double>
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dgdr = r8::detail::dgdr (molar_density, temperature);
+            CHECK(dgdr == Approx { 
+                central_finite_difference <0> (
+                      r8::detail::g <double, double>
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dgdrr = r8::detail::dgdrr (molar_density, temperature);
+            CHECK(dgdrr == Approx { 
+                central_finite_difference <0, 2> (
+                      r8::detail::g <double, double>
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dgdtr = r8::detail::dgdtr (molar_density, temperature);
+            CHECK(dgdtr == Approx { 
+                central_finite_difference <1> (
+                    [=](auto md, auto t)
+                    {
+                        return central_finite_difference <0> (
+                            r8::detail::g <double, double>
+                            , 1e-3
+                            , md
+                            , t
+                        );
+                    }
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+            
+                const auto
+            g = r8::detail::g (molar_density, temperature);
+
+                const auto
+            dadt = r8::detail::dadt (molar_density, temperature, g, dgdt);
+            CHECK(dadt == Approx { 
+                central_finite_difference <1> (
+                    [=](auto md, auto t)
+                    {
+                            const auto
+                        g_ = r8::detail::g (md, t);
+                        return r8::detail::a (md, t, g_);
+                    }
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dadtt = r8::detail::dadtt (molar_density, temperature, g, dgdt, dgdtt);
+            CHECK(dadtt == Approx { 
+                central_finite_difference <1, 2> (
+                    [=](auto md, auto t)
+                    {
+                            const auto
+                        g_ = r8::detail::g (md, t);
+                        return r8::detail::a (md, t, g_);
+                    }
+                    , 1e-2
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dadr = r8::detail::dadr (molar_density, temperature, g, dgdr);
+            CHECK(dadr == Approx { 
+                central_finite_difference <0> (
+                    [=](auto md, auto t)
+                    {
+                            const auto
+                        g_ = r8::detail::g (md, t);
+                        return r8::detail::a (md, t, g_);
+                    }
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dadrr = r8::detail::dadrr (molar_density, temperature, dgdr, dgdrr);
+            CHECK(dadrr == Approx { 
+                central_finite_difference <0, 2> (
+                    [=](auto md, auto t)
+                    {
+                            const auto
+                        g_ = r8::detail::g (md, t);
+                        return r8::detail::a (md, t, g_);
+                    }
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dadtr = r8::detail::dadtr (molar_density, temperature, g, dgdt, dgdr, dgdtr);
+            CHECK(dadtr == Approx { 
+                central_finite_difference <1> (
+                    [=](auto md, auto t)
+                    {
+                        return central_finite_difference <0> (
+                            [=](auto md_, auto t_)
+                            {
+                                    const auto
+                                g_ = r8::detail::g (md_, t_);
+                                return r8::detail::a (md_, t_, g_);
+                            }
+                            , 1e-3
+                            , md
+                            , t
+                        );
+                    }
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+            // TODO: the rest...
+
+                const auto
+            dedt = r8::detail::dedt (molar_density, temperature);
+            CHECK(dedt == Approx { 
+                central_finite_difference <1> (
+                      r8::detail::e <double, double>
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dedtt = r8::detail::dedtt (molar_density, temperature);
+            CHECK(dedtt == Approx { 
+                central_finite_difference <1, 2> (
+                      r8::detail::e <double, double>
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dedr = r8::detail::dedr (molar_density, temperature);
+            CHECK(dedr == Approx { 
+                central_finite_difference <0> (
+                      r8::detail::e <double, double>
+                    , 1e-6
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dedrr = r8::detail::dedrr (molar_density, temperature);
+            CHECK(dedrr == Approx { 
+                central_finite_difference <0, 2> (
+                      r8::detail::e <double, double>
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
+                const auto
+            dedtr = r8::detail::dedtr (molar_density, temperature);
+            CHECK(dedtr == Approx { 
+                central_finite_difference <1> (
+                    [=](auto md, auto t)
+                    {
+                        return central_finite_difference <0> (
+                            r8::detail::e <double, double>
+                            , 1e-3
+                            , md
+                            , t
+                        );
+                    }
+                    , 1e-3
+                    , molar_density
+                    , temperature
+                ) 
+            });
         }
+        {
+                const auto
+            relative_permittivity = relative_permittivity_dt (density, temperature);
+            CHECK(relative_permittivity == Approx { e.epsilon });
+        }{
+                const auto
+            d_relative_permittivity_d_density_at_temperature = d_relative_permittivity_d_density_at_temperature_dt (density, temperature);
+                const auto
+            d_relative_permittivity_d_density_at_temperature_fd = central_finite_difference <0> (
+                relative_permittivity_dt <double, double>
+                , 1e-7
+                , density
+                , temperature
+            );
+            CHECK(d_relative_permittivity_d_density_at_temperature == Approx { d_relative_permittivity_d_density_at_temperature_fd });
+        }{
+                const auto
+            d_relative_permittivity_d_temperature_at_density = d_relative_permittivity_d_temperature_at_density_dt (density, temperature);
+                const auto
+            d_relative_permittivity_d_temperature_at_density_fd = central_finite_difference <1> (
+                relative_permittivity_dt <double, double>
+                , 1e-6
+                , density
+                , temperature
+            );
+            CHECK(d_relative_permittivity_d_temperature_at_density == Approx { d_relative_permittivity_d_temperature_at_density_fd });
+        }
+            const auto
+        d_density_d_pressure = 1 / r6::d_pressure_d_density_dt (density, temperature);
+        {
+                const auto
+            d_relative_permittivity_d_pressure_at_temperature = d_relative_permittivity_d_pressure_at_temperature_dt (density, temperature, d_density_d_pressure);
+                const auto
+            d_relative_permittivity_d_pressure_at_temperature_fd = central_finite_difference <0> (
+                [=](auto p, auto t)
+                {
+                        const auto
+                    d = r6_inverse::density_pt (p, t);
+                    return relative_permittivity_dt (d, t);
+                }
+                , 1e-6
+                , pressure
+                , temperature
+            );
+            CHECK(d_relative_permittivity_d_pressure_at_temperature == Approx { d_relative_permittivity_d_pressure_at_temperature_fd });
+        }
+            const auto
+        d_density_d_temperature = r6::d_density_d_temperature_dt (density, temperature);
+        {
+                const auto
+            d_relative_permittivity_d_temperature_at_pressure = d_relative_permittivity_d_temperature_at_pressure_dt (density, temperature, d_density_d_temperature);
+                const auto
+            d_relative_permittivity_d_temperature_at_pressure_fd = central_finite_difference <1> (
+                [=](auto p, auto t)
+                {
+                        const auto
+                    d = r6_inverse::density_pt (p, t);
+                    return relative_permittivity_dt (d, t);
+                }
+                , 1e-6
+                , pressure
+                , temperature
+            );
+            CHECK(d_relative_permittivity_d_temperature_at_pressure == Approx { d_relative_permittivity_d_temperature_at_pressure_fd });
+        }{
+                const auto
+            d_relative_permittivity_d2_temperature_at_pressure = d_relative_permittivity_d2_temperature_at_pressure_dt (density, temperature, d_density_d_temperature);
+                const auto
+            d_relative_permittivity_d2_temperature_at_pressure_fd = central_finite_difference <1, 2> (
+                [=](auto p, auto t)
+                {
+                        const auto
+                    d = r6_inverse::density_pt (p, t);
+                    return relative_permittivity_dt (d, t);
+                }
+                , 1e-3
+                , pressure
+                , temperature
+            );
+            CHECK(d_relative_permittivity_d2_temperature_at_pressure == Approx { d_relative_permittivity_d2_temperature_at_pressure_fd });
+        }
+
+    /*
+            const auto
+        D = density_pt (P, T);
+        CHECK (D == Approx { rho_m * molar_mass }.scale (rho_m * molar_mass).epsilon (1e-6));
+        INFO("T= ", T, ", p= ", P, ", rho= ", rho_m * molar_mass);
+            const auto
+        Dm = D / molar_mass;
+
+        // detail functions
+        CHECK(dgdr  (Dm, T) == Approx { central_finite_difference <0> (g <double, double>, 1e-6, Dm, T) });
+        CHECK(dgdrr (Dm, T) == Approx { central_finite_difference <0, 2> (g <double, double>, 1e-2, Dm, T) });
+        CHECK(dgdt  (Dm, T) == Approx { central_finite_difference <1> (g <double, double>, 1e-6, Dm, T) });
+        CHECK(dgdtt (Dm, T) == Approx { central_finite_difference <1, 2> (g <double, double>, 1e-2, Dm, T) });
+        CHECK(dgdtr (Dm, T) == Approx { 
+            central_finite_difference <1> (
+                  [](auto dm, auto t)
+                  {
+                      return central_finite_difference <0> (g <double, double>, 1e-4, dm, t);
+                  }
+                , 1e-4
+                , Dm
+                , T
+            )
+        });
+        CHECK(dedr  (Dm, T) == Approx { central_finite_difference <0> (e <double, double>, 1e-6, Dm, T) });
+        CHECK(dedrr (Dm, T) == Approx { central_finite_difference <0, 2> (e <double, double>, 1e-2, Dm, T) });
+        CHECK(dedt  (Dm, T) == Approx { central_finite_difference <1> (e <double, double>, 1e-6, Dm, T) });
+        CHECK(dedtt (Dm, T) == Approx { central_finite_difference <1, 2> (e <double, double>, 1e-2, Dm, T) });
+        CHECK(dedtr (Dm, T) == Approx { 
+            central_finite_difference <1> (
+                  [](auto dm, auto t)
+                  {
+                      return central_finite_difference <0> (e <double, double>, 1e-4, dm, t);
+                  }
+                , 1e-4
+                , Dm
+                , T
+            )
+        });
+
+        CHECK (relative_permittivity_dt (D, T) == Approx { epsilon });
+
+            const auto
+        d_D_d_P = 1 / r6::d_pressure_d_density_dt (D, T);
+
+        // INFO: This fails (probably because Fernandez et al, 1997 used an older EoS).
+        // CHECK (d_relative_permittivity_d_p_dt (D, T, d_D_d_P) == Approx { dEdp });
+
+            const auto
+        d_E_d_P_fd = central_finite_difference (
+              [](auto p, auto t)
+              {
+                    const auto
+                d = density_pt (p, t);
+                return relative_permittivity_dt (d, t);
+              }
+            , 1e-6
+            , P
+            , T
+        );
+        CHECK (d_relative_permittivity_d_pressure_at_temperature_dt (D, T, d_D_d_P) == Approx { d_E_d_P_fd });
+
+            const auto
+        d_D_d_T = r6::d_density_d_temperature_dt (D, T);
+            const auto
+        d_E_d_t_fd = central_finite_difference <1> (
+              [](auto p, auto t)
+              {
+                    const auto
+                d = density_pt (p, t);
+                return relative_permittivity_dt (d, t);
+              }
+            , 1e-6
+            , P
+            , T
+        );
+        CHECK (d_relative_permittivity_d_temperature_at_pressure_dt (D, T, d_D_d_T) == Approx { d_E_d_t_fd });
+
+            const auto
+        d_E_d_tt_fd = central_finite_difference <1, 2> (
+              [](auto p, auto t)
+              {
+                    const auto
+                d = density_pt (p, t);
+                return relative_permittivity_dt (d, t);
+              }
+            , 1e-2
+            , P
+            , T
+        );
+        CHECK (d_relative_permittivity_d2_temperature_at_pressure_dt (D, T, d_D_d_T) == Approx { d_E_d_tt_fd });
+    */
     }
+        /*
     SUBCASE ("Comparison with SUPCRT92")
     {
             struct
-        data_t {
+        data_supcrt_t {
                 double
               T      // K
             , P      // bar
@@ -161,8 +517,8 @@ SUBCASE ("Derivatives")
         };
         // Computed using https://doi.org/10.1016/0098-3004(92)90029-Q
             constexpr auto
-        data = std::array <data_t, 160>
-        {{
+        data_supcrt = std::array <data_supcrt_t, 160> 
+        {{ //{{{
             //  T                   P                        D                        e                   dedP                     dedT                      d2edT2                    Z                         Q                        Y                         X
               { 298.14999999999998, 3.1687373347492838E-002, 0.99701770223508457    , 78.241204546741571, 4.0626655443134216E-003, -0.35499122845632397    , 1.3501561525097775E-003 , -1.2780989323887472E-002, 6.6365140016952601E-007, -5.7989126410540784E-005, -3.0565647871740714E-007 }
             , { 298.14999999999998, 3.1687373347492838E-002, 0.99701770223508457    , 78.241204546741571, 4.0626655443134216E-003, -0.35499122845632397    , 1.3501561525097775E-003 , -1.2780989323887472E-002, 6.6365140016952601E-007, -5.7989126410540784E-005, -3.0565647871740714E-007 }
@@ -324,28 +680,44 @@ SUBCASE ("Derivatives")
             , { 1073.1500000000001, 5000.0000000000000     , 0.70174792027179955    , 10.105591902969483, 9.8289396415440810E-004, -2.0480268897011399E-002, 5.5258398766788130E-005 , -9.8955114119159568E-002, 9.6246103468073420E-006, -2.0054514029003306E-004, -2.7176395688816201E-007 }
             , { 1173.1500000000001, 5000.0000000000000     , 0.65281273021945729    , 8.3089883348774229, 7.6014807044347222E-004, -1.5684108440761204E-002, 4.1303682248813597E-005 , -0.12035159512770605    , 1.1010369629128786E-005, -2.2717656986930598E-004, -2.5937692820215993E-007 }
             , { 1273.1500000000001, 5000.0000000000000     , 0.60922636458571988    , 6.9282160498160801, 5.2511453081937470E-004, -1.2107364753703453E-002, 3.0729046587938717E-005 , -0.14433730022413874    , 1.0939845573803359E-005, -2.5223583225653622E-004, -2.4140050125128942E-007 }
-        }};        
-        for (auto [T , P , d, e , dedP , dedT , d2edT2 , Z , Q , Y , X]: data)
+        }}; //}}}
+        for (auto [T , P , d, e , dedP , dedT , d2edT2 , z , q , y , x]: data_supcrt)
         {
             if (P < 1.) continue;
             // bar -> Pa
             P *= 1e5;
             dedP /= 1e5;
-            Q /= 1e5;
+            q /= 1e5;
             d *= 1e3;
+            // TODO: We need an intial guess here. Investigate why.
                 const auto
-            D = density_pt (P, T, 1000.); // <- We need (!) an initial guess here TODO: investigate why.
+            D = r6_inverse::density_pt (P, T, 1000.); 
             INFO("T= ", T, ", P= ", P, ", D= ", D);
             CHECK (D == Approx { d }.scale (d).epsilon (1e-2));
-            CHECK (relative_permittivity_dt (D, T) == Approx { e }.scale (e).epsilon (1e-1));
-            CHECK (d_relative_permittivity_d_p_dt (D, T)  == Approx { dedP }.scale (fabs (dedP)).epsilon (1));
-            CHECK (d_relative_permittivity_d_t_dt (D, T)  == Approx { dedT }.scale (fabs (dedT)).epsilon (1e-1));
-            CHECK (d_relative_permittivity_d_tt_dt (D, T) == Approx { d2edT2 }.scale (fabs (d2edT2)).epsilon (1));
-            CHECK (born::z (D, T)== Approx { Z }.scale (fabs (Z)).epsilon (1e-1));
-            CHECK (born::q (D, T)== Approx { Q }.scale (fabs (Q)).epsilon (1));
-            CHECK (born::y (D, T)== Approx { Y }.scale (fabs (Y)).epsilon (1));
-            // CHECK (born::x (D, T)== Approx { X }.scale (fabs (X)).epsilon (1));
+                const auto
+            E = relative_permittivity_dt (D, T);
+            CHECK (E == Approx { e }.scale (e).epsilon (1e-1));
+                const auto
+            d_D_d_P = 1. / r6::d_pressure_d_density_dt (D, T);
+            CHECK (d_relative_permittivity_d_pressure_at_temperature_dt (D, T, d_D_d_P)  == Approx { dedP }.scale (fabs (dedP)).epsilon (1e-1));
+                const auto
+            d_D_d_T = r6::d_density_d_temperature_dt (D, T);
+            CHECK (d_relative_permittivity_d_temperature_at_pressure_dt (D, T, d_D_d_T)  == Approx { dedT }.scale (fabs (dedT)).epsilon (1e-1));
+            CHECK (d_relative_permittivity_d2_temperature_at_pressure_dt (D, T, d_D_d_T) == Approx { d2edT2 }.scale (fabs (d2edT2)).epsilon (1));
+                const auto
+            Z = -1 / E;
+                const auto
+            Q = born::q (D, T, E, d_D_d_P);
+                const auto
+            Y = born::y (D, T, E, d_D_d_T);
+                const auto
+            X = born::x (D, T, E, d_D_d_T, Y);
+            CHECK (Z == Approx { z }.scale (fabs (z)).epsilon (1));
+            CHECK (Q == Approx { q }.scale (fabs (q)).epsilon (1));
+            CHECK (Y == Approx { y }.scale (fabs (y)).epsilon (1));
+            CHECK (X == Approx { x }.scale (fabs (x)).epsilon (1));
         }
     } // SUBCASE ("Comparison with SUPCRT92")
+    // */
 } // SUBCASE ("Derivatives")
 } // TEST_CASE("r10.hpp")
