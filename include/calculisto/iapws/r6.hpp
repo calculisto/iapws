@@ -842,10 +842,13 @@ phi_r_dtt (auto const& delta, auto const& tau)
             * pow (delta, d_1 - 1) * pow (tau, t_1 - 2)
           )
         + sum (
-              n_2 * t_2 * exp (-pow (delta, c_2))
-            * pow (tau, t_2 - 2) * pow (delta, d_2 - 1)
-            * (d_2 + pow (delta, c_2) * c_2)
+              n_2 
+            * t_2 
             * (t_2 - 1)
+            * pow (delta, d_2 - 1) 
+            * pow (tau, t_2 - 2)
+            * (d_2 - c_2 * pow (delta, c_2)) 
+            * exp (-pow (delta, c_2))
           )
         + sum (
               n_3 * pow (delta, d_3 - 1) * pow (tau, t_3 - 2)
