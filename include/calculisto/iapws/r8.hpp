@@ -324,8 +324,12 @@ detail
         return dAdtt * (1 + A + 5 * B) + dAdt * dAdt;
     }
         constexpr auto
-    half_dcdr (auto const& A, auto const& B, auto const& dAdr, auto const& dBdr)
-    {
+    half_dcdr (
+          auto const& A
+        , auto const& B
+        , auto const& dAdr
+        , auto const& dBdr
+    ){
         return dAdr * (1 + A + 5 * B) + dBdr * (9 + 5 * A + 9 * B);
     }
         constexpr auto
@@ -563,8 +567,6 @@ detail
             const auto
         sqrtC = sqrt (c (A, B));
             const auto
-        D = d (A, B, sqrtC);
-            const auto
         dGdr = dgdr (molar_density, temperature);
             const auto
         dGdrr = dgdrr (molar_density, temperature);
@@ -575,6 +577,8 @@ detail
             const auto
         dBdr = dbdr ();
             const auto
+        D = d (A, B, sqrtC);
+            const auto
         half_dCdr = half_dcdr (A, B, dAdr, dBdr);
             const auto
         half_dCdrr = half_dcdrr (A, B, dAdr, dAdrr, dBdr);
@@ -583,10 +587,12 @@ detail
             const auto
         dDdrr = dddrr (dAdrr, half_dCdr, half_dCdrr, C, sqrtC);
         return (
-              dDdrr / 2 
-            + dBdr * dDdr / (1 - B)
-            - dBdr * dBdr * D / (1 - B) / (1 - B)
-        ) / 2 / (1 - B);
+              pow (1 - B, 2) * dDdrr
+            + 2 * (1 - B) * dDdr * dBdr
+            + 2 * D * pow (dBdr, 2)
+        ) / (
+            4 * pow (1 - B, 3)
+        ) ;
     }
 } // namespace detail
 
@@ -608,6 +614,15 @@ d_relative_permittivity_d_density_at_temperature_dt (
     return detail::dedr (molar_density, temperature) / molar_mass;
 }
     auto
+d_relative_permittivity_d2_density_at_temperature_dt (
+      auto const& density
+    , auto const& temperature
+){
+        const auto
+    molar_density = density / molar_mass;
+    return detail::dedrr (molar_density, temperature) / molar_mass / molar_mass;
+}
+    auto
 d_relative_permittivity_d_temperature_at_density_dt (
       auto const& density
     , auto const& temperature
@@ -616,14 +631,32 @@ d_relative_permittivity_d_temperature_at_density_dt (
     molar_density = density / molar_mass;
     return detail::dedt (molar_density, temperature);
 }
+    auto
+d_relative_permittivity_d2_temperature_at_density_dt (
+      auto const& density
+    , auto const& temperature
+){
+        const auto
+    molar_density = density / molar_mass;
+    return detail::dedtt (molar_density, temperature);
+}
+    auto
+d_relative_permittivity_d_density_temperature_at_temperature_density_dt (
+      auto const& density
+    , auto const& temperature
+){
+        const auto
+    molar_density = density / molar_mass;
+    return detail::dedtr (molar_density, temperature) / molar_mass;
+}
     constexpr auto
 d_relative_permittivity_d_pressure_at_temperature_dt (
       auto const& density
     , auto const& temperature
-    , auto const& d_density_d_pressure
+    , auto const& d_density_d_pressure_at_pressure
 ){
     return 
-          d_density_d_pressure 
+          d_density_d_pressure_at_pressure 
         * d_relative_permittivity_d_density_at_temperature_dt (density, temperature)
     ;
 }
@@ -631,20 +664,30 @@ d_relative_permittivity_d_pressure_at_temperature_dt (
 d_relative_permittivity_d_temperature_at_pressure_dt (
       auto const& density
     , auto const& temperature
-    , auto const& d_density_d_temperature
+    , auto const& d_density_d_temperature_at_pressure
 ){
     return 
           d_relative_permittivity_d_temperature_at_density_dt (density, temperature)
         + d_relative_permittivity_d_density_at_temperature_dt (density, temperature)
-        * d_density_d_temperature
+        * d_density_d_temperature_at_pressure
     ;
 }
     constexpr auto
 d_relative_permittivity_d2_temperature_at_pressure_dt (
       auto const& density
     , auto const& temperature
-    , auto const& d_density_d_temperature
+    , auto const& d_density_d_temperature_at_pressure
+    , auto const& d_density_d2_temperature_at_pressure_density
+    , auto const& d_density_d_temperature_density_at_pressure_temperature
 ){
+    return
+          d_relative_permittivity_d2_temperature_at_density_dt (density, temperature)
+        + 2 * d_density_d_temperature_at_pressure * d_relative_permittivity_d_density_temperature_at_temperature_density_dt (density, temperature)
+        + d_relative_permittivity_d_density_at_temperature_dt (density, temperature) * d_density_d2_temperature_at_pressure_density
+        + pow (d_density_d_temperature_at_pressure, 2) * d_relative_permittivity_d2_density_at_temperature_dt (density, temperature)
+        + d_density_d_temperature_at_pressure * d_relative_permittivity_d_density_at_temperature_dt (density, temperature) * d_density_d_temperature_density_at_pressure_temperature
+    ;
+    /*
         using
     ValueType = std::remove_cvref_t <decltype (temperature)>;
         auto const
@@ -656,6 +699,7 @@ d_relative_permittivity_d2_temperature_at_pressure_dt (
         , d_density_d_temperature
     );
     return r.differentials[0];
+    */
 }
 /*
     namespace

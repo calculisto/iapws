@@ -199,22 +199,48 @@ TEST_CASE("r6_inverse.hpp")
             }
         }
     }
-    SUBCASE("R6: Derivative of density w.r.t. temperature")
+    SUBCASE("R6: Derivative of density w.r.t. temperature at fixed pressure")
     {
-        // This is here because we need r6_inverse to test that
+        // This is here because we need r6_inverse to test it
         for(const auto& e: r6::detail::table_7)
         {
             INFO("D= ", e.D, ", T= ", e.T, ", P= ", e.P);
                 const auto
-            d_D_d_T = d_density_d_temperature_dt (e.D, e.T);
+            d_D_d_T_at_P = d_density_d_temperature_at_pressure_dt (e.D, e.T);
                 const auto
-            d_D_d_T_fd = central_finite_difference <0> (
+            d_D_d_T_at_P_fd = central_finite_difference <0> (
                   r6_inverse::density_tp <double, double>
-                , 1e-5
+                , 1e-6
                 , e.T
                 , e.P
             );
-            CHECK(d_D_d_T == Approx { d_D_d_T_fd }.scale (fabs (d_D_d_T_fd)).epsilon (1e-4));
+            CHECK(d_D_d_T_at_P == Approx { d_D_d_T_at_P_fd }.epsilon (1e-4));
+
+            /*
+                const auto
+            d_D_d2_T_at_P = d_density_d2_temperature_at_pressure_dt (e.D, e.T);
+                const auto
+            d_D_d2_T_at_P_fd = central_finite_difference <0, 2, 4> (
+                  r6_inverse::density_tp <double, double>
+                , 1e-4
+                , e.T
+                , e.P
+            );
+            CHECK(d_D_d2_T_at_P == Approx { d_D_d2_T_at_P_fd  });
+                const auto
+            d_D_d2_T_at_P_fd_2 = central_finite_difference <0, 1, 4> (
+                  [=](auto T, auto P)
+                  {
+                        const auto
+                    D = r6_inverse::density_tp (T, P);
+                    return d_density_d_temperature_at_pressure_dt (D, T);
+                  }
+                , 1e-7
+                , e.T
+                , e.P
+            );
+            CHECK(d_D_d2_T_at_P == Approx { d_D_d2_T_at_P_fd_2 });
+            */
         }
     }
 } // TEST_CASE("r6_inverse.hpp")

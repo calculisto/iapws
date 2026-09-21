@@ -40,25 +40,106 @@ SUBCASE("base functions")
     CHECK(phi_r_dt (358.000 / 322., 647.096 / 647.) == Approx { -0.133214720e1 });
 
 } // SUBCASE("base functions")
-SUBCASE("Third-order derivatives")
+SUBCASE("derivatives, including the third-orders")
 {
-    // The analytical expressions were established by us. We test them against
-    // finite difference.
     for(const auto& e: r6::detail::table_7)
     {
+            const auto
+        delta = e.D / critical_density;
+            const auto
+        tau = critical_temperature / e.T;
+        INFO("D= ", e.D, ", T= ", e.T, ", delta= ", delta, ", tau= ", tau);
+
             using namespace r6::detail;
-            const auto
-        d = e.D / critical_density;
-            const auto
-        t = critical_temperature / e.T;
-        CHECK(phi_r_d   (d, t) == Approx { central_finite_difference <0> (phi_r <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_t   (d, t) == Approx { central_finite_difference <1> (phi_r <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_dd  (d, t) == Approx { central_finite_difference <0> (phi_r_d <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_tt  (d, t) == Approx { central_finite_difference <1> (phi_r_t <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_ddd (d, t) == Approx { central_finite_difference <0> (phi_r_dd <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_dt  (d, t) == Approx { central_finite_difference <1> (phi_r_d <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_ddt (d, t) == Approx { central_finite_difference <1> (phi_r_dd <double, double>, 1e-6, d, t) });
-        CHECK(phi_r_dtt (d, t) == Approx { central_finite_difference <1> (phi_r_dt <double, double>, 1e-7, d, t) });
+        CHECK(phi_1_r_d   (delta, tau) == Approx { central_finite_difference <0> (phi_1_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_dd  (delta, tau) == Approx { central_finite_difference <0> (phi_1_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_ddd (delta, tau) == Approx { central_finite_difference <0> (phi_1_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_t   (delta, tau) == Approx { central_finite_difference <1> (phi_1_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_tt  (delta, tau) == Approx { central_finite_difference <1> (phi_1_r_t  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_ttt (delta, tau) == Approx { central_finite_difference <1> (phi_1_r_tt <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_dt  (delta, tau) == Approx { central_finite_difference <1> (phi_1_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_ddt (delta, tau) == Approx { central_finite_difference <1> (phi_1_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_1_r_dtt (delta, tau) == Approx { central_finite_difference <0> (phi_1_r_tt <double, double>, 1e-6, delta, tau) });
+
+        CHECK(phi_2_r_d   (delta, tau) == Approx { central_finite_difference <0> (phi_2_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_dd  (delta, tau) == Approx { central_finite_difference <0> (phi_2_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_ddd (delta, tau) == Approx { central_finite_difference <0> (phi_2_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_t   (delta, tau) == Approx { central_finite_difference <1> (phi_2_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_tt  (delta, tau) == Approx { central_finite_difference <1> (phi_2_r_t  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_ttt (delta, tau) == Approx { central_finite_difference <1> (phi_2_r_tt <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_dt  (delta, tau) == Approx { central_finite_difference <1> (phi_2_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_ddt (delta, tau) == Approx { central_finite_difference <1> (phi_2_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_2_r_dtt (delta, tau) == Approx { central_finite_difference <0> (phi_2_r_tt <double, double>, 1e-6, delta, tau) });
+
+        CHECK(phi_3_r_d   (delta, tau) == Approx { central_finite_difference <0> (phi_3_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_dd  (delta, tau) == Approx { central_finite_difference <0> (phi_3_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_ddd (delta, tau) == Approx { central_finite_difference <0> (phi_3_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_t   (delta, tau) == Approx { central_finite_difference <1> (phi_3_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_tt  (delta, tau) == Approx { central_finite_difference <1> (phi_3_r_t  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_ttt (delta, tau) == Approx { central_finite_difference <1> (phi_3_r_tt <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_dt  (delta, tau) == Approx { central_finite_difference <1> (phi_3_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_ddt (delta, tau) == Approx { central_finite_difference <1> (phi_3_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_3_r_dtt (delta, tau) == Approx { central_finite_difference <0> (phi_3_r_tt <double, double>, 1e-6, delta, tau) });
+
+        CHECK(sum(Delta_d   (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta    <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_dd  (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_d  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_ddd (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_dd <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_t   (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta    <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_tt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_t  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_ttt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_tt <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_dt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_d  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_ddt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_dd <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Delta_dtt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_dt <double, double>, 1e-6, delta, tau)) });
+
+        CHECK(sum(Psi_d   (delta, tau)) == Approx { sum(central_finite_difference <0> (Psi    <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_dd  (delta, tau)) == Approx { sum(central_finite_difference <0> (Psi_d  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_ddd (delta, tau)) == Approx { sum(central_finite_difference <0> (Psi_dd <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_t   (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi    <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_tt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi_t  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_ttt (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi_tt <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_dt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi_d  <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_ddt (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi_dd <double, double>, 1e-6, delta, tau)) });
+        CHECK(sum(Psi_dtt (delta, tau)) == Approx { sum(central_finite_difference <1> (Psi_dt <double, double>, 1e-6, delta, tau)) });
+
+        CHECK(sum(Delta_b_d   (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b    <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_dd  (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b_d  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_ddd (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b_dd <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_t   (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b    <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_tt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_t  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_ttt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_tt <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_dt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_d  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_ddt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_dd <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_dtt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_dt <double, double>, 1e-7, delta, tau)) });
+
+        CHECK(sum(Delta_b_Psi_d   (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b_Psi    <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_dd  (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b_Psi_d  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_ddd (delta, tau)) == Approx { sum(central_finite_difference <0> (Delta_b_Psi_dd <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_t   (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi    <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_tt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi_t  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_ttt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi_tt <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_dt  (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi_d  <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_ddt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi_dd <double, double>, 1e-7, delta, tau)) });
+        CHECK(sum(Delta_b_Psi_dtt (delta, tau)) == Approx { sum(central_finite_difference <1> (Delta_b_Psi_dt <double, double>, 1e-7, delta, tau)) });
+
+        CHECK(phi_4_r_d   (delta, tau) == Approx { central_finite_difference <0> (phi_4_r    <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_dd  (delta, tau) == Approx { central_finite_difference <0> (phi_4_r_d  <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_ddd (delta, tau) == Approx { central_finite_difference <0> (phi_4_r_dd <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_t   (delta, tau) == Approx { central_finite_difference <1> (phi_4_r    <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_tt  (delta, tau) == Approx { central_finite_difference <1> (phi_4_r_t  <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_ttt (delta, tau) == Approx { central_finite_difference <1> (phi_4_r_tt <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_dt  (delta, tau) == Approx { central_finite_difference <1> (phi_4_r_d  <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_ddt (delta, tau) == Approx { central_finite_difference <1> (phi_4_r_dd <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_4_r_dtt (delta, tau) == Approx { central_finite_difference <0> (phi_4_r_tt <double, double>, 1e-7, delta, tau) });
+
+        CHECK(phi_r_d   (delta, tau) == Approx { central_finite_difference <0> (phi_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_dd  (delta, tau) == Approx { central_finite_difference <0> (phi_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_ddd (delta, tau) == Approx { central_finite_difference <0> (phi_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_t   (delta, tau) == Approx { central_finite_difference <1> (phi_r    <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_tt  (delta, tau) == Approx { central_finite_difference <1> (phi_r_t  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_ttt (delta, tau) == Approx { central_finite_difference <1> (phi_r_tt <double, double>, 1e-7, delta, tau) });
+        CHECK(phi_r_dt  (delta, tau) == Approx { central_finite_difference <1> (phi_r_d  <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_ddt (delta, tau) == Approx { central_finite_difference <1> (phi_r_dd <double, double>, 1e-6, delta, tau) });
+        CHECK(phi_r_dtt (delta, tau) == Approx { central_finite_difference <0> (phi_r_tt <double, double>, 1e-6, delta, tau) });
     }
 
 }
@@ -150,17 +231,57 @@ SUBCASE("Derivatives needed by the Born functions")
     {
         INFO("D= ", e.D, ", T= ", e.T, ", P= ", e.P);
             const auto
-        d_P_d_D = d_pressure_d_density_dt (e.D, e.T);
+        d_P_d_D_at_T = d_pressure_d_density_at_temperature_dt (e.D, e.T);
             const auto
-        d_P_d_D_fd = central_finite_difference (
+        d_P_d_D_at_T_fd = central_finite_difference (
               r6::pressure_dt <double, double>
             , 1e-5
             , e.D
             , e.T
         );
-        CHECK(d_P_d_D == Approx { d_P_d_D_fd  });
+        CHECK(d_P_d_D_at_T == Approx { d_P_d_D_at_T_fd  });
 
-        // NOTE: d_density_d_temperature_dt is tested in r6_inverse.cpp
+        // NOTE: d_density_d_temperature_at_pressure_dt is tested in r6_inverse.cpp
+        
+            const auto
+        d_D_d_TT_at_PD = d_density_d2_temperature_at_pressure_density_dt (e.D, e.T);
+            const auto
+        d_D_d_TT_at_PD_fd = central_finite_difference <1> (
+              d_density_d_temperature_at_pressure_dt <double, double>
+            , 1e-6
+            , e.D
+            , e.T
+        );
+        CHECK(d_D_d_TT_at_PD == Approx { d_D_d_TT_at_PD_fd });
+        {
+                const auto
+            delta = e.D / critical_density;
+                const auto
+            tau = critical_temperature / e.T;
+            CHECK(r6::detail::d_dddt_numerator_d_d (delta, tau) == Approx { central_finite_difference <0> (
+                  r6::detail::dddt_numerator <double, double>
+                , 1e-6
+                , delta
+                , tau
+            ) });
+            CHECK(r6::detail::d_dddt_denominator_d_d (delta, tau) == Approx { central_finite_difference <0> (
+                  r6::detail::dddt_denominator <double, double>
+                , 1e-6
+                , delta
+                , tau
+            ) });
+        }
+
+            const auto
+        d_D_d_TD_at_PT = d_density_d_temperature_density_at_pressure_temperature_dt (e.D, e.T);
+            const auto
+        d_D_d_TD_at_PT_fd = central_finite_difference <0> (
+              r6::d_density_d_temperature_at_pressure_dt <double, double>
+            , 1e-6
+            , e.D
+            , e.T
+        );
+        CHECK(d_D_d_TD_at_PT == Approx { d_D_d_TD_at_PT_fd  });
     }
 }
 #if 0
