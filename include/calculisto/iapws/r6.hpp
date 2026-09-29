@@ -1,6 +1,5 @@
 #pragma once
 #include "detail/common.hpp"
-#include "detail/disambiguate.hpp"
 
     namespace
 calculisto::thermodynamics::iapws::r6

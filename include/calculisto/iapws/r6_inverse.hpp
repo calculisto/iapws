@@ -220,19 +220,44 @@ detail
             auto
         r = Eigen::Matrix <T, 3, 1> {};
             const auto&
-        pi = x[0];
+        delta_p = x[0];
             const auto&
-        delta_p = x[1];
+        delta_pp = x[1];
             const auto&
-        delta_pp = x[2];
-        r[0] = delta_p * (1 + delta_p * phi_r_d (delta_p, tau)) - pi;
-        r[1] = delta_pp * (1 + delta_pp * phi_r_d (delta_pp, tau)) - pi;
+        pi = x[2];
+        r[0] = delta_p + pow (delta_p,  2) * phi_r_d (delta_p,  tau) - pi;
+        r[1] = delta_pp + pow (delta_pp, 2) * phi_r_d (delta_pp, tau) - pi;
         r[2] = 
               phi_r (delta_p, tau) 
             - phi_r (delta_pp, tau) 
             - pi * (1 / delta_pp - 1 / delta_p)
-            + log (delta_p / delta_pp)
+            + log (delta_p)
+            - log (delta_pp)
         ;
+        return r;
+    }
+        template <class T>
+        auto
+    j_saturation (Eigen::Matrix <T, 3, 1> const& x, auto const tau)
+    {
+            using namespace r6::detail;
+            auto
+        r = Eigen::Matrix <T, 3, 3> {};
+            const auto&
+        delta_p = x[0];
+            const auto&
+        delta_pp = x[1];
+            const auto&
+        pi = x[2];
+        r (0, 0) =  1 + 2 * delta_p * phi_r_d (delta_p, tau) + pow (delta_p, 2) * phi_r_dd (delta_p, tau);
+        r (0, 1) =  0;
+        r (0, 2) = -1;
+        r (1, 0) =  0;
+        r (1, 1) =  1 + 2 * delta_pp * phi_r_d (delta_pp, tau) + pow (delta_pp, 2) * phi_r_dd (delta_pp, tau);
+        r (1, 2) = -1;
+        r (2, 0) =  phi_r_d (delta_p, tau) - pi / pow (delta_p, 2) + 1 / delta_p;
+        r (2, 1) = -phi_r_d (delta_pp, tau) + pi / pow (delta_pp, 2) - 1 / delta_pp;
+        r (2, 2) =  1 / delta_p - 1 / delta_pp;
         return r;
     }
 } // namespace detail
@@ -248,38 +273,41 @@ saturation_pressure_t (
     , T const& pressure_initial_guess
     , T const& density_liquid_initial_guess
     , T const& density_gas_initial_guess
-    , multidimensional_newton_options_t <3, Range, Range, Range> const& options
+    , multidimensional_newton_options_t <3, Range, Range> const& options
     , info_t <InfoTag> info
 ){
-        const auto
-    pi_0 = pressure_initial_guess / massic_gas_constant / temperature / critical_density;
         const auto
     delta_p_0 = density_liquid_initial_guess / critical_density;
         const auto
     delta_pp_0 = density_gas_initial_guess / critical_density;
         const auto
+    pi_0 = pressure_initial_guess / massic_gas_constant / temperature / critical_density;
+        const auto
     x_0 = Eigen::Matrix <T, 3, 1> {
-          pi_0
-        , delta_p_0
+          delta_p_0
         , delta_pp_0
+        , pi_0
     };
         const auto
     tau = critical_temperature / temperature;
         const auto
     f = [tau](auto const& x){ return detail::f_saturation (x, tau); };
+        const auto
+    j = [tau](auto const& x){ return detail::j_saturation (x, tau); };
     if constexpr (InfoTag == info::tag::none)
     {
             const auto
         r = newton <3> (
               f
+            , j
             , x_0
             , options
             , info
         );
         return std::tuple {
-              r[0] * massic_gas_constant * temperature * critical_density
+              r[2] * massic_gas_constant * temperature * critical_density
+            , r[0] * critical_density
             , r[1] * critical_density
-            , r[2] * critical_density
         };
     }
     else
@@ -287,14 +315,15 @@ saturation_pressure_t (
             const auto
         [r, info_data] = newton <3> (
               f
+            , j
             , x_0
             , options
             , info
         );
         return std::tuple {
-              r[0] * massic_gas_constant * temperature * critical_density
+              r[2] * massic_gas_constant * temperature * critical_density
+            , r[0] * critical_density
             , r[1] * critical_density
-            , r[2] * critical_density
             , info_data
         };
     }
@@ -329,7 +358,7 @@ saturation_pressure_t (
     auto
 saturation_pressure_t (
       T const& temperature
-    , T const& relative_tolerance = 1e-8
+    , T const& relative_tolerance = 1e-7
     , T const& absolute_tolerance = 0.
     , int max_iter = 100
     , info_t <InfoTag> info = info::none
@@ -357,6 +386,25 @@ saturation_pressure_t (
               }
           }
         , info
+    );
+}
+    template <
+          class T
+        , info_tag_t InfoTag
+    >
+    auto
+saturation_pressure_t (
+      T const& temperature
+    , info_t <InfoTag> info
+){
+        const auto
+    pressure_inital_guess = r7::saturation_pressure_t (temperature);
+    return saturation_pressure_t (
+      temperature
+    , 1e-8
+    , 0.
+    , 100
+    , info
     );
 }
 

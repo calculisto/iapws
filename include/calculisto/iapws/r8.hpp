@@ -2,8 +2,6 @@
 #include <numbers>
 #include "detail/common.hpp"
 #include "r6.hpp"
-#include <calculisto/auto_diff/dual.hpp>
-    using calculisto::auto_diff::dual_t;
 
     namespace
 calculisto::thermodynamics::iapws::r8
@@ -687,74 +685,6 @@ d_relative_permittivity_d2_temperature_at_pressure_dt (
         + pow (d_density_d_temperature_at_pressure, 2) * d_relative_permittivity_d2_density_at_temperature_dt (density, temperature)
         + d_density_d_temperature_at_pressure * d_relative_permittivity_d_density_at_temperature_dt (density, temperature) * d_density_d_temperature_density_at_pressure_temperature
     ;
-    /*
-        using
-    ValueType = std::remove_cvref_t <decltype (temperature)>;
-        auto const
-    dual_value = dual_t <1, ValueType> { temperature, 0 };
-        const auto
-    r = d_relative_permittivity_d_temperature_at_pressure_dt (
-          density
-        , dual_value
-        , d_density_d_temperature
-    );
-    return r.differentials[0];
-    */
 }
-/*
-    namespace
-born
-{
-    constexpr auto
-z (auto const& density, auto const& temperature)
-{
-    return -1 / e (density / molar_mass, temperature);
-}
-    constexpr auto
-q (
-      auto const& density
-    , auto const& temperature
-    , auto const& relative_permittivity
-    , auto const& d_density_d_pressure
-){
-    return 
-          d_relative_permittivity_d_pressure_at_temperature_dt (density, temperature, d_density_d_pressure) 
-        / relative_permittivity
-        / relative_permittivity
-    ;
-}
-    constexpr auto
-y (
-      auto const& density
-    , auto const& temperature
-    , auto const& relative_permittivity
-    , auto const& d_density_d_temperature
-){
-    return 
-          d_relative_permittivity_d_temperature_at_pressure_dt(density, temperature, d_density_d_temperature)
-        / relative_permittivity
-        / relative_permittivity
-    ;
-}
-    constexpr auto
-x (
-      auto const& density
-    , auto const& temperature
-    , auto const& relative_permittivity
-    , auto const& d_density_d_temperature
-    , auto const& y
-){
-    return 
-          d_relative_permittivity_d2_temperature_at_pressure_dt(density, temperature, d_density_d_temperature)
-        / relative_permittivity
-        / relative_permittivity
-        - 2
-        * relative_permittivity
-        * y
-        * y
-    ;
-}
-} // namespace born
-*/
 } // namespace r8_09_1997
 } // namespace calculisto::thermodynamics::iapws::r8

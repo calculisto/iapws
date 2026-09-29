@@ -4,9 +4,9 @@
 [submodule "git_submodules/calculisto/root_finding"]
 	path = git_submodules/calculisto/root_finding
 	url = https://github.com/calculisto/root_finding
-[submodule "git_submodules/calculisto/auto_diff"]
-	path = git_submodules/calculisto/auto_diff
-	url = https://github.com/calculisto/auto_diff
 [submodule "git_submodules/calculisto/finite_difference"]
 	path = git_submodules/calculisto/finite_difference
 	url = https://github.com/calculisto/finite_difference
+[submodule "git_submodules/calculisto/auto_diff"]
+	path = git_submodules/calculisto/auto_diff
+	url = https://github.com/calculisto/auto_diff
