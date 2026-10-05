@@ -1327,7 +1327,6 @@ d_density_d_temperature_at_pressure_td (auto const& temperature, auto const& den
 {
     return d_density_d_temperature_at_pressure_dt (density, temperature);
 }
-/*
     constexpr auto
 d_density_d2_temperature_at_pressure_dt (auto const& density, auto const& temperature)
 {
@@ -1339,18 +1338,33 @@ d_density_d2_temperature_at_pressure_dt (auto const& density, auto const& temper
     N = detail::dddt_numerator (delta, tau);
         const auto
     D = detail::dddt_denominator (delta, tau);
-    return -density / temperature / temperature * (
-          delta * pow (tau, 2) * detail::phi_r_dtt (delta, tau)
-        - 2 * N * (1 + 2 * delta * detail::phi_r_d (delta, tau) + pow (delta, 2) * detail::phi_r_dd (delta, tau)) / D
-        + delta * pow (N / D, 2) * (2 * detail::phi_r_d (delta, tau) + 4 * delta * detail::phi_r_dd (delta, tau) + pow (delta, 2) * detail::phi_r_ddd (delta, tau))
-    ) / D;
+        const auto
+    E = 
+          1
+        + 2 * delta * detail::phi_r_d (delta, tau)
+        + pow (delta, 2) * detail::phi_r_dd (delta, tau)
+        - 2 * delta * tau * detail::phi_r_dt (delta, tau)
+        - pow (delta, tau) * tau * detail::phi_r_ddt (delta, tau)
+    ;
+        const auto
+    F = 
+          2 * detail::phi_r_d (delta, tau) 
+        + 4 * detail::phi_r_dd (delta, tau) 
+        + pow (delta, 2) * detail::phi_r_ddd (delta, tau)
+    ;
+        const auto
+    G = delta * pow (tau, 2) * detail::phi_r_dtt (delta, tau);
+    return - density / pow (temperature, 2) * (
+          G / D
+        - 2 * N * E / pow (D, 2)
+        + delta * pow (N, 2) * F / pow (D, 3)
+    );
 }
     constexpr auto
 d_density_d2_temperature_at_pressure_td (auto const& temperature, auto const& density)
 {
     return d_density_d2_temperature_at_pressure_dt (density, temperature);
 }
-*/
     constexpr auto
 d_density_d2_temperature_at_pressure_density_dt (auto const& density, auto const& temperature)
 {
@@ -1367,7 +1381,6 @@ d_density_d2_temperature_at_pressure_density_dt (auto const& density, auto const
         const auto
     DT = - detail::d_dddt_denominator_d_t (delta, tau) * tau / temperature;
 
-    // return - density / temperature * N / D;
     return 
           density 
         / pow (temperature, 2)

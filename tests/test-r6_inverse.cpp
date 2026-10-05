@@ -129,33 +129,31 @@ TEST_CASE("r6_inverse.hpp")
                 , e.T
                 , e.P
             );
-            CHECK(d_D_d_T_at_P == Approx { d_D_d_T_at_P_fd }.epsilon (1e-4));
-
-            /*
+            CHECK(d_D_d_T_at_P == Approx { d_D_d_T_at_P_fd }.scale (fabs (d_D_d_T_at_P_fd )));
                 const auto
-            d_D_d2_T_at_P = d_density_d2_temperature_at_pressure_dt (e.D, e.T);
+            P = e.P;
                 const auto
-            d_D_d2_T_at_P_fd = central_finite_difference <0, 2, 4> (
+            d2_D_d2_T_at_P = d_density_d2_temperature_at_pressure_dt (e.D, e.T);
+                const auto
+            d2_D_d2_T_at_P_fd = central_finite_difference (
+                  [P] (auto T_)
+                  {
+                        const auto
+                    D_ = r6_inverse::density_tp (P, T_);
+                    return d_density_d_temperature_at_pressure_dt (D_, T_);
+                  }
+                , 1e-4
+                , e.T
+            );
+            CHECK(d2_D_d2_T_at_P == Approx { d2_D_d2_T_at_P_fd }.scale (fabs (d2_D_d2_T_at_P_fd)));
+                const auto
+            d2_D_d2_T_at_P_fd2 = central_finite_difference <0, 2> (
                   r6_inverse::density_tp <double, double>
                 , 1e-4
                 , e.T
                 , e.P
             );
-            CHECK(d_D_d2_T_at_P == Approx { d_D_d2_T_at_P_fd  });
-                const auto
-            d_D_d2_T_at_P_fd_2 = central_finite_difference <0, 1, 4> (
-                  [=](auto T, auto P)
-                  {
-                        const auto
-                    D = r6_inverse::density_tp (T, P);
-                    return d_density_d_temperature_at_pressure_dt (D, T);
-                  }
-                , 1e-7
-                , e.T
-                , e.P
-            );
-            CHECK(d_D_d2_T_at_P == Approx { d_D_d2_T_at_P_fd_2 });
-    */
+            CHECK(d2_D_d2_T_at_P == Approx { d2_D_d2_T_at_P_fd2 }.scale (fabs (d2_D_d2_T_at_P_fd2)));
         }
     }
 } // TEST_CASE("r6_inverse.hpp")

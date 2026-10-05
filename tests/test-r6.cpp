@@ -242,6 +242,7 @@ SUBCASE("Derivatives needed by the Born functions")
         CHECK(d_P_d_D_at_T == Approx { d_P_d_D_at_T_fd  });
 
         // NOTE: d_density_d_temperature_at_pressure_dt is tested in r6_inverse.cpp
+        // NOTE: d2_density_d2_temperature_at_pressure_dt is tested in r6_inverse.cpp
         
             const auto
         d_D_d_TT_at_PD = d_density_d2_temperature_at_pressure_density_dt (e.D, e.T);
