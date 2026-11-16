@@ -699,10 +699,22 @@ TEST_CASE("r7.hpp")
                     auto const
                 r = region_pt (p, t);
                 INFO ("P = ", p * 1e-5, ", T = ", t - 273.15, ", region = ", r);
-                CHECK(isobaric_cubic_expansion_coefficient_pt (p, t) == Approx { a }.scale (fabs (a)).epsilon (1e-4));
-                CHECK(isothermal_compressibility_pt           (p, t) == Approx { b }.scale (b).epsilon (1e-4));
-                CHECK(relative_pressure_coefficient_pt        (p, t) == Approx { c }.scale (fabs (c)).epsilon (1e-4));
-                CHECK(isothermal_stress_coefficient_pt        (p, t) == Approx { d }.scale (fabs (d)).epsilon (1e-4));
+                // Near the critical point (region 3, subregions 3u to 3z),
+                // these derivatives are very sensitive to the density:
+                // - the density given by the backward equations v(p, T)
+                //   is only approximate (8.6e-4 relative error at 220 bar,
+                //   375 °C), which gives errors up to 3.7e-3;
+                // - the values in the book might have been computed from
+                //   an approximate density too: at 220 bar, 375 °C, they
+                //   are all reproduced by rho = 204.128 kg/m3, whereas the
+                //   exact root of the basic equation is 204.165 kg/m3.
+                // Hence the looser tolerance there.
+                    auto const
+                eps = (r == 3 && r3::detail::subregion_pt (p, t) >= r3::detail::u) ? 5e-3 : 1e-4;
+                CHECK(isobaric_cubic_expansion_coefficient_pt (p, t) == Approx { a }.scale (fabs (a)).epsilon (eps));
+                CHECK(isothermal_compressibility_pt           (p, t) == Approx { b }.scale (b).epsilon (eps));
+                CHECK(relative_pressure_coefficient_pt        (p, t) == Approx { c }.scale (fabs (c)).epsilon (eps));
+                CHECK(isothermal_stress_coefficient_pt        (p, t) == Approx { d }.scale (fabs (d)).epsilon (eps));
             }
         }
     }
