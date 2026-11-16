@@ -278,11 +278,11 @@ SUBCASE("Derivatives needed by the Born functions")
             const auto
         d_D_d_TD_at_PT_fd = central_finite_difference <0> (
               r6::d_density_d_temperature_at_pressure_dt <double, double>
-            , 1e-6
+            , 1e-4
             , e.D
             , e.T
         );
-        CHECK(d_D_d_TD_at_PT == Approx { d_D_d_TD_at_PT_fd  });
+        CHECK(d_D_d_TD_at_PT ==Approx { d_D_d_TD_at_PT_fd  });
     }
 }
 #if 0

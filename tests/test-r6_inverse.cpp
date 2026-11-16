@@ -120,8 +120,13 @@ TEST_CASE("r6_inverse.hpp")
         for(const auto& e: r6::detail::table_7)
         {
             INFO("D= ", e.D, ", T= ", e.T, ", P= ", e.P);
+            // Evaluate the analytical derivatives at the density consistent
+            // with e.P: the tabulated pressure is rounded, and near the
+            // critical point that is enough to shift the density noticeably.
                 const auto
-            d_D_d_T_at_P = d_density_d_temperature_at_pressure_dt (e.D, e.T);
+            D = r6_inverse::density_tp (e.T, e.P);
+                const auto
+            d_D_d_T_at_P = d_density_d_temperature_at_pressure_dt (D, e.T);
                 const auto
             d_D_d_T_at_P_fd = central_finite_difference <0> (
                   r6_inverse::density_tp <double, double>
@@ -133,19 +138,19 @@ TEST_CASE("r6_inverse.hpp")
                 const auto
             P = e.P;
                 const auto
-            d2_D_d2_T_at_P = d_density_d2_temperature_at_pressure_dt (e.D, e.T);
+            d2_D_d2_T_at_P = d_density_d2_temperature_at_pressure_dt (D, e.T);
                 const auto
-            d2_D_d2_T_at_P_fd = central_finite_difference (
+            d2_D_d2_T_at_P_fd = central_finite_difference <0, 1, 4> (
                   [P] (auto T_)
                   {
                         const auto
                     D_ = r6_inverse::density_tp (T_, P);
                     return d_density_d_temperature_at_pressure_dt (D_, T_);
                   }
-                , 1e-4
+                , 1e-5
                 , e.T
             );
-            CHECK(d2_D_d2_T_at_P == Approx { d2_D_d2_T_at_P_fd }.scale (fabs (d2_D_d2_T_at_P_fd)));
+            CHECK(d2_D_d2_T_at_P ==Approx { d2_D_d2_T_at_P_fd }.scale (fabs (d2_D_d2_T_at_P_fd)));
         }
     }
 } // TEST_CASE("r6_inverse.hpp")
