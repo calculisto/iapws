@@ -651,10 +651,10 @@ d_relative_permittivity_d_density_temperature_at_temperature_density_dt (
 d_relative_permittivity_d_pressure_at_temperature_dt (
       auto const& density
     , auto const& temperature
-    , auto const& d_density_d_pressure_at_pressure
+    , auto const& d_density_d_pressure_at_temperature
 ){
     return 
-          d_density_d_pressure_at_pressure 
+          d_density_d_pressure_at_temperature
         * d_relative_permittivity_d_density_at_temperature_dt (density, temperature)
     ;
 }

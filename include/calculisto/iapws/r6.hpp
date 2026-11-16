@@ -1344,12 +1344,12 @@ d_density_d2_temperature_at_pressure_dt (auto const& density, auto const& temper
         + 2 * delta * detail::phi_r_d (delta, tau)
         + pow (delta, 2) * detail::phi_r_dd (delta, tau)
         - 2 * delta * tau * detail::phi_r_dt (delta, tau)
-        - pow (delta, tau) * tau * detail::phi_r_ddt (delta, tau)
+        - pow (delta, 2) * tau * detail::phi_r_ddt (delta, tau)
     ;
         const auto
-    F = 
-          2 * detail::phi_r_d (delta, tau) 
-        + 4 * detail::phi_r_dd (delta, tau) 
+    F =
+          2 * detail::phi_r_d (delta, tau)
+        + 4 * delta * detail::phi_r_dd (delta, tau)
         + pow (delta, 2) * detail::phi_r_ddd (delta, tau)
     ;
         const auto

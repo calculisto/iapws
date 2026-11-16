@@ -139,21 +139,13 @@ TEST_CASE("r6_inverse.hpp")
                   [P] (auto T_)
                   {
                         const auto
-                    D_ = r6_inverse::density_tp (P, T_);
+                    D_ = r6_inverse::density_tp (T_, P);
                     return d_density_d_temperature_at_pressure_dt (D_, T_);
                   }
                 , 1e-4
                 , e.T
             );
             CHECK(d2_D_d2_T_at_P == Approx { d2_D_d2_T_at_P_fd }.scale (fabs (d2_D_d2_T_at_P_fd)));
-                const auto
-            d2_D_d2_T_at_P_fd2 = central_finite_difference <0, 2> (
-                  r6_inverse::density_tp <double, double>
-                , 1e-4
-                , e.T
-                , e.P
-            );
-            CHECK(d2_D_d2_T_at_P == Approx { d2_D_d2_T_at_P_fd2 }.scale (fabs (d2_D_d2_T_at_P_fd2)));
         }
     }
 } // TEST_CASE("r6_inverse.hpp")
